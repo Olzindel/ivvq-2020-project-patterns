@@ -96,8 +96,8 @@
                                 <resource>
                                     <directory>${project.parent.basedir}/frontend/dist</directory>
                                     <includes>
-                                        <include>static/</include>
-                                        <include>index.html</include>
+                                        <include>*</include>
+<!--                                        <include>index.html</include>-->
                                     </includes>
                                 </resource>
                             </resources>
