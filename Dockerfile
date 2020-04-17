@@ -2,11 +2,11 @@ FROM node:13-alpine as frontend
 
 WORKDIR /app
 
-COPY ./frontend/babel.config.js ./frontend/package.json ./
+COPY ./frontend/package.json ./
 
 RUN npm install
 
-COPY ./frontend/src/. ./src
+COPY ./frontend ./
 
 RUN npm run build
 
@@ -24,8 +24,8 @@ COPY ./backend/pom.xml ./
 
 RUN mvn dependency:go-offline -B
 
-COPY ./backend/src/. ./src/
-COPY --from=frontend /app/dist/* ./src/main/resources/public/
+COPY ./backend/src ./src/
+COPY --from=frontend /app/target/dist ./src/main/resources/public/
 
 RUN mvn package && cp ./target/backend-*.jar ../app.jar
 
