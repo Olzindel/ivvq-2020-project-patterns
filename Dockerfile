@@ -1,24 +1,41 @@
-FROM maven:3-jdk-8 as build
+FROM node:13-alpine as frontend
+
+WORKDIR /app
+
+COPY ./frontend/babel.config.js ./frontend/package.json ./
+
+RUN npm install
+
+COPY ./frontend/src/. ./src
+
+RUN npm run build
+
+#========================================================================
+
+FROM maven:3-jdk-8 as backend
 
 WORKDIR /app
 
 COPY pom.xml ./pom.xml
-COPY ./backend/pom.xml ./backend/
-COPY ./frontend/pom.xml ./frontend/
+
+WORKDIR /app/backend
+
+COPY ./backend/pom.xml ./
 
 RUN mvn dependency:go-offline -B
 
-COPY ./backend/src/. ./backend/src/
-COPY ./frontend/babel.config.js ./frontend/package.json ./frontend/
-COPY ./frontend/src/. ./frontend/src/
+COPY ./backend/src/. ./src/
+COPY --from=frontend /app/dist/* ./src/main/resources/public/
 
-RUN mvn package && cp ./backend/target/backend-*.jar app.jar
+RUN mvn package && cp ./target/backend-*.jar ../app.jar
+
+#========================================================================
 
 FROM openjdk:8-jre-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/app.jar ./app.jar
+COPY --from=backend /app/app.jar ./app.jar
 
 EXPOSE 8080
 
