@@ -26,7 +26,7 @@ public class OrdersController {
     }
 
     @GetMapping("/{id}")
-    public void getOrders(@PathVariable final long id) {
+    public void getOrders(@PathVariable final Long id) {
         ordersService.findOrdersById(id);
     }
 
@@ -35,8 +35,8 @@ public class OrdersController {
         ordersService.saveOrders(orders);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteOrders(@PathVariable final long id) {
+    @DeleteMapping("/{id}")
+    public void deleteOrders(@PathVariable final Long id) {
         ordersService.deleteOrdersById(id);
     }
 

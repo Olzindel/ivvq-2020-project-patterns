@@ -26,8 +26,9 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
+
     @GetMapping("/{id}")
-    public UserDTO getUser(@PathVariable final long id) {
+    public UserDTO getUser(@PathVariable final Long id) {
         User user = userService.findUserById(id);
         return convertToDto(user);
     }
@@ -37,8 +38,8 @@ public class UserController {
         userService.saveUser(user);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteUser(@PathVariable final long id) {
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable final Long id) {
         userService.deleteUserById(id);
     }
 

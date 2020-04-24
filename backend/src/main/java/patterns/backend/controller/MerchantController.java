@@ -28,7 +28,7 @@ public class MerchantController {
     }
 
     @GetMapping("/{id}")
-    public void getMerchant(@PathVariable final long id) {
+    public void getMerchant(@PathVariable final Long id) {
         merchantService.findMerchantById(id);
     }
 
@@ -37,8 +37,8 @@ public class MerchantController {
         merchantService.saveMerchant(merchant);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteMerchant(@PathVariable final long id) {
+    @DeleteMapping("/{id}")
+    public void deleteMerchant(@PathVariable final Long id) {
         merchantService.deleteMerchantById(id);
     }
 
