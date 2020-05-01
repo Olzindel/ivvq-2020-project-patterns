@@ -10,7 +10,8 @@ import patterns.backend.services.OrdersService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController()
+@RequestMapping(value = "/order", produces = "application/json")
 public class OrdersController {
 
     private final ModelMapper modelMapper = new ModelMapper();
@@ -26,7 +27,7 @@ public class OrdersController {
     }
 
     @GetMapping("/{id}")
-    public void getOrders(@PathVariable final Long id) {
+    public void getOrders(@PathVariable("id") final Long id) {
         ordersService.findOrdersById(id);
     }
 
@@ -36,7 +37,7 @@ public class OrdersController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrders(@PathVariable final Long id) {
+    public void deleteOrders(@PathVariable("id") final Long id) {
         ordersService.deleteOrdersById(id);
     }
 
@@ -44,5 +45,4 @@ public class OrdersController {
         OrdersDTO ordersDTO = modelMapper.map(orders, OrdersDTO.class);
         return ordersDTO;
     }
-
 }

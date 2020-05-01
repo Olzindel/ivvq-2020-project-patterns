@@ -1,5 +1,6 @@
 package patterns.backend.controller;
 
+import io.swagger.annotations.ApiParam;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public void getProduct(@PathVariable final Long id) {
+    public void getProduct(@PathVariable("id") final Long id) {
         productService.findProductById(id);
     }
 
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable final Long id) {
+    public void deleteProduct(@ApiParam(value = "ID of person to return", required = true, example = "123") @PathVariable("id") final Long id) {
         productService.deleteProductById(id);
     }
 
