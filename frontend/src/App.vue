@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <BandeauTitre/>
     <router-view/>
   </div>
 </template>
 
 <script>
+import BandeauTitre from './components/bandeauTitre'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {BandeauTitre}
 }
 </script>
 
@@ -18,6 +20,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
