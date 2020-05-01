@@ -1,15 +1,17 @@
 <template>
   <div id="app">
-    <BandeauTitre/>
+    <Header/>
+    <banner/>
     <router-view/>
   </div>
 </template>
 
 <script>
-import BandeauTitre from './components/bandeauTitre'
+import Header from './components/Header'
+import Banner from './components/Banner'
 export default {
   name: 'App',
-  components: {BandeauTitre}
+  components: {Header, Banner}
 }
 </script>
 

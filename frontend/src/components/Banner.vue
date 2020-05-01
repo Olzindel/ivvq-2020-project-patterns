@@ -1,0 +1,27 @@
+<template>
+  <div class="div">
+    <img class="img"  src="../assets/titreBis.png" >
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Banner'
+}
+</script>
+
+<style scoped>
+
+  .div {
+    margin: 0 0;
+    display: inline-block;
+    height: 100%;
+    max-width: 100%;
+  }
+
+  .img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+</style>

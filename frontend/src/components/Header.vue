@@ -1,11 +1,15 @@
 <template>
   <div>
-    <div>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <md-toolbar >
+        <div style="display:flex;justify-content: space-between">
         <md-button @click="showNavigation = true">
           <md-icon class="fa fa-bars"></md-icon>
         </md-button>
+        <md-button>
+          connexion
+        </md-button>
+        </div>
       </md-toolbar>
       <md-drawer :md-active.sync="showNavigation" md-swipeable>
         <md-toolbar class="md-transparent" md-elevation="0">
@@ -30,10 +34,6 @@
           </md-list-item>
         </md-list>
       </md-drawer>
-    </div>
-  <div class="div">
-  <img class="img"  src="../assets/titreBis.png" >
-    </div>
   </div>
 </template>
 
@@ -47,24 +47,12 @@ Vue.use(MdDrawer)
 Vue.use(MdList)
 Vue.use(MdIcon)
 
-export default {name: 'bandeauTitre',
+export default {name: 'header',
   data: () => ({
     showNavigation: false
   })}
 </script>
 
 <style scoped>
-  .div {
-    margin: 0 0;
-    display: inline-block;
-    height: 100%;
-    max-width: 100%;
-  }
-
-  .img {
-    display: block;
-    height: auto;
-    max-width: 100%;
-  }
 
 </style>
