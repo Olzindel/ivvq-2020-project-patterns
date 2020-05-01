@@ -2,9 +2,11 @@ package patterns.backend.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import patterns.backend.domain.Merchant;
-import patterns.backend.dto.MerchantDTO;
+import patterns.backend.dto.MerchantDto;
 import patterns.backend.services.MerchantService;
 
 import java.util.List;
@@ -20,30 +22,39 @@ public class MerchantController {
     private MerchantService merchantService;
 
     @GetMapping()
-    public List<MerchantDTO> getMerchants() {
-        List<Merchant> merchants = merchantService.findAll();
-        return merchants.stream()
+    public ResponseEntity<List<MerchantDto>> getMerchants() {
+        List<MerchantDto> merchantDtos = merchantService.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(merchantDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public void getMerchant(@PathVariable("id") final Long id) {
-        merchantService.findMerchantById(id);
+    @GetMapping("/{merchantId}")
+    public ResponseEntity<MerchantDto> getMerchant(@PathVariable("merchantId") final Long merchantId) {
+        MerchantDto merchantDto = convertToDto(merchantService.findMerchantById(merchantId));
+        return new ResponseEntity<>(merchantDto, HttpStatus.OK);
     }
 
     @PutMapping()
-    public void addMerchant(@RequestBody Merchant merchant) {
-        merchantService.saveMerchant(merchant);
+    public ResponseEntity<MerchantDto> createMerchant(@RequestBody Merchant merchant) {
+        MerchantDto merchantDto = convertToDto(merchantService.create(merchant));
+        return new ResponseEntity<>(merchantDto, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteMerchant(@PathVariable("id") final Long id) {
-        merchantService.deleteMerchantById(id);
+    @PatchMapping()
+    public ResponseEntity<MerchantDto> updateMerchant(@RequestBody Merchant merchant) {
+        MerchantDto merchantDto = convertToDto(merchantService.update(merchant));
+        return new ResponseEntity<>(merchantDto, HttpStatus.OK);
     }
 
-    private MerchantDTO convertToDto(Merchant merchant) {
-        MerchantDTO merchantDTO = modelMapper.map(merchant, MerchantDTO.class);
+    @DeleteMapping("/{merchantId}")
+    public ResponseEntity<String> deleteMerchant(@PathVariable("merchantId") final Long merchantId) {
+        merchantService.deleteMerchantById(merchantId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private MerchantDto convertToDto(Merchant merchant) {
+        MerchantDto merchantDTO = modelMapper.map(merchant, MerchantDto.class);
         return merchantDTO;
     }
 

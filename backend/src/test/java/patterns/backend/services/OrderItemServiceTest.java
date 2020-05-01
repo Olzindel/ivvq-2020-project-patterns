@@ -55,7 +55,7 @@ class OrderItemServiceTest {
         when(orderItemService.getOrderItemRepository().save(orderItem)).thenReturn(orderItem);
 
         // when: saveOrderItem is invoked
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
 
         // then: the save method of OrderItemRepository is invoked
         verify(orderItemService.getOrderItemRepository()).save(orderItem);

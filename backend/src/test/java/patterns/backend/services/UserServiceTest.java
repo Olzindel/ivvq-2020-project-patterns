@@ -58,7 +58,7 @@ class UserServiceTest {
         when(userService.getUserRepository().save(user)).thenReturn(user);
 
         // when: saveUser is invoked
-        userService.saveUser(user);
+        userService.create(user);
 
         // then: the save method of UserRepository is invoked
         verify(userService.getUserRepository()).save(user);

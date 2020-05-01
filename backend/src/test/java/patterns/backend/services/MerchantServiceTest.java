@@ -55,7 +55,7 @@ class MerchantServiceTest {
         when(merchantService.getMerchantRepository().save(merchant)).thenReturn(merchant);
 
         // when: saveMerchant is invoked
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
 
         // then: the save method of MerchantRepository is invoked
         verify(merchantService.getMerchantRepository()).save(merchant);

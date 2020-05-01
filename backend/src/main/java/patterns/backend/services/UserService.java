@@ -8,6 +8,7 @@ import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
 import patterns.backend.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class UserService {
     private UserRepository userRepository;
 
 
-    public User findUserById(Long id) {
+    public User findUserById(final Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (!optionalUser.isPresent()) {
             throw new UserNotFoundException(id);
@@ -30,7 +31,18 @@ public class UserService {
         }
     }
 
-    public User saveUser(User user) {
+    public User create(final User user) {
+        User savedUser;
+        if (user != null) {
+            user.setCreatedAt(LocalDate.now());
+            savedUser = userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException();
+        }
+        return savedUser;
+    }
+
+    public User update(final User user) {
         User savedUser;
         if (user != null) {
             savedUser = userRepository.save(user);
@@ -44,7 +56,7 @@ public class UserService {
         return userRepository.count();
     }
 
-    public void deleteUserById(Long id) {
+    public void deleteUserById(final Long id) {
         User user = findUserById(id);
         userRepository.delete(user);
     }

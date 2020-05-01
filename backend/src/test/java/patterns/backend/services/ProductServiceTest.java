@@ -56,7 +56,7 @@ class ProductServiceTest {
         when(productService.getProductRepository().save(product)).thenReturn(product);
 
         // when: saveProduct is invoked
-        productService.saveProduct(product);
+        productService.create(product);
 
         // then: the save method of ProductRepository is invoked
         verify(productService.getProductRepository()).save(product);

@@ -5,54 +5,67 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Orders;
-import patterns.backend.domain.User;
+import patterns.backend.domain.*;
 import patterns.backend.exception.OrdersNotFoundException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class OrdersServiceIntegrationTest {
+public class OrderServiceIntegrationTest {
     @Autowired
-    private OrdersService ordersService;
+    private OrderService orderService;
 
-    private Orders orders;
+    private Order order;
+
+    private Merchant merchant;
+
+    private Product product;
+
+    private OrderItem orderItem;
 
     private User user;
 
     @BeforeEach
     public void setup() {
         user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
-        orders = new Orders("Ready", LocalDate.now(), user);
+        merchant = new Merchant("Market", LocalDate.now(), user);
+        product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
+        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
+        orderItem = new OrderItem(2, product, order);
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem);
+        order.setOrderItems(orderItems);
     }
 
     @Test
     public void testSavedOrdersHasId() {
         // given: an Orders not persisted orders
         // then: orders has no id
-        assertNull(orders.getId());
+        assertNull(order.getId());
         // when: orders is persisted
-        ordersService.saveOrders(orders);
+        orderService.create(order);
         // then: orders has an id
-        assertNotNull(orders.getId());
+        assertNotNull(order.getId());
     }
 
     @Test()
     public void testSaveOrdersNull() {
         // when: null is persisted via an OrdersService
         // then: an exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> ordersService.saveOrders(null));
+        assertThrows(IllegalArgumentException.class, () -> orderService.create(null));
     }
 
     @Test
     public void testFetchedOrdersIsNotNull() {
         // given: an Orders orders is persisted
-        ordersService.saveOrders(orders);
+        orderService.create(order);
         // when: we call findOrdersById with the id of that Orders
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        Order fetched = orderService.findOrdersById(order.getId());
         // then: the result is not null
         assertNotNull(fetched);
     }
@@ -60,88 +73,88 @@ public class OrdersServiceIntegrationTest {
     @Test
     public void testFetchedOrdersHasGoodId() {
         // given: an Orders orders is persisted
-        ordersService.saveOrders(orders);
+        orderService.create(order);
         // when: we call findOrdersById with the id of that Orders
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        Order fetched = orderService.findOrdersById(order.getId());
         // then: the Orders obtained has the correct id
-        assertEquals(orders.getId(), fetched.getId());
+        assertEquals(order.getId(), fetched.getId());
     }
 
     @Test
     public void testFetchedOrdersIsUnchanged() {
         // given: an Orders orders persisted
-        ordersService.saveOrders(orders);
+        orderService.create(order);
         // when: we call findOrdersById with the id of that Orders
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        Order fetched = orderService.findOrdersById(order.getId());
         // then: All the attributes of the Orders obtained has the correct values
-        assertEquals(orders.getCreatedAt(), fetched.getCreatedAt());
-        assertEquals(orders.getStatus(), fetched.getStatus());
+        assertEquals(order.getCreatedAt(), fetched.getCreatedAt());
+        assertEquals(order.getOrderStatus(), fetched.getOrderStatus());
     }
 
     @Test
     public void testUpdatedOrdersIsUpdated() {
         // given: an Orders orders persisted
-        ordersService.saveOrders(orders);
+        orderService.create(order);
 
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        Order fetched = orderService.findOrdersById(order.getId());
         // when: the email is modified at the "object" level
-        fetched.setStatus("Aborted");
+        fetched.setOrderStatus(OrderStatus.ABORTED);
         // when: the object orders is updated in the database
-        ordersService.saveOrders(fetched);
+        orderService.update(fetched);
         // when: the object orders is re-read in the database
-        Orders fetchedUpdated = ordersService.findOrdersById(orders.getId());
+        Order fetchedUpdated = orderService.findOrdersById(order.getId());
         // then: the email has been successfully updated
-        assertEquals(fetched.getStatus(), fetchedUpdated.getStatus());
+        assertEquals(fetched.getOrderStatus(), fetchedUpdated.getOrderStatus());
     }
 
     @Test
     public void testSavedOrdersIsSaved() {
-        long before = ordersService.countOrders();
+        long before = orderService.countOrders();
         // given: is new orders
         // when: this USer is persisted
-        ordersService.saveOrders(new Orders("Ready", LocalDate.now(), user));
+        orderService.create(new Order(LocalDate.now(), OrderStatus.PAID, user));
         // then : the number of Orders persisted is increased by 1
-        assertEquals(before + 1, ordersService.countOrders());
+        assertEquals(before + 1, orderService.countOrders());
     }
 
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: an Orders orders persisted
-        ordersService.saveOrders(orders);
-        long count = ordersService.countOrders();
+        orderService.create(order);
+        long count = orderService.countOrders();
 
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        Order fetched = orderService.findOrdersById(order.getId());
         // when: the email is modified at the "object" level
-        fetched.setStatus("Aborted");
+        fetched.setOrderStatus(OrderStatus.PAID);
         // when: the object is updated in the database
-        ordersService.saveOrders(fetched);
+        orderService.update(fetched);
         // then: a new entry has not been created in the database
-        assertEquals(count, ordersService.countOrders());
+        assertEquals(count, orderService.countOrders());
     }
 
     @Test
     public void testFindOrdersWithUnexistingId() {
         // when:  findOrdersById is called with an id not corresponding to any object in database
         // then: OrdersNotFoundException is thrown
-        assertThrows(OrdersNotFoundException.class, () -> ordersService.findOrdersById(1000L));
+        assertThrows(OrdersNotFoundException.class, () -> orderService.findOrdersById(1000L));
     }
 
     @Test
     public void testDeleteOrdersWithExistingId() {
         // given: an User Orders persisted
-        ordersService.saveOrders(orders);
-        Orders fetched = ordersService.findOrdersById(orders.getId());
+        orderService.create(order);
+        Order fetched = orderService.findOrdersById(order.getId());
 
         // when: deleteUserById is called with an id corresponding to an object in database
-        ordersService.deleteOrdersById(fetched.getId());
+        orderService.deleteOrdersById(fetched.getId());
         // then: the orders is delete
-        assertThrows(OrdersNotFoundException.class, () -> ordersService.findOrdersById(fetched.getId()));
+        assertThrows(OrdersNotFoundException.class, () -> orderService.findOrdersById(fetched.getId()));
     }
 
     @Test
     public void testDeleteOerdersWithUnexistingId() {
         // when: deleteUserById is called with an id not corresponding to any object in database
         // then: an exception is thrown
-        assertThrows(OrdersNotFoundException.class, () -> ordersService.deleteOrdersById(0L));
+        assertThrows(OrdersNotFoundException.class, () -> orderService.deleteOrdersById(0L));
     }
 }

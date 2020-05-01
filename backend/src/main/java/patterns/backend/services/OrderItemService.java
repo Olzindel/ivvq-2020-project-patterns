@@ -21,7 +21,7 @@ public class OrderItemService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    public OrderItem findOrderItemById(Long id) {
+    public OrderItem findOrderItemById(final Long id) {
         Optional<OrderItem> optionalOrderItem = orderItemRepository.findById(id);
         if (!optionalOrderItem.isPresent()) {
             throw new OrderItemNotFoundException(id);
@@ -30,7 +30,7 @@ public class OrderItemService {
         }
     }
 
-    public OrderItem saveOrderItem(OrderItem orderItem) {
+    public OrderItem create(final OrderItem orderItem) {
         OrderItem savedOrderItem;
         if (orderItem != null) {
             savedOrderItem = orderItemRepository.save(orderItem);
@@ -40,9 +40,24 @@ public class OrderItemService {
         return savedOrderItem;
     }
 
-    public void deleteOrderItemById(Long id) {
+    public OrderItem update(final OrderItem orderItem) {
+        OrderItem savedOrderItem;
+        if (orderItem != null) {
+            savedOrderItem = orderItemRepository.save(orderItem);
+        } else {
+            throw new IllegalArgumentException();
+        }
+        return savedOrderItem;
+    }
+
+    public void deleteOrderItemById(final Long id) {
         OrderItem orderItem = findOrderItemById(id);
         orderItemRepository.delete(orderItem);
+    }
+
+    public void deleteProductFromOrderItem(final Long orderId, final Long productId) {
+        OrderItem order = findOrderItemById(orderId);
+
     }
 
     public long countOrderItem() {

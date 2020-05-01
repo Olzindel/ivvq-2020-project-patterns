@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-public class MerchantDTO {
+public class MerchantDto {
 
     private Long id;
 

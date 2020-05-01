@@ -22,10 +22,10 @@ public class OrderItem {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Product product;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Orders order;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Order order;
 
-    public OrderItem(int quantity, Product product, Orders order) {
+    public OrderItem(int quantity, Product product, Order order) {
         this.quantity = quantity;
         this.product = product;
         this.order = order;

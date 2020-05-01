@@ -35,7 +35,7 @@ public class MerchantServiceIntegrationTest {
         // then: merchant has no id
         assertNull(merchant.getId());
         // when: merchant is persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         // then: merchant has an id
         assertNotNull(merchant.getId());
     }
@@ -44,13 +44,13 @@ public class MerchantServiceIntegrationTest {
     public void testSaveMerchantNull() {
         // when: null is persisted via a MerchantService
         // then: a exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> merchantService.saveMerchant(null));
+        assertThrows(IllegalArgumentException.class, () -> merchantService.create(null));
     }
 
     @Test
     public void testFetchedMerchantIsNotNull() {
         // given: a Merchant merchant is persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         // when: we call findMerchantById with the id of that Merchant
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // then: the result is not null
@@ -60,7 +60,7 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testFetchedMerchantHasGoodId() {
         // given: a Merchant merchant is persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         // when: we call findMerchantById with the id of that Merchant
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // then: the Merchant obtained has the correct id
@@ -70,7 +70,7 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testFetchedMerchantIsUnchanged() {
         // given: a Merchant merchant persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         // when: we call findMerchantById with the id of that Merchant
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // then: All the attributes of the Merchant obtained has the correct values
@@ -81,13 +81,13 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testUpdatedMerchantIsUpdated() {
         // given: a Merchant merchant persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
 
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // when: the email is modified at the "object" level
         fetched.setName("Husbando Market-dess");
         // when: the object merchant is updated in the database
-        merchantService.saveMerchant(fetched);
+        merchantService.update(fetched);
         // when: the object merchant is re-read in the database
         Merchant fetchedUpdated = merchantService.findMerchantById(merchant.getId());
         // then: the email has been successfully updated
@@ -99,7 +99,7 @@ public class MerchantServiceIntegrationTest {
         long before = merchantService.countMerchant();
         // given: is new merchant
         // when: this USer is persisted
-        merchantService.saveMerchant(new Merchant("Husbando market-dess", LocalDate.now(), user));
+        merchantService.create(new Merchant("Husbando market-dess", LocalDate.now(), user));
         // then : the number of Merchant persisted is increased by 1
         assertEquals(before + 1, merchantService.countMerchant());
     }
@@ -107,14 +107,14 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: a Merchant merchant persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         long count = merchantService.countMerchant();
 
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // when: the email is modified at the "object" level
         fetched.setName("Husbando market-dess");
         // when: the object is updated in the database
-        merchantService.saveMerchant(fetched);
+        merchantService.update(fetched);
         // then: a new entry has not been created in the database
         assertEquals(count, merchantService.countMerchant());
     }
@@ -129,7 +129,7 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testDeleteMerchantWithExistingId() {
         // given: an User user persisted
-        merchantService.saveMerchant(merchant);
+        merchantService.create(merchant);
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
 
         // when: deleteUserById is called with an id corresponding to an object in database

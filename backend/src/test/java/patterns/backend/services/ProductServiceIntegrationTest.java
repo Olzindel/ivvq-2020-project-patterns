@@ -39,7 +39,7 @@ public class ProductServiceIntegrationTest {
         // then: product has no id
         assertNull(product.getId());
         // when: product is persisted
-        productService.saveProduct(product);
+        productService.create(product);
         // then: product has a id
         assertNotNull(product.getId());
     }
@@ -48,13 +48,13 @@ public class ProductServiceIntegrationTest {
     public void testSaveProductNull() {
         // when: null is persisted via a ProductService
         // then: a exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> productService.saveProduct(null));
+        assertThrows(IllegalArgumentException.class, () -> productService.create(null));
     }
 
     @Test
     public void testFetchedProductIsNotNull() {
         // given: a Product product is persisted
-        productService.saveProduct(product);
+        productService.create(product);
         // when: we call findProductById with the id of that Product
         Product fetched = productService.findProductById(product.getId());
         // then: the result is not null
@@ -64,7 +64,7 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testFetchedProductHasGoodId() {
         // given: a Product product is persisted
-        productService.saveProduct(product);
+        productService.create(product);
         // when: we call findProductById with the id of that Product
         Product fetched = productService.findProductById(product.getId());
         // then: the Product obtained has the correct id
@@ -74,7 +74,7 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testFetchedProductIsUnchanged() {
         // given: a Product product persisted
-        productService.saveProduct(product);
+        productService.create(product);
         // when: we call findProductById with the id of that Product
         Product fetched = productService.findProductById(product.getId());
         // then: All the attributes of the Product obtained has the correct values
@@ -88,13 +88,13 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testUpdatedProductIsUpdated() {
         // given: a Product product persisted
-        productService.saveProduct(product);
+        productService.create(product);
 
         Product fetched = productService.findProductById(product.getId());
         // when: the image link is modified at the "object" level
         fetched.setImageLink("https://www.google.com/");
         // when: the object product is updated in the database
-        productService.saveProduct(fetched);
+        productService.update(fetched);
         // when: the object product is re-read in the database
         Product fetchedUpdated = productService.findProductById(product.getId());
         // then: the email has been successfully updated
@@ -106,7 +106,7 @@ public class ProductServiceIntegrationTest {
         long before = productService.countProduct();
         // given: is new product
         // when: this USer is persisted
-        productService.saveProduct(new Product("Rikka", 1000000.0, "Ready", LocalDate.now(), "https://www.google.com/", merchant));
+        productService.create(new Product("Rikka", 1000000.0, "Ready", LocalDate.now(), "https://www.google.com/", merchant));
         // then : the number of Product persisted is increased by 1
         assertEquals(before + 1, productService.countProduct());
     }
@@ -114,14 +114,14 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: a Product product persisted
-        productService.saveProduct(product);
+        productService.create(product);
         long count = productService.countProduct();
 
         Product fetched = productService.findProductById(product.getId());
         // when: the image link is modified at the "object" level
         fetched.setImageLink("https://www.google.com/");
         // when: the object is updated in the database
-        productService.saveProduct(fetched);
+        productService.update(fetched);
         // then: a new entry has not been created in the database
         assertEquals(count, productService.countProduct());
     }
@@ -136,7 +136,7 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testDeleteProductWithExistingId() {
         // given: a Product product persisted
-        productService.saveProduct(product);
+        productService.create(product);
         Product fetched = productService.findProductById(product.getId());
 
         // when: deleteProductById is called with an id corresponding to an object in database

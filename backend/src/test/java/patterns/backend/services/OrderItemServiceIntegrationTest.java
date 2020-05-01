@@ -9,6 +9,8 @@ import patterns.backend.domain.*;
 import patterns.backend.exception.OrderItemNotFoundException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,7 @@ public class OrderItemServiceIntegrationTest {
 
     private OrderItem orderItem;
 
-    private Orders orders;
+    private Order order;
 
     private Product product;
 
@@ -33,8 +35,11 @@ public class OrderItemServiceIntegrationTest {
         user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
         product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
-        orders = new Orders("Ready", LocalDate.now(), user);
-        orderItem = new OrderItem(2, product, orders);
+        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
+        orderItem = new OrderItem(2, product, order);
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem);
+        order.setOrderItems(orderItems);
     }
 
     @Test
@@ -43,7 +48,7 @@ public class OrderItemServiceIntegrationTest {
         // then: orderItem has no id
         assertNull(orderItem.getId());
         // when: orderItem is persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         // then: orderItem has an id
         assertNotNull(orderItem.getId());
     }
@@ -52,13 +57,13 @@ public class OrderItemServiceIntegrationTest {
     public void testSaveOrderItemNull() {
         // when: null is persisted via an OrderItemService
         // then: an exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> orderItemService.saveOrderItem(null));
+        assertThrows(IllegalArgumentException.class, () -> orderItemService.create(null));
     }
 
     @Test
     public void testFetchedOrderItemIsNotNull() {
         // given: an OrderItem orderItem is persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         // when: we call findOrderItemById with the id of that OrderItem
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // then: the result is not null
@@ -68,7 +73,7 @@ public class OrderItemServiceIntegrationTest {
     @Test
     public void testFetchedOrderItemHasGoodId() {
         // given: an OrderItem orderItem is persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         // when: we call findOrderItemById with the id of that OrderItem
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // then: the OrderItem obtained has the correct id
@@ -78,7 +83,7 @@ public class OrderItemServiceIntegrationTest {
     @Test
     public void testFetchedOrderItemIsUnchanged() {
         // given: an OrderItem orderItem persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         // when: we call findOrderItemById with the id of that OrderItem
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // then: All the attributes of the OrderItem obtained has the correct values
@@ -88,13 +93,13 @@ public class OrderItemServiceIntegrationTest {
     @Test
     public void testUpdatedOrderItemIsUpdated() {
         // given: an OrderItem orderItem persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
 
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // when: the email is modified at the "object" level
         fetched.setQuantity(25);
         // when: the object orderItem is updated in the database
-        orderItemService.saveOrderItem(fetched);
+        orderItemService.update(fetched);
         // when: the object orderItem is re-read in the database
         OrderItem fetchedUpdated = orderItemService.findOrderItemById(orderItem.getId());
         // then: the email has been successfully updated
@@ -106,7 +111,7 @@ public class OrderItemServiceIntegrationTest {
         long before = orderItemService.countOrderItem();
         // given: is new orderItem
         // when: this USer is persisted
-        orderItemService.saveOrderItem(new OrderItem(2, product, orders));
+        orderItemService.create(new OrderItem(2, product, order));
         // then : the number of OrderItem persisted is increased by 1
         assertEquals(before + 1, orderItemService.countOrderItem());
     }
@@ -114,14 +119,14 @@ public class OrderItemServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: an OrderItem orderItem persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         long count = orderItemService.countOrderItem();
 
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // when: the email is modified at the "object" level
         fetched.setQuantity(42);
         // when: the object is updated in the database
-        orderItemService.saveOrderItem(fetched);
+        orderItemService.update(fetched);
         // then: a new entry has not been created in the database
         assertEquals(count, orderItemService.countOrderItem());
     }
@@ -136,7 +141,7 @@ public class OrderItemServiceIntegrationTest {
     @Test
     public void testDeleteOrderItemWithExistingId() {
         // given: an User user persisted
-        orderItemService.saveOrderItem(orderItem);
+        orderItemService.create(orderItem);
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
 
         // when: deleteUserById is called with an id corresponding to an object in database

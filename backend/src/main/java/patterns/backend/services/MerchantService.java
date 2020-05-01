@@ -8,6 +8,7 @@ import patterns.backend.domain.Merchant;
 import patterns.backend.exception.MerchantNotFoundException;
 import patterns.backend.repositories.MerchantRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class MerchantService {
     @Autowired
     private MerchantRepository merchantRepository;
 
-    public Merchant findMerchantById(Long id) {
+    public Merchant findMerchantById(final Long id) {
         Optional<Merchant> optionalMerchant = merchantRepository.findById(id);
         if (!optionalMerchant.isPresent()) {
             throw new MerchantNotFoundException(id);
@@ -30,17 +31,28 @@ public class MerchantService {
         }
     }
 
-    public Merchant saveMerchant(Merchant market) {
-        Merchant savedMarket;
-        if (market != null) {
-            savedMarket = merchantRepository.save(market);
+    public Merchant create(final Merchant merchant) {
+        Merchant savedMerchant;
+        if (merchant != null) {
+            merchant.setCreatedAt(LocalDate.now());
+            savedMerchant = merchantRepository.save(merchant);
         } else {
             throw new IllegalArgumentException();
         }
-        return savedMarket;
+        return savedMerchant;
     }
 
-    public void deleteMerchantById(Long id) {
+    public Merchant update(final Merchant merchant) {
+        Merchant savedMerchant;
+        if (merchant != null) {
+            savedMerchant = merchantRepository.save(merchant);
+        } else {
+            throw new IllegalArgumentException();
+        }
+        return savedMerchant;
+    }
+
+    public void deleteMerchantById(final Long id) {
         Merchant merchant = findMerchantById(id);
         merchantRepository.delete(merchant);
     }
