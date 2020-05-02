@@ -61,6 +61,10 @@ public class MerchantService {
         return merchantRepository.count();
     }
 
+    public Merchant getMerchantByUser(Long adminId) {
+        return merchantRepository.findMerchantByAdmin_Id(adminId);
+    }
+
     public List<Merchant> findAll() {
         return StreamSupport.stream(merchantRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
