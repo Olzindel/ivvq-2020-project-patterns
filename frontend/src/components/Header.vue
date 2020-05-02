@@ -1,15 +1,13 @@
 <template>
-  <div>
+  <div class="menuBar">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <md-toolbar >
-        <div style="display:flex;justify-content: space-between">
+      <md-toolbar class="toolbar">
         <md-button @click="showNavigation = true">
           <md-icon class="fa fa-bars"></md-icon>
         </md-button>
         <md-button>
           connexion
         </md-button>
-        </div>
       </md-toolbar>
       <md-drawer :md-active.sync="showNavigation" md-swipeable>
         <md-toolbar class="md-transparent" md-elevation="0">
@@ -17,20 +15,25 @@
         </md-toolbar>
 
         <md-list>
+          <!-- hidden="" -->
           <md-list-item>
-            <span class="md-list-item-text">Inbox</span>
+            <span class="md-list-item-text">accueil</span>
           </md-list-item>
 
           <md-list-item>
-            <span class="md-list-item-text">Sent Mail</span>
+            <span class="md-list-item-text">Mon compte</span>
           </md-list-item>
 
           <md-list-item>
-            <span class="md-list-item-text">Trash</span>
+            <span class="md-list-item-text">Mon panier</span>
           </md-list-item>
 
           <md-list-item>
-            <span class="md-list-item-text">Spam</span>
+            <span class="md-list-item-text">historique</span>
+          </md-list-item>
+
+          <md-list-item>
+            <span class="md-list-item-text">deconnexion</span>
           </md-list-item>
         </md-list>
       </md-drawer>
@@ -38,15 +41,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import {MdDrawer, MdList, MdButton, MdIcon} from 'vue-material/dist/components'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
-Vue.use(MdButton)
-Vue.use(MdDrawer)
-Vue.use(MdList)
-Vue.use(MdIcon)
-
 export default {name: 'header',
   data: () => ({
     showNavigation: false
@@ -54,5 +48,11 @@ export default {name: 'header',
 </script>
 
 <style scoped>
-
+.toolbar{
+  display:flex;
+  position:fixed;
+  justify-content: space-between;
+  min-height: 56px;
+  max-height: 56px
+}
 </style>
