@@ -1,42 +1,38 @@
 <template>
-  <div class="menuBar">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <md-toolbar class="toolbar">
-        <md-button @click="showNavigation = true">
-          <md-icon class="fa fa-bars"></md-icon>
-        </md-button>
-        <md-button>
-          connexion
-        </md-button>
-      </md-toolbar>
-      <md-drawer :md-active.sync="showNavigation" md-swipeable>
-        <md-toolbar class="md-transparent" md-elevation="0">
-          <span class="md-title">My App name</span>
-        </md-toolbar>
-
-        <md-list>
-          <!-- hidden="" -->
-          <md-list-item>
-            <span class="md-list-item-text">accueil</span>
-          </md-list-item>
-
-          <md-list-item>
-            <span class="md-list-item-text">Mon compte</span>
-          </md-list-item>
-
-          <md-list-item>
-            <span class="md-list-item-text">Mon panier</span>
-          </md-list-item>
-
-          <md-list-item>
-            <span class="md-list-item-text">historique</span>
-          </md-list-item>
-
-          <md-list-item>
-            <span class="md-list-item-text">deconnexion</span>
-          </md-list-item>
-        </md-list>
-      </md-drawer>
+  <div>
+    <b-sidebar :open.sync="showNavigation" :fullheight="true" :overlay="true" >
+      <img src="../assets/imageDefault.png" alt="People">
+      <b-menu style="padding:12px">
+        <b-menu-list label="Mon compte">
+          <b-menu-item icon-pack="fa" icon="info-circle" label="Info"></b-menu-item>
+          <b-menu-item icon-pack="fa"  icon="settings" label="Mon panier"></b-menu-item>
+          <b-menu-item icon="account" label="historique d'achat">
+          </b-menu-item>
+        </b-menu-list>
+        <b-menu-list label="Actions">
+          <b-menu-item label="Logout"></b-menu-item>
+        </b-menu-list>
+      </b-menu>
+    </b-sidebar>
+    <b-navbar class="toolbar">
+      <template slot="brand">
+        <b-navbar-item tag="div">
+          <b-button @click="showNavigation = true">Show</b-button>
+        </b-navbar-item>
+      </template>
+      <template slot="end">
+        <b-navbar-item tag="div">
+          <div class="buttons">
+            <a class="button is-primary">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light">
+              Log in
+            </a>
+          </div>
+        </b-navbar-item>
+      </template>
+    </b-navbar>
   </div>
 </template>
 
@@ -53,6 +49,7 @@ export default {name: 'header',
   position:fixed;
   justify-content: space-between;
   min-height: 56px;
-  max-height: 56px
+  max-height: 56px;
+  width: 100%;
 }
 </style>
