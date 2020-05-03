@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-sidebar :open.sync="showNavigation" :fullheight="true" :overlay="true" >
+  <div >
+    <b-sidebar  :open.sync="showNavigation" :fullheight="true" :overlay="true">
       <img src="../assets/imageDefault.png" alt="People">
       <b-menu style="padding:12px">
         <b-menu-list label="Mon compte">
@@ -14,7 +14,7 @@
         </b-menu-list>
       </b-menu>
     </b-sidebar>
-    <b-navbar class="toolbar">
+    <b-navbar fixed-top="true" class="toolbar">
       <template slot="brand">
         <b-navbar-item tag="div">
           <b-button @click="showNavigation = true">Show</b-button>
@@ -40,11 +40,8 @@ export default {name: 'header',
 
 <style scoped>
 .toolbar{
-  display:flex;
-  position:fixed;
-  justify-content: space-between;
   min-height: 56px;
   max-height: 56px;
-  width: 100%;
 }
+
 </style>
