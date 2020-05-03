@@ -13,7 +13,8 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/product',
+      path: '/product/:productId',
+      props: true,
       name: 'Product-Page',
       component: ProductPage
     }
