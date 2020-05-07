@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import Header from './components/Header'
-import Banner from './components/Banner'
+import Header from './components/header-part/HeaderPart'
+import Banner from './components/header-part/Banner'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'

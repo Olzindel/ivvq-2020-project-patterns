@@ -6,7 +6,7 @@
           Poster avec les meilleurs Waifu
         </div>
         <div>
-          <img src="../assets/imageDefault.png" alt="People">
+          <img src="../../assets/imageDefault.png" alt="People">
         </div>
         <div class="card-content" style="padding:0">
           <div>{{price}}€</div>
