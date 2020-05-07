@@ -1,7 +1,7 @@
 <template>
   <div >
     <b-sidebar  :open.sync="showNavigation" :fullheight="true" :overlay="true">
-      <img src="../assets/imageDefault.png" alt="People">
+      <img src="../../assets/imageDefault.png" alt="People">
       <b-menu style="padding:12px">
         <b-menu-list label="Mon compte">
           <b-menu-item icon-pack="fa" icon="info-circle" label="Info"></b-menu-item>
@@ -31,7 +31,7 @@
 
 <script>
 import Login from './Login'
-export default {name: 'header',
+export default {name: 'headerPart',
   components: {Login},
   data: () => ({
     showNavigation: false
