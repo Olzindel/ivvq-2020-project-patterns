@@ -1,0 +1,16 @@
+type OrderItem {
+    id: ID!,
+    quantity: Int!,
+    product: Product!,
+    order: Order!
+}
+
+
+extend type Query {
+    orderItems(count: Int!):[OrderItem]
+    orderItem(id: ID!):OrderItem
+}
+
+extend type Mutation {
+    createOrderItem(quantity:Int!, productId:ID!, orderId:ID!):OrderItem
+}

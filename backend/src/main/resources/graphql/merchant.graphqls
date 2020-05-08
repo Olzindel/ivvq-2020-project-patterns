@@ -1,0 +1,15 @@
+type Merchant {
+    id: ID!
+    name: String!
+    createdAt: String,
+    admin: User!
+}
+
+extend type Query {
+    merchants(count: Int!):[Merchant]
+    merchant(id: ID!):Merchant
+}
+
+extend type Mutation {
+    createMerchant(name:String! , userId:ID!, createdAt:String):Merchant
+}

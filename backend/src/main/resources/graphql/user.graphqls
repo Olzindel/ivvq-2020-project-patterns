@@ -1,0 +1,18 @@
+type User {
+    id: ID!,
+    fullName: String!,
+    email: String!,
+    gender: String!,
+    dateOfBirth: String,
+    createdAt: String
+}
+
+
+extend type Query {
+    users(count: Int!):[User]
+    user(id: ID!):User
+}
+
+extend type Mutation {
+    createUser( fullName:String!, email:String!, gender:String!, dateOfBirth:String, createdAt:String):User
+}
