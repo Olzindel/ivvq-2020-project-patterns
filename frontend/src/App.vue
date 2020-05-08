@@ -2,14 +2,14 @@
   <div id="app">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <Header/>
-    <banner style="margin-top: 56px"/>
+    <banner/>
     <router-view/>
   </div>
 </template>
 
 <script>
-import Header from './components/Header'
-import Banner from './components/Banner'
+import Header from './components/header-part/HeaderPart'
+import Banner from './components/header-part/Banner'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
