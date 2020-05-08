@@ -1,6 +1,6 @@
 <template>
   <div class="cardSize">
-    <div class="card" style="margin: 24px" onclick="test()">
+    <div class="card" style="margin: 24px">
       <div >
         <div class="card-header-title is-centered">
           Poster avec les meilleurs Waifu

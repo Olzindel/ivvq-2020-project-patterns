@@ -8,14 +8,19 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 
-const httpLink = new HttpLink({
+const httpLinkProd = new HttpLink({
+  // URL to graphql server, you should use an absolute URL here
+  uri: 'http://' + window.location.host + '/graphql'
+})
+
+/*const httpLinkDev = new HttpLink({
   // URL to graphql server, you should use an absolute URL here
   uri: 'http://localhost:8080/graphql'
-})
+})*/
 
 // create the apollo client
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: httpLinkProd,
   cache: new InMemoryCache()
 })
 
@@ -26,6 +31,7 @@ const apolloProvider = new VueApollo({
 // install the vue plugin
 Vue.use(VueApollo)
 Vue.config.productionTip = false
+console.log(test)
 
 /* eslint-disable no-new */
 new Vue({
