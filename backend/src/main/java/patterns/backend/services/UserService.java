@@ -61,8 +61,10 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public List<User> findAll() {
+    public List<User> findAll(int count) {
+        // TODO à changer avec de la pagination
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

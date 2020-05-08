@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "merchants")
 public class Merchant {
 
     @Id

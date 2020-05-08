@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Order;
 import patterns.backend.exception.OrdersNotFoundException;
 import patterns.backend.repositories.OrderRepository;
@@ -17,6 +18,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class OrderService {
 
     @Autowired
@@ -66,8 +68,9 @@ public class OrderService {
         return orderRepository.count();
     }
 
-    public List<Order> findAll() {
+    public List<Order> findAll(int count) {
         return StreamSupport.stream(orderRepository.findAll().spliterator(), false)
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

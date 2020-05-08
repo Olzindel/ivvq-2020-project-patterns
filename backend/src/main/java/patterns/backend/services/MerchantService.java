@@ -65,8 +65,9 @@ public class MerchantService {
         return merchantRepository.findMerchantByAdmin_Id(adminId);
     }
 
-    public List<Merchant> findAll() {
+    public List<Merchant> findAll(int count) {
         return StreamSupport.stream(merchantRepository.findAll().spliterator(), false)
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

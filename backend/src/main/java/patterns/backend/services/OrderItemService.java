@@ -64,8 +64,9 @@ public class OrderItemService {
         return orderItemRepository.count();
     }
 
-    public List<OrderItem> findAll() {
+    public List<OrderItem> findAll(int count) {
         return StreamSupport.stream(orderItemRepository.findAll().spliterator(), false)
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

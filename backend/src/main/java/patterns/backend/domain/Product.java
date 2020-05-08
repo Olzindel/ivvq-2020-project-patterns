@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "products")
 public class Product {
     @Id
     @GeneratedValue
@@ -30,7 +30,6 @@ public class Product {
     @DecimalMin("0.0")
     private double price;
 
-    @NotEmpty
     @NotEmpty
     private String status;
 

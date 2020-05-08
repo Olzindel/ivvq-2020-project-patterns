@@ -61,9 +61,9 @@ public class ProductService {
         return productRepository.count();
     }
 
-    public List<Product> findAll() {
+    public List<Product> findAll(int count) {
         return StreamSupport.stream(productRepository.findAll().spliterator(), false)
+                .limit(count)
                 .collect(Collectors.toList());
     }
-
 }

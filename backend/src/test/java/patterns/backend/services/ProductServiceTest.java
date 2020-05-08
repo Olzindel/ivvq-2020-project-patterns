@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductServiceTest {
 
     private ProductService productService;
@@ -86,7 +86,7 @@ class ProductServiceTest {
     void findAll() {
         // given: a ProductService
         // when: the findAll method is invoked
-        productService.findAll();
+        productService.findAll(8);
         // then: the findAll method of the Repository is invoked
         verify(productService.getProductRepository()).findAll();
     }

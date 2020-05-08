@@ -29,7 +29,7 @@ public class Order {
 
     private OrderStatus orderStatus;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 

@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "order_items")
 public class OrderItem {
     @Id
     @GeneratedValue

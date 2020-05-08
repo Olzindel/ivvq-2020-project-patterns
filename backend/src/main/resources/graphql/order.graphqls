@@ -1,0 +1,16 @@
+type Order {
+    id: ID!,
+    createdAt: String!,
+    orderStatus: String,
+    OrderItems: [OrderItem!]!,
+    User: User!
+}
+
+extend type Query {
+    orders(count: Int!):[Order]
+    order(id: ID!):Order
+}
+
+extend type Mutation {
+    createOrder(orderStatus:String,orderItemIds:[ID!]!, userId:ID! ):Order
+}
