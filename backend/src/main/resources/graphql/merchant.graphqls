@@ -7,9 +7,10 @@ type Merchant {
 
 extend type Query {
     merchants(count: Int!):[Merchant]
-    merchant(id: ID!):Merchant
+    merchant(merchantId: ID!):Merchant
 }
 
 extend type Mutation {
     createMerchant(name:String! , userId:ID!, createdAt:String):Merchant
+    deleteMerchant(merchantId:ID!):ID
 }

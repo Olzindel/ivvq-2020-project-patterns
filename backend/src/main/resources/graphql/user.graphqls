@@ -10,9 +10,10 @@ type User {
 
 extend type Query {
     users(count: Int!):[User]
-    user(id: ID!):User
+    user(userId: ID!):User
 }
 
 extend type Mutation {
-    createUser( fullName:String!, email:String!, gender:String!, dateOfBirth:String, createdAt:String):User
+    createUser(fullName:String!, email:String!, gender:String!, dateOfBirth:String, createdAt:String):User
+    deleteUser(userId:ID!):ID
 }

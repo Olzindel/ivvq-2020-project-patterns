@@ -40,7 +40,7 @@ public class Product {
     @URL
     private String imageLink;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
 
     public Product(String name, double price, String status, LocalDate createdAt, String imageLink, Merchant merchant) {

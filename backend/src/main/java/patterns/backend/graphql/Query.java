@@ -46,23 +46,23 @@ public class Query implements GraphQLQueryResolver {
         return orderService.findAll(count);
     }
 
-    public User getUser(final Long id) {
-        return userService.findUserById(id);
+    public User getUser(final Long userId) {
+        return userService.findUserById(userId);
     }
 
-    public Merchant getMerchant(final Long id) {
-        return merchantService.findMerchantById(id);
+    public Merchant getMerchant(final Long merchantId) {
+        return merchantService.findMerchantById(merchantId);
     }
 
-    public Product getProduct(final Long id) {
-        return productService.findProductById(id);
+    public Product getProduct(final Long productId) {
+        return productService.findProductById(productId);
     }
 
-    public OrderItem getOrderItem(final Long id) {
-        return orderItemService.findOrderItemById(id);
+    public OrderItem getOrderItem(final Long orderItemId) {
+        return orderItemService.findOrderItemById(orderItemId);
     }
 
-    public Order getOrder(final Long id) {
-        return orderService.findOrdersById(id);
+    public Order getOrder(final Long OrderId) {
+        return orderService.findOrdersById(OrderId);
     }
 }

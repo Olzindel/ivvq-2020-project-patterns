@@ -1,16 +1,23 @@
 type Order {
     id: ID!,
     createdAt: String!,
-    orderStatus: String,
+    orderStatus: OrderStatus!,
     OrderItems: [OrderItem!]!,
     User: User!
 }
 
+enum OrderStatus {
+    BASKET
+    PAID
+    ABORTED
+}
+
 extend type Query {
     orders(count: Int!):[Order]
-    order(id: ID!):Order
+    order(orderId: ID!):Order
 }
 
 extend type Mutation {
-    createOrder(orderStatus:String,orderItemIds:[ID!]!, userId:ID! ):Order
+    createOrder(orderStatus:OrderStatus!,orderItemIds:[ID!]!, userId:ID! ):Order
+    deleteOrder(orderId:ID!):ID
 }

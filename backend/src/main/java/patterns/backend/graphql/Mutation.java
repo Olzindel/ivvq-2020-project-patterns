@@ -70,4 +70,29 @@ public class Mutation implements GraphQLMutationResolver {
         OrderItem orderItem = new OrderItem(quantity, product, order);
         return orderItemService.create(orderItem);
     }
+
+    public Long deleteUser(Long userId) {
+        userService.deleteUserById(userId);
+        return userId;
+    }
+
+    public Long deleteMerchant(Long merchantId) {
+        merchantService.deleteMerchantById(merchantId);
+        return merchantId;
+    }
+
+    public Long deleteOrder(Long orderId) {
+        orderService.deleteOrderById(orderId);
+        return orderId;
+    }
+
+    public Long deleteOrderItem(Long orderItemId) {
+        orderItemService.deleteOrderItemById(orderItemId);
+        return orderItemId;
+    }
+
+    public Long deleteProduct(Long productId) {
+        productService.deleteProductById(productId);
+        return productId;
+    }
 }

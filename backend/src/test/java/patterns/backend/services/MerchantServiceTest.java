@@ -6,7 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
 import patterns.backend.domain.Merchant;
+import patterns.backend.domain.User;
 import patterns.backend.repositories.MerchantRepository;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -51,7 +54,9 @@ class MerchantServiceTest {
     @Test
     void saveMerchant() {
         // given: a merchant and an merchantService
+        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
         Merchant merchant = new Merchant();
+        merchant.setAdmin(user);
         when(merchantService.getMerchantRepository().save(merchant)).thenReturn(merchant);
 
         // when: saveMerchant is invoked
