@@ -10,6 +10,7 @@
         </div>
         <div class="card-content" style="padding:0">
           <div>{{price}}€</div>
+          <div v-if="test !== undefined">{{test.data.users[0].fullName}}</div>
         </div>
       </div>
       <b-button>
@@ -20,12 +21,18 @@
 </template>
 
 <script>
+import {GET_ALL_USERS_QUERY} from '../../service/api'
 export default {
   name: 'WaifuCard',
   data () {
     return {
-      price: Math.floor(Math.random() * (50) + 5)
+      price: Math.floor(Math.random() * (50) + 5),
+      test: undefined
     }
+  },
+  async mounted () {
+    this.test = await this.$apollo.query({query: GET_ALL_USERS_QUERY,
+      variables: {count: 5}})
   }
 }
 </script>
