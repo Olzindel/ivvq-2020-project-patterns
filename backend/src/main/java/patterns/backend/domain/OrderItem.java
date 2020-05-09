@@ -7,9 +7,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity(name = "order_items")
 public class OrderItem {
     @Id

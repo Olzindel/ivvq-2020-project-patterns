@@ -12,10 +12,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity(name = "merchants")
 public class Merchant {
 
@@ -32,14 +34,23 @@ public class Merchant {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     @NotNull
     @Valid
     private User admin;
+
+    @OneToMany(mappedBy = "merchant", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private List<Product> products;
 
     public Merchant(String name, LocalDate createdAt, User admin) {
         this.name = name;
         this.createdAt = createdAt;
         this.admin = admin;
+        this.products = new ArrayList<>();
+    }
+
+    public void addProduct(Product product) {
+        if (!products.contains(product))
+            products.add(product);
     }
 }

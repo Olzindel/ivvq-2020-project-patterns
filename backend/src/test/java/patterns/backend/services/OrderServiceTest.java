@@ -6,7 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.User;
 import patterns.backend.repositories.OrderRepository;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -51,7 +54,9 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
+        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
         Order order = new Order();
+        order.setUser(user);
         when(orderService.getOrderRepository().save(order)).thenReturn(order);
 
         // when: saveOrders is invoked
@@ -76,7 +81,7 @@ class OrderServiceTest {
         Order order = new Order();
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
         // when: the deleteOrdersById method is invoked
-        orderService.deleteOrdersById(0L);
+        orderService.deleteOrderById(0L);
         // then: the delete method of the Repository is invoked
         verify(orderService.getOrderRepository()).delete(order);
     }
