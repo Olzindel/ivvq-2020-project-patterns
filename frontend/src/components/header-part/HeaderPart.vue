@@ -14,7 +14,7 @@
         </b-menu-list>
       </b-menu>
     </b-sidebar>
-    <b-navbar fixed-top="true" class="toolbar">
+    <b-navbar :fixed-top=navbarOptions.fixedTop class="toolbar">
       <template slot="brand">
         <b-navbar-item tag="div">
           <b-button @click="showNavigation = true">Show</b-button>
@@ -34,7 +34,10 @@ import Login from './Login'
 export default {name: 'headerPart',
   components: {Login},
   data: () => ({
-    showNavigation: false
+    showNavigation: false,
+    navbarOptions: {
+      fixedTop: true
+    }
   })}
 </script>
 
