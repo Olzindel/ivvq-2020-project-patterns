@@ -34,7 +34,7 @@ public class OrderServiceIntegrationTest {
     public void setup() {
         user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
+        product = new Product("Saber", 100000.0, "Ready", "Description", LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
         List<OrderItem> orderItems = new ArrayList<>();

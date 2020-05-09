@@ -4,7 +4,7 @@ type Product {
     price: Float!,
     status: String!,
     createdAt: String,
-    imageLink: String,
+    imageLinks: [ImageLink!]!,
     merchant: Merchant!
 }
 
@@ -15,6 +15,6 @@ extend type Query {
 }
 
 extend type Mutation {
-    createProduct(name:String!, price:Float!, status:String!, imageLink:String, merchantId:ID!):Product
+    createProduct(name:String!, price:Float!, status:String!, description:String, imageLinkIds:[ID!], merchantId:ID!):Product
     deleteProduct(productId:ID!):ID
 }

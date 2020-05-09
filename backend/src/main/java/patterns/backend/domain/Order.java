@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity(name = "orders")
 public class Order {
     @Id

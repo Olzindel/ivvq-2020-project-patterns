@@ -26,6 +26,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    ImageLinkService imageLinkService;
+
     public List<User> getUsers(final int count) {
         return userService.findAll(count);
     }
@@ -46,6 +49,10 @@ public class Query implements GraphQLQueryResolver {
         return orderService.findAll(count);
     }
 
+    public List<ImageLink> getImageLinks(final int count) {
+        return imageLinkService.findAll(count);
+    }
+
     public User getUser(final Long userId) {
         return userService.findUserById(userId);
     }
@@ -62,7 +69,11 @@ public class Query implements GraphQLQueryResolver {
         return orderItemService.findOrderItemById(orderItemId);
     }
 
-    public Order getOrder(final Long OrderId) {
-        return orderService.findOrdersById(OrderId);
+    public Order getOrder(final Long orderId) {
+        return orderService.findOrdersById(orderId);
+    }
+
+    public ImageLink getImageLink(final Long imageLinkId) {
+        return imageLinkService.findImageLinkById(imageLinkId);
     }
 }
