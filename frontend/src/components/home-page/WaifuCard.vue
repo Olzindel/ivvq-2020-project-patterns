@@ -3,13 +3,13 @@
     <div class="card" style="margin: 24px">
       <div >
         <div class="card-header-title is-centered">
-          Poster avec les meilleurs Waifu
+          {{product.name}}
         </div>
         <div>
-          <img src="../../assets/imageDefault.png" alt="People">
+          <img :src=product.imageLink alt="People">
         </div>
         <div class="card-content" style="padding:0">
-          <div>{{price}}€</div>
+          <div>{{product.price}}€</div>
           <div v-if="test !== undefined">{{test.data.users[0].fullName}}</div>
         </div>
       </div>
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import {GET_ALL_USERS_QUERY} from '../../service/api'
 export default {
   name: 'WaifuCard',
   data () {
@@ -30,9 +29,8 @@ export default {
       test: undefined
     }
   },
-  async mounted () {
-    this.test = await this.$apollo.query({query: GET_ALL_USERS_QUERY,
-      variables: {count: 5}})
+  props: {
+    product: {type: Object, required: true}
   }
 }
 </script>
