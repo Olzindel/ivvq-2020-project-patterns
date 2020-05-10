@@ -34,7 +34,7 @@ public class OrderServiceIntegrationTest {
     public void setup() {
         user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
+        product = new Product("Saber", 100000.0, "Ready", "Description", LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
         List<OrderItem> orderItems = new ArrayList<>();
@@ -146,7 +146,7 @@ public class OrderServiceIntegrationTest {
         Order fetched = orderService.findOrdersById(order.getId());
 
         // when: deleteUserById is called with an id corresponding to an object in database
-        orderService.deleteOrdersById(fetched.getId());
+        orderService.deleteOrderById(fetched.getId());
         // then: the orders is delete
         assertThrows(OrdersNotFoundException.class, () -> orderService.findOrdersById(fetched.getId()));
     }
@@ -155,6 +155,6 @@ public class OrderServiceIntegrationTest {
     public void testDeleteOerdersWithUnexistingId() {
         // when: deleteUserById is called with an id not corresponding to any object in database
         // then: an exception is thrown
-        assertThrows(OrdersNotFoundException.class, () -> orderService.deleteOrdersById(0L));
+        assertThrows(OrdersNotFoundException.class, () -> orderService.deleteOrderById(0L));
     }
 }

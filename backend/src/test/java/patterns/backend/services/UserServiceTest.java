@@ -23,6 +23,9 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private MerchantService merchantService;
+
 
     @MockBean
     private User user;
@@ -31,6 +34,7 @@ class UserServiceTest {
     @BeforeEach
     public void setup() {
         userService = new UserService();
+        userService.setMerchantService(merchantService);
         userService.setUserRepository(userRepository);
     }
 
@@ -77,6 +81,7 @@ class UserServiceTest {
     void deleteUser() {
         // given: an UserService and an user persisted
         User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        user.setId(0L);
         when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
         // when: the deleteUserById method is invoked
         userService.deleteUserById(0L);

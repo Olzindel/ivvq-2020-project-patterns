@@ -42,6 +42,9 @@ public class OrderService {
         if (order != null) {
             order.setCreatedAt(LocalDate.now());
             savedOrder = orderRepository.save(order);
+            if (order.getUser() != null) {
+                order.getUser().addOrder(order);
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -59,7 +62,7 @@ public class OrderService {
         return savedOrder;
     }
 
-    public void deleteOrdersById(final Long id) {
+    public void deleteOrderById(final Long id) {
         Order order = findOrdersById(id);
         orderRepository.delete(order);
     }

@@ -36,6 +36,9 @@ public class MerchantService {
         if (merchant != null) {
             merchant.setCreatedAt(LocalDate.now());
             savedMerchant = merchantRepository.save(merchant);
+            if (merchant.getAdmin() != null) {
+                merchant.getAdmin().addMerchant(merchant);
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -61,8 +64,12 @@ public class MerchantService {
         return merchantRepository.count();
     }
 
-    public Merchant getMerchantByUser(Long adminId) {
+    public List<Merchant> findMerchantByUser(Long adminId) {
         return merchantRepository.findMerchantByAdmin_Id(adminId);
+    }
+
+    public void deleteMerchantAdminId(Long adminId) {
+        merchantRepository.findMerchantByAdmin_Id(adminId);
     }
 
     public List<Merchant> findAll(int count) {

@@ -36,6 +36,9 @@ public class ProductService {
         if (product != null) {
             product.setCreatedAt(LocalDate.now());
             savedProduct = productRepository.save(product);
+            if (product.getMerchant() != null) {
+                product.getMerchant().addProduct(product);
+            }
         } else {
             throw new IllegalArgumentException();
         }

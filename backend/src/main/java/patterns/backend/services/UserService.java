@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import patterns.backend.domain.Merchant;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
 import patterns.backend.repositories.UserRepository;
@@ -20,6 +21,9 @@ import java.util.stream.StreamSupport;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MerchantService merchantService;
 
 
     public User findUserById(final Long id) {
@@ -58,6 +62,10 @@ public class UserService {
 
     public void deleteUserById(final Long id) {
         User user = findUserById(id);
+        List<Merchant> merchants = merchantService.findMerchantByUser(user.getId());
+        for (Merchant merchant : merchants) {
+            merchantService.deleteMerchantById(merchant.getId());
+        }
         userRepository.delete(user);
     }
 

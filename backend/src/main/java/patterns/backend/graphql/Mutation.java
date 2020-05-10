@@ -33,6 +33,9 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    ImageLinkService imageLinkService;
+
     public User createUser(String fullName, String email, String gender, String dateOfBirth, String createdAt) {
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
@@ -47,10 +50,20 @@ public class Mutation implements GraphQLMutationResolver {
         return merchantService.create(merchant);
     }
 
-    public Product createProduct(String name, float price, String status, String imageLink, Long merchantId) {
+    public Product createProduct(String name, float price, String status, String description, List<Long> imageLinkIds, Long merchantId) {
         Merchant merchant = merchantService.findMerchantById(merchantId);
-        Product product = new Product(name, price, status, LocalDate.now(), imageLink, merchant);
+        List<ImageLink> imageLinks = new ArrayList<>();
+        for (Long id : imageLinkIds) {
+            imageLinks.add(imageLinkService.findImageLinkById(id));
+        }
+        Product product = new Product(name, price, status, description, LocalDate.now(), merchant);
+        product.setImageLinks(imageLinks);
         return productService.create(product);
+    }
+
+    public ImageLink createImageLink(String imageLink, Long productId) {
+        Product product = productService.findProductById(productId);
+        return imageLinkService.create(new ImageLink(imageLink, product));
     }
 
     public Order createOrder(OrderStatus orderStatus, List<Long> orderItemIds, Long userId) {
@@ -69,5 +82,35 @@ public class Mutation implements GraphQLMutationResolver {
         Order order = orderService.findOrdersById(orderId);
         OrderItem orderItem = new OrderItem(quantity, product, order);
         return orderItemService.create(orderItem);
+    }
+
+    public Long deleteUser(Long userId) {
+        userService.deleteUserById(userId);
+        return userId;
+    }
+
+    public Long deleteMerchant(Long merchantId) {
+        merchantService.deleteMerchantById(merchantId);
+        return merchantId;
+    }
+
+    public Long deleteOrder(Long orderId) {
+        orderService.deleteOrderById(orderId);
+        return orderId;
+    }
+
+    public Long deleteOrderItem(Long orderItemId) {
+        orderItemService.deleteOrderItemById(orderItemId);
+        return orderItemId;
+    }
+
+    public Long deleteProduct(Long productId) {
+        productService.deleteProductById(productId);
+        return productId;
+    }
+
+    public Long deleteImageLink(Long imageLinkId) {
+        imageLinkService.deleteImageLinkById(imageLinkId);
+        return imageLinkId;
     }
 }

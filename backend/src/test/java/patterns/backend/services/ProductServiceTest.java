@@ -5,8 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
+import patterns.backend.domain.User;
 import patterns.backend.repositories.ProductRepository;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -52,7 +56,10 @@ class ProductServiceTest {
     @Test
     void saveProduct() {
         // given: a product and a productService
+        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        Merchant merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
         Product product = new Product();
+        product.setMerchant(merchant);
         when(productService.getProductRepository().save(product)).thenReturn(product);
 
         // when: saveProduct is invoked
