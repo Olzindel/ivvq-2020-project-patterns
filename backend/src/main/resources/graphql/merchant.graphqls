@@ -5,20 +5,13 @@ type Merchant {
     admin: User!
 }
 
-input MerchantInput {
-    id: ID!
-    name: String
-    createdAt: String
-    admin: UserInput
-}
-
 extend type Query {
     merchants(count: Int!):[Merchant]
     merchant(merchantId: ID!):Merchant
 }
 
 extend type Mutation {
-    updateMerchant(input:MerchantInput):Merchant
+    updateMerchant(merchantId:ID!, name:String , userId:ID, createdAt:String):Merchant
     createMerchant(name:String! , userId:ID!, createdAt:String):Merchant
     deleteMerchant(merchantId:ID!):ID
 }

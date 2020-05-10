@@ -33,7 +33,7 @@ public class Query implements GraphQLQueryResolver {
 
     public List<User> getUsers(final int count) {
         List<User> user = userService.findAll(count);
-        return userService.findAll(count);
+        return user;
     }
 
     public List<Merchant> getMerchants(final int count) {

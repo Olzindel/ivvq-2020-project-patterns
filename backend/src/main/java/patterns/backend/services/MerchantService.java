@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
+import patterns.backend.domain.ProductStatus;
 import patterns.backend.exception.MerchantNotFoundException;
 import patterns.backend.repositories.MerchantRepository;
 
@@ -65,7 +66,7 @@ public class MerchantService {
         Merchant merchant = findMerchantById(id);
         for (Product product : merchant.getProducts()) {
             product.setStock(0);
-            product.setStatus("not available");
+            product.setStatus(ProductStatus.NOT_AVAILABLE);
             product.setMerchant(null);
         }
         merchant.getAdmin().getMerchants().remove(merchant);

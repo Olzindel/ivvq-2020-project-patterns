@@ -63,7 +63,7 @@ public class Mutation implements GraphQLMutationResolver {
         return merchantService.create(merchant);
     }
 
-    public Product createProduct(String name, float price, String status, String description, int stock, List<Long> imageLinkIds, Long merchantId) {
+    public Product createProduct(String name, float price, ProductStatus status, String description, int stock, List<Long> imageLinkIds, Long merchantId) {
         Merchant merchant = merchantService.findMerchantById(merchantId);
         List<ImageLink> imageLinks = new ArrayList<>();
         if (imageLinkIds != null) {
@@ -209,7 +209,7 @@ public class Mutation implements GraphQLMutationResolver {
         return orderItemService.update(orderItem);
     }
 
-    public Product updateProduct(long productId, String name, Float price, String status, String description, Integer stock, List<Long> imageLinkIds, Long merchantId) {
+    public Product updateProduct(long productId, String name, Float price, ProductStatus status, String description, Integer stock, List<Long> imageLinkIds, Long merchantId) {
         Product product = productService.findProductById(productId);
 
         if (imageLinkIds != null && !imageLinkIds.isEmpty()) {
@@ -302,6 +302,7 @@ public class Mutation implements GraphQLMutationResolver {
             }
         }
 
-        return userService.update(user);
+        user = userService.update(user);
+        return user;
     }
 }

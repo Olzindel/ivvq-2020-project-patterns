@@ -31,8 +31,7 @@ public class Product {
     @DecimalMin("0.0")
     private double price;
 
-    @NotEmpty
-    private String status;
+    private ProductStatus status;
 
     private String description;
 
@@ -50,7 +49,7 @@ public class Product {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
 
-    public Product(String name, double price, String status, String description, int stock, LocalDate createdAt, Merchant merchant) {
+    public Product(String name, double price, ProductStatus status, String description, int stock, LocalDate createdAt, Merchant merchant) {
         this.name = name;
         this.price = price;
         this.status = status;

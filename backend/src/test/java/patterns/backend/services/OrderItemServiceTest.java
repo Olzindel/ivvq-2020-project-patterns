@@ -37,7 +37,7 @@ class OrderItemServiceTest {
         orderItemService.setOrderItemRepository(orderItemRepository);
         user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", "Description", 2, LocalDate.now(), merchant);
+        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
     }

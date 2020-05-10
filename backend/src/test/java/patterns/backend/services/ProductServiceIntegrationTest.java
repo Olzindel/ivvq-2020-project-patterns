@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
+import patterns.backend.domain.ProductStatus;
 import patterns.backend.domain.User;
 import patterns.backend.exception.ProductNotFoundException;
 
@@ -30,7 +31,7 @@ public class ProductServiceIntegrationTest {
     public void setup() {
         user = new User("Nathan", "Roche", "nathan@edf.fr", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", "Description", 2, LocalDate.now(), merchant);
+        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
     }
 
     @Test
@@ -106,7 +107,7 @@ public class ProductServiceIntegrationTest {
         long before = productService.countProduct();
         // given: is new product
         // when: this USer is persisted
-        productService.create(new Product("Rikka", 1000000.0, "Ready", "Description", 2, LocalDate.now(), merchant));
+        productService.create(new Product("Rikka", 1000000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant));
         // then : the number of Product persisted is increased by 1
         assertEquals(before + 1, productService.countProduct());
     }

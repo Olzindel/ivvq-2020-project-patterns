@@ -6,14 +6,6 @@ type Order {
     User: User!
 }
 
-input OrderInput {
-    id: ID!
-    createdAt: String
-    orderStatus: OrderStatus
-    OrderItems: [OrderItemInput!]
-    User: UserInput
-}
-
 enum OrderStatus {
     BASKET
     PAID
@@ -26,7 +18,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateOrder(input:OrderInput):Order
+    updateOrder(orderId:ID!,orderStatus:OrderStatus,orderItemIds:[ID!], userId:ID ):Order
     createOrder(orderStatus:OrderStatus!,orderItemIds:[ID!]!, userId:ID! ):Order
     deleteOrder(orderId:ID!):ID
 }
