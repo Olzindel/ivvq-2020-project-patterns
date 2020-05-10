@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
@@ -18,6 +19,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;

@@ -12,7 +12,7 @@
     <artifactId>frontend</artifactId>
     <groupId>patterns</groupId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Waifu market-dess - Frontend</name>
+    <name>Waifu market-desu - Frontend</name>
     <description>Frontend du site web de vente</description>
     <packaging>pom</packaging>
 

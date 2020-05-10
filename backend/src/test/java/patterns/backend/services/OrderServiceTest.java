@@ -54,7 +54,7 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Order order = new Order();
         order.setUser(user);
         when(orderService.getOrderRepository().save(order)).thenReturn(order);

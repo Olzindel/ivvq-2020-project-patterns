@@ -1,8 +1,15 @@
 type OrderItem {
-    id: ID!,
-    quantity: Int!,
-    product: Product!,
+    id: ID!
+    quantity: Int!
+    product: Product!
     order: Order!
+}
+
+input OrderItemInput {
+    id: ID!
+    quantity: Int
+    product: ProductInput
+    order: OrderInput
 }
 
 
@@ -12,6 +19,7 @@ extend type Query {
 }
 
 extend type Mutation {
+    updateOrderItem(input:OrderItemInput):OrderItem
     createOrderItem(quantity:Int!, productId:ID!, orderId:ID!):OrderItem
     deleteOrderItem(orderItemId:ID!):ID
 }

@@ -33,9 +33,9 @@ public class OrderItemServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", "Description", LocalDate.now(), merchant);
+        product = new Product("Saber", 100000.0, "Ready", "Description", 4, LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
         List<OrderItem> orderItems = new ArrayList<>();
@@ -98,9 +98,9 @@ public class OrderItemServiceIntegrationTest {
 
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // when: the email is modified at the "object" level
-        fetched.setQuantity(25);
+        fetched.setQuantity(1);
         // when: the object orderItem is updated in the database
-        orderItemService.update(fetched);
+        orderItemService.create(fetched);
         // when: the object orderItem is re-read in the database
         OrderItem fetchedUpdated = orderItemService.findOrderItemById(orderItem.getId());
         // then: the email has been successfully updated
@@ -125,9 +125,9 @@ public class OrderItemServiceIntegrationTest {
 
         OrderItem fetched = orderItemService.findOrderItemById(orderItem.getId());
         // when: the email is modified at the "object" level
-        fetched.setQuantity(42);
+        fetched.setQuantity(1);
         // when: the object is updated in the database
-        orderItemService.update(fetched);
+        orderItemService.create(fetched);
         // then: a new entry has not been created in the database
         assertEquals(count, orderItemService.countOrderItem());
     }

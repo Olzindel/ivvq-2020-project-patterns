@@ -56,9 +56,9 @@ class ImageLinkServiceTest {
     @Test
     void saveImageLink() {
         // given: an imageLink and an ImageLinkService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Merchant merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
-        Product product = new Product("Saber", 1.0, "status", "description", LocalDate.now(), merchant);
+        Product product = new Product("Saber", 1.0, "status", "description", 2, LocalDate.now(), merchant);
         ImageLink imageLink = new ImageLink("htt://www.lueur.fr", product);
         imageLink.setProduct(product);
         when(imageLinkService.getImageLinkRepository().save(imageLink)).thenReturn(imageLink);

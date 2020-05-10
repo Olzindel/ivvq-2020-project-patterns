@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
+import patterns.backend.domain.Product;
 import patterns.backend.exception.MerchantNotFoundException;
 import patterns.backend.repositories.MerchantRepository;
 
@@ -17,10 +19,14 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class MerchantService {
 
     @Autowired
     private MerchantRepository merchantRepository;
+
+    @Autowired
+    private ProductService productService;
 
     public Merchant findMerchantById(final Long id) {
         Optional<Merchant> optionalMerchant = merchantRepository.findById(id);
@@ -57,6 +63,12 @@ public class MerchantService {
 
     public void deleteMerchantById(final Long id) {
         Merchant merchant = findMerchantById(id);
+        for (Product product : merchant.getProducts()) {
+            product.setStock(0);
+            product.setStatus("not available");
+            product.setMerchant(null);
+        }
+        merchant.getAdmin().getMerchants().remove(merchant);
         merchantRepository.delete(merchant);
     }
 

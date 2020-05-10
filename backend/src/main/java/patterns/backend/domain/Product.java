@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.exception.NotEnoughStockException;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "products")
 public class Product {
     @Id
@@ -36,6 +36,10 @@ public class Product {
 
     private String description;
 
+    @NotNull
+    @Min(0)
+    private int stock;
+
     @PastOrPresent
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
@@ -46,17 +50,27 @@ public class Product {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
 
-    public Product(String name, double price, String status, String description, LocalDate createdAt, Merchant merchant) {
+    public Product(String name, double price, String status, String description, int stock, LocalDate createdAt, Merchant merchant) {
         this.name = name;
         this.price = price;
         this.status = status;
         this.createdAt = createdAt;
         this.merchant = merchant;
+        this.description = description;
+        this.stock = stock;
         this.imageLinks = new ArrayList<>();
     }
 
     public void addImageLink(ImageLink imageLink) {
         if (!imageLinks.contains(imageLink))
             imageLinks.add(imageLink);
+    }
+
+    public void decreaseStock(int value) {
+        if (stock >= value) {
+            this.stock = this.stock - value;
+        } else {
+            throw new NotEnoughStockException(id, name);
+        }
     }
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.ImageLink;
 import patterns.backend.exception.ImageLinkNotFoundException;
 import patterns.backend.repositories.ImageLinkRepository;
@@ -16,6 +17,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class ImageLinkService {
     @Autowired
     private ImageLinkRepository imageLinkRepository;
@@ -54,6 +56,7 @@ public class ImageLinkService {
 
     public void deleteImageLinkById(final Long id) {
         ImageLink imageLink = findImageLinkById(id);
+        imageLink.getProduct().getImageLinks().remove(imageLink);
         imageLinkRepository.delete(imageLink);
     }
 

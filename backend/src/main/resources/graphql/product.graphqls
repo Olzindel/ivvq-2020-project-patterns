@@ -1,11 +1,25 @@
 type Product {
-    id: ID!,
-    name: String!,
-    price: Float!,
-    status: String!,
-    createdAt: String,
-    imageLinks: [ImageLink!]!,
+    id: ID!
+    name: String!
+    price: Float!
+    status: String!
+    description: String!
+    stock: Int!
+    createdAt: String
+    imageLinks: [ImageLink!]!
     merchant: Merchant!
+}
+
+input ProductInput {
+    id: ID!
+    name: String
+    price: Float
+    status: String
+    description: String
+    stock: Int
+    createdAt: String
+    imageLinkInputs: [ImageLinkInput!]
+    merchantInput: MerchantInput
 }
 
 
@@ -15,6 +29,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    createProduct(name:String!, price:Float!, status:String!, description:String, imageLinkIds:[ID!], merchantId:ID!):Product
+    updateProduct(input:ProductInput):Product
+    createProduct(name:String!, price:Float!, status:String!, description:String, stock:Int! imageLinkIds:[ID!], merchantId:ID!):Product
     deleteProduct(productId:ID!):ID
 }

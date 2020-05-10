@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "users")
 public class User {
 
@@ -23,7 +25,9 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    private String fullName;
+    private String firstName;
+
+    private String lastName;
 
     @Email
     @NotNull
@@ -36,6 +40,13 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
+    private String rue;
+
+    @Pattern(regexp = "^(([0-8][0-9])|(9[0-5]))[0-9]{3}$")
+    private String codePostal;
+
+    private String ville;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
@@ -45,12 +56,16 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private List<Order> orders;
 
-    public User(String fullName, String email, String gender, LocalDate dateOfBirth, LocalDate createdAt) {
-        this.fullName = fullName;
+    public User(String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String rue, String codePostal, String ville, LocalDate createdAt) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
+        this.rue = rue;
+        this.codePostal = codePostal;
+        this.ville = ville;
         this.merchants = new ArrayList<>();
         this.orders = new ArrayList<>();
     }

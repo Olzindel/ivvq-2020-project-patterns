@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.ProductNotFoundException;
 import patterns.backend.repositories.ProductRepository;
@@ -17,6 +18,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class ProductService {
 
     @Autowired

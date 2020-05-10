@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.OrderItem;
 import patterns.backend.exception.OrdersNotFoundException;
 import patterns.backend.repositories.OrderRepository;
 
@@ -45,6 +46,11 @@ public class OrderService {
             if (order.getUser() != null) {
                 order.getUser().addOrder(order);
             }
+            if (order.getOrderItems() != null) {
+                for (OrderItem orderItem : order.getOrderItems()) {
+                    orderItem.setOrder(order);
+                }
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -53,9 +59,17 @@ public class OrderService {
 
     public Order update(final Order order) {
         Order savedOrder;
-
         if (order != null) {
+            order.setCreatedAt(LocalDate.now());
             savedOrder = orderRepository.save(order);
+            if (order.getUser() != null) {
+                order.getUser().addOrder(order);
+            }
+            if (order.getOrderItems() != null) {
+                for (OrderItem orderItem : order.getOrderItems()) {
+                    orderItem.setOrder(order);
+                }
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -64,6 +78,10 @@ public class OrderService {
 
     public void deleteOrderById(final Long id) {
         Order order = findOrdersById(id);
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderItemService.deleteOrderItemById(orderItem.getId());
+        }
+        order.getUser().getOrders().remove(order);
         orderRepository.delete(order);
     }
 

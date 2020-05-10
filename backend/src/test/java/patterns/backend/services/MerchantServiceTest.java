@@ -54,7 +54,7 @@ class MerchantServiceTest {
     @Test
     void saveMerchant() {
         // given: a merchant and an merchantService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Merchant merchant = new Merchant();
         merchant.setAdmin(user);
         when(merchantService.getMerchantRepository().save(merchant)).thenReturn(merchant);

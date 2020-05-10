@@ -30,9 +30,9 @@ public class ImageLinkServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", "Description", LocalDate.now(), merchant);
+        product = new Product("Saber", 100000.0, "Ready", "Description", 2, LocalDate.now(), merchant);
         imageLink = new ImageLink("http://www.lueur.fr", product);
     }
 

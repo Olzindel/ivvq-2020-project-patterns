@@ -1,7 +1,13 @@
 type ImageLink {
-    id: ID!,
-    imageLink: String!,
-    product: Product!,
+    id: ID!
+    imageLink: String!
+    product: Product!
+}
+
+input ImageLinkInput {
+    id: ID!
+    imageLink: String
+    product: ProductInput
 }
 
 
@@ -11,6 +17,7 @@ extend type Query {
 }
 
 extend type Mutation {
+    updateImageLink(input:ImageLinkInput):ImageLink
     createImageLink(imageLink:String!, productId:ID!):ImageLink
     deleteImageLink(imageLinkId:ID!):ID
 }
