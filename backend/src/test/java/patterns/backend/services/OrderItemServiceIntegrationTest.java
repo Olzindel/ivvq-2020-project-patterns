@@ -112,7 +112,7 @@ public class OrderItemServiceIntegrationTest {
         long before = orderItemService.countOrderItem();
         // given: is new orderItem
         // when: this USer is persisted
-        orderItemService.create(new OrderItem(2, product, order));
+        orderItemService.create(orderItem);
         // then : the number of OrderItem persisted is increased by 1
         assertEquals(before + 1, orderItemService.countOrderItem());
     }

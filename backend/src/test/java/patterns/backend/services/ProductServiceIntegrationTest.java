@@ -107,7 +107,7 @@ public class ProductServiceIntegrationTest {
         long before = productService.countProduct();
         // given: is new product
         // when: this USer is persisted
-        productService.create(new Product("Rikka", 1000000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant));
+        productService.create(product);
         // then : the number of Product persisted is increased by 1
         assertEquals(before + 1, productService.countProduct());
     }

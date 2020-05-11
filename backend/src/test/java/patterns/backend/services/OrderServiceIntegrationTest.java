@@ -112,7 +112,7 @@ public class OrderServiceIntegrationTest {
         long before = orderService.countOrders();
         // given: is new orders
         // when: this USer is persisted
-        orderService.create(new Order(LocalDate.now(), OrderStatus.PAID, user));
+        orderService.create(order);
         // then : the number of Orders persisted is increased by 1
         assertEquals(before + 1, orderService.countOrders());
     }

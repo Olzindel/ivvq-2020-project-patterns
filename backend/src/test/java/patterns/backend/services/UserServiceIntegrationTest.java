@@ -99,7 +99,7 @@ public class UserServiceIntegrationTest {
         long before = userService.countUser();
         // given: is new user
         // when: this USer is persisted
-        userService.create(new User("john", "Smith", "john@john.fr", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now()));
+        userService.create(user);
         // then : the number of User persisted is increased by 1
         assertEquals(before + 1, userService.countUser());
     }

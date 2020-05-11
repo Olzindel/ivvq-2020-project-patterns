@@ -99,7 +99,7 @@ public class MerchantServiceIntegrationTest {
         long before = merchantService.countMerchant();
         // given: is new merchant
         // when: this USer is persisted
-        merchantService.create(new Merchant("Husbando market-dess", LocalDate.now(), user));
+        merchantService.create(merchant);
         // then : the number of Merchant persisted is increased by 1
         assertEquals(before + 1, merchantService.countMerchant());
     }

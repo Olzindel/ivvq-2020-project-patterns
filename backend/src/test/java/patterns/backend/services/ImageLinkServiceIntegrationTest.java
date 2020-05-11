@@ -106,7 +106,7 @@ public class ImageLinkServiceIntegrationTest {
         long before = imageLinkService.countImageLink();
         // given: is new imageLink
         // when: this USer is persisted
-        imageLinkService.create(new ImageLink("http://www.lueur.fr", product));
+        imageLinkService.create(imageLink);
         // then : the number of ImageLink persisted is increased by 1
         assertEquals(before + 1, imageLinkService.countImageLink());
     }
