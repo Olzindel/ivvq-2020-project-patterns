@@ -5,13 +5,17 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.domain.ImageLink;
+import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.ProductNotFoundException;
 import patterns.backend.repositories.ProductRepository;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,6 +27,12 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ImageLinkService imageLinkService;
+
+    @Autowired
+    private MerchantService merchantService;
 
     public Product findProductById(final Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
@@ -70,5 +80,18 @@ public class ProductService {
         return StreamSupport.stream(productRepository.findAll().spliterator(), false)
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public Product create(Product product, List<Long> imageLinkIds, Long merchantId) {
+        Merchant merchant = merchantService.findMerchantById(merchantId);
+        product.setMerchant(merchant);
+        Set<ImageLink> imageLinks = new HashSet<>();
+        if (imageLinkIds != null) {
+            for (Long id : imageLinkIds) {
+                imageLinks.add(imageLinkService.findImageLinkById(id));
+            }
+        }
+        product.setImageLinks(imageLinks);
+        return create(product);
     }
 }

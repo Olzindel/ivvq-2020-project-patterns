@@ -24,13 +24,16 @@ class MerchantServiceTest {
     @MockBean
     private MerchantRepository merchantRepository;
 
-    @MockBean
     private Merchant merchant;
+    private User user;
 
     @BeforeEach
     public void setup() {
         merchantService = new MerchantService();
         merchantService.setMerchantRepository(merchantRepository);
+
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
     }
 
 
@@ -43,7 +46,6 @@ class MerchantServiceTest {
     @Test
     void findMerchantById() {
         // given: a Merchant and a MerchantService
-        Merchant merchant = new Merchant();
         when(merchantService.getMerchantRepository().findById(0L)).thenReturn(java.util.Optional.of(merchant));
         // when: the findAll method is invoked
         merchantService.findMerchantById(0L);
@@ -54,9 +56,6 @@ class MerchantServiceTest {
     @Test
     void saveMerchant() {
         // given: a merchant and an merchantService
-        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        Merchant merchant = new Merchant();
-        merchant.setAdmin(user);
         when(merchantService.getMerchantRepository().save(merchant)).thenReturn(merchant);
 
         // when: saveMerchant is invoked
@@ -78,7 +77,6 @@ class MerchantServiceTest {
     @Test
     void deleteMerchant() {
         // given: a Merchant and a MerchantService
-        Merchant merchant = new Merchant();
         when(merchantService.getMerchantRepository().findById(0L)).thenReturn(java.util.Optional.of(merchant));
         // when: the deleteMerchantById method is invoked
         merchantService.deleteMerchantById(0L);

@@ -9,7 +9,6 @@ import patterns.backend.services.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,63 +39,34 @@ public class Mutation implements GraphQLMutationResolver {
     public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String rue, String codePostal, String ville, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
-        List<Merchant> merchants = new ArrayList<>();
-        List<Order> orders = new ArrayList<>();
-        if (merchantIds != null) {
-            for (Long id : merchantIds) {
-                merchants.add(merchantService.findMerchantById(id));
-            }
-        }
-        if (orderIds != null) {
-            for (Long id : orderIds) {
-                orders.add(orderService.findOrdersById(id));
-            }
-        }
         User user = new User(firstName, lastName, email, gender, localDateOfBirth, rue, codePostal, ville, localcreatedAt);
-        return userService.create(user);
+        return userService.create(user, merchantIds, orderIds);
     }
 
-    public Merchant createMerchant(String name, Long id, String createdAt) {
+    public Merchant createMerchant(String name, Long userId, String createdAt) {
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
-        User admin = userService.findUserById(id);
-        Merchant merchant = new Merchant(name, localcreatedAt, admin);
-        return merchantService.create(merchant);
+        Merchant merchant = new Merchant(name, localcreatedAt, null);
+        return merchantService.create(merchant, userId);
     }
 
     public Product createProduct(String name, float price, ProductStatus status, String description, int stock, List<Long> imageLinkIds, Long merchantId) {
-        Merchant merchant = merchantService.findMerchantById(merchantId);
-        List<ImageLink> imageLinks = new ArrayList<>();
-        if (imageLinkIds != null) {
-            for (Long id : imageLinkIds) {
-                imageLinks.add(imageLinkService.findImageLinkById(id));
-            }
-        }
-        Product product = new Product(name, price, status, description, stock, LocalDate.now(), merchant);
-        product.setImageLinks(imageLinks);
-        return productService.create(product);
+        Product product = new Product(name, price, status, description, stock, LocalDate.now(), null);
+        return productService.create(product, imageLinkIds, merchantId);
     }
 
     public ImageLink createImageLink(String imageLink, Long productId) {
-        Product product = productService.findProductById(productId);
-        return imageLinkService.create(new ImageLink(imageLink, product));
+        ImageLink il = new ImageLink(imageLink, null);
+        return imageLinkService.create(il, productId);
     }
 
     public Order createOrder(OrderStatus orderStatus, List<Long> orderItemIds, Long userId) {
-        User user = userService.findUserById(userId);
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (Long id : orderItemIds) {
-            orderItems.add(orderItemService.findOrderItemById(id));
-        }
-        Order order = new Order(LocalDate.now(), orderStatus, user);
-        order.setOrderItems(orderItems);
-        return orderService.create(order);
+        Order order = new Order(LocalDate.now(), orderStatus, null);
+        return orderService.create(order, orderItemIds, userId);
     }
 
     public OrderItem createOrderItem(int quantity, Long productId, Long orderId) {
-        Product product = productService.findProductById(productId);
-        Order order = orderService.findOrdersById(orderId);
-        OrderItem orderItem = new OrderItem(quantity, product, order);
-        return orderItemService.create(orderItem);
+        OrderItem orderItem = new OrderItem(quantity, null, null);
+        return orderItemService.create(orderItem, productId, orderId);
     }
 
     public Long deleteUser(Long userId) {

@@ -9,8 +9,8 @@ import patterns.backend.domain.*;
 import patterns.backend.exception.OrdersNotFoundException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +37,7 @@ public class OrderServiceIntegrationTest {
         product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
-        List<OrderItem> orderItems = new ArrayList<>();
+        Set<OrderItem> orderItems = new HashSet<>();
         orderItems.add(orderItem);
         order.setOrderItems(orderItems);
     }

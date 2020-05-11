@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.domain.Order;
 import patterns.backend.domain.OrderItem;
 import patterns.backend.domain.OrderStatus;
 import patterns.backend.domain.Product;
@@ -27,6 +28,9 @@ public class OrderItemService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private OrderService orderService;
 
     public OrderItem findOrderItemById(final Long id) {
         Optional<OrderItem> optionalOrderItem = orderItemRepository.findById(id);
@@ -89,4 +93,11 @@ public class OrderItemService {
     }
 
 
+    public OrderItem create(OrderItem orderItem, Long productId, Long orderId) {
+        Product product = productService.findProductById(productId);
+        Order order = orderService.findOrdersById(orderId);
+        orderItem.setProduct(product);
+        orderItem.setOrder(order);
+        return create(orderItem);
+    }
 }

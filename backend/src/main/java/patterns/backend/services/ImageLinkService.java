@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.ImageLink;
+import patterns.backend.domain.Product;
 import patterns.backend.exception.ImageLinkNotFoundException;
 import patterns.backend.repositories.ImageLinkRepository;
 
@@ -21,6 +22,9 @@ import java.util.stream.StreamSupport;
 public class ImageLinkService {
     @Autowired
     private ImageLinkRepository imageLinkRepository;
+
+    @Autowired
+    private ProductService productService;
 
     public ImageLink findImageLinkById(final Long id) {
         Optional<ImageLink> optionalImageLink = imageLinkRepository.findById(id);
@@ -69,5 +73,11 @@ public class ImageLinkService {
         return StreamSupport.stream(imageLinkRepository.findAll().spliterator(), false)
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public ImageLink create(ImageLink imageLink, Long productId) {
+        Product product = productService.findProductById(productId);
+        imageLink.setProduct(product);
+        return create(imageLink);
     }
 }

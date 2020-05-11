@@ -2,6 +2,7 @@ package patterns.backend.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +12,8 @@ import patterns.backend.exception.NotEnoughStockException;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -43,8 +44,9 @@ public class Product {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<ImageLink> imageLinks;
+    private Set<ImageLink> imageLinks = new HashSet<>();
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
@@ -57,12 +59,10 @@ public class Product {
         this.merchant = merchant;
         this.description = description;
         this.stock = stock;
-        this.imageLinks = new ArrayList<>();
     }
 
     public void addImageLink(ImageLink imageLink) {
-        if (!imageLinks.contains(imageLink))
-            imageLinks.add(imageLink);
+        imageLinks.add(imageLink);
     }
 
     public void decreaseStock(int value) {

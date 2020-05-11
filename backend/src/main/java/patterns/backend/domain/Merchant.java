@@ -2,6 +2,7 @@ package patterns.backend.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +14,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -41,18 +42,17 @@ public class Merchant {
     @Valid
     private User admin;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "merchant", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<Product> products;
+    private Set<Product> products = new HashSet<>();
 
     public Merchant(String name, LocalDate createdAt, User admin) {
         this.name = name;
         this.createdAt = createdAt;
         this.admin = admin;
-        this.products = new ArrayList<>();
     }
 
     public void addProduct(Product product) {
-        if (!products.contains(product))
-            products.add(product);
+        products.add(product);
     }
 }

@@ -1,6 +1,7 @@
 package patterns.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +12,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,11 +51,13 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "admin", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<Merchant> merchants;
+    @JsonIgnore
+    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Merchant> merchants = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<Order> orders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Order> orders = new HashSet<>();
 
     public User(String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String rue, String codePostal, String ville, LocalDate createdAt) {
         this.firstName = firstName;
@@ -66,17 +69,13 @@ public class User {
         this.rue = rue;
         this.codePostal = codePostal;
         this.ville = ville;
-        this.merchants = new ArrayList<>();
-        this.orders = new ArrayList<>();
     }
 
     public void addMerchant(Merchant merchant) {
-        if (!merchants.contains(merchant))
-            merchants.add(merchant);
+        merchants.add(merchant);
     }
 
     public void addOrder(Order order) {
-        if (!orders.contains(order))
-            orders.add(order);
+        orders.add(order);
     }
 }

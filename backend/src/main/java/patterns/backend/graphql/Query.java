@@ -3,14 +3,12 @@ package patterns.backend.graphql;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.*;
 import patterns.backend.services.*;
 
 import java.util.List;
 
 @Component
-@Transactional
 public class Query implements GraphQLQueryResolver {
 
     @Autowired
@@ -32,8 +30,7 @@ public class Query implements GraphQLQueryResolver {
     ImageLinkService imageLinkService;
 
     public List<User> getUsers(final int count) {
-        List<User> user = userService.findAll(count);
-        return user;
+        return userService.findAll(count);
     }
 
     public List<Merchant> getMerchants(final int count) {
@@ -57,8 +54,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public User getUser(final Long userId) {
-        User user = userService.findUserById(userId);
-        return user;
+        return userService.findUserById(userId);
     }
 
     public Merchant getMerchant(final Long merchantId) {

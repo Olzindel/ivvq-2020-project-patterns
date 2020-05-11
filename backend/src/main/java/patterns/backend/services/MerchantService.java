@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
 import patterns.backend.domain.ProductStatus;
+import patterns.backend.domain.User;
 import patterns.backend.exception.MerchantNotFoundException;
 import patterns.backend.repositories.MerchantRepository;
 
@@ -27,6 +28,9 @@ public class MerchantService {
     private MerchantRepository merchantRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ProductService productService;
 
     public Merchant findMerchantById(final Long id) {
@@ -38,14 +42,19 @@ public class MerchantService {
         }
     }
 
+    public Merchant create(final Merchant merchant, Long userId) {
+        if (userId != null) {
+            User admin = userService.findUserById(userId);
+            merchant.setAdmin(admin);
+        }
+        return create(merchant);
+    }
+
     public Merchant create(final Merchant merchant) {
         Merchant savedMerchant;
         if (merchant != null) {
             merchant.setCreatedAt(LocalDate.now());
             savedMerchant = merchantRepository.save(merchant);
-            if (merchant.getAdmin() != null) {
-                merchant.getAdmin().addMerchant(merchant);
-            }
         } else {
             throw new IllegalArgumentException();
         }
