@@ -1,6 +1,3 @@
 package patterns.backend.graphql;
 
-class MutationTest {
-
-
-}
+class MutationTest {}

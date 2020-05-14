@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ConfigurationWaifuMarketDess {
-    @Bean
-    public TestRestTemplate testRestTemplate() {
-        return new TestRestTemplate();
-    }
-
-
+  @Bean
+  public TestRestTemplate testRestTemplate() {
+    return new TestRestTemplate();
+  }
 }
