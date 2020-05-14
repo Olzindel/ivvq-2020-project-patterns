@@ -43,6 +43,17 @@ public class OrderService {
         }
     }
 
+    public Order create(Order order, List<Long> orderItemIds, Long userId) {
+        User user = userService.findUserById(userId);
+        Set<OrderItem> orderItems = new HashSet<>();
+        for (Long id : orderItemIds) {
+            orderItems.add(orderItemService.findOrderItemById(id));
+        }
+        order.setOrderItems(orderItems);
+        order.setUser(user);
+        return create(order);
+    }
+
     public Order create(final Order order) {
         Order savedOrder;
 
@@ -52,6 +63,7 @@ public class OrderService {
             if (order.getOrderItems() != null) {
                 for (OrderItem orderItem : order.getOrderItems()) {
                     orderItem.setOrder(order);
+                    orderItemService.decreaseStockIfPaid(orderItem);
                 }
             }
         } else {
@@ -67,6 +79,7 @@ public class OrderService {
             savedOrder = orderRepository.save(order);
             if (order.getOrderItems() != null) {
                 for (OrderItem orderItem : order.getOrderItems()) {
+                    orderItemService.decreaseStockIfPaid(orderItem);
                     orderItem.setOrder(order);
                 }
             }
@@ -95,14 +108,4 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public Order create(Order order, List<Long> orderItemIds, Long userId) {
-        User user = userService.findUserById(userId);
-        Set<OrderItem> orderItems = new HashSet<>();
-        for (Long id : orderItemIds) {
-            orderItems.add(orderItemService.findOrderItemById(id));
-        }
-        order.setOrderItems(orderItems);
-        order.setUser(user);
-        return create(order);
-    }
 }

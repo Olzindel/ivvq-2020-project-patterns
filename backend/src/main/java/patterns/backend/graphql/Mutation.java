@@ -43,10 +43,10 @@ public class Mutation implements GraphQLMutationResolver {
         return userService.create(user, merchantIds, orderIds);
     }
 
-    public Merchant createMerchant(String name, Long userId, String createdAt) {
+    public Merchant createMerchant(String name, Long userId, String createdAt, List<Long> productIds) {
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
         Merchant merchant = new Merchant(name, localcreatedAt, null);
-        return merchantService.create(merchant, userId);
+        return merchantService.create(merchant, userId, productIds);
     }
 
     public Product createProduct(String name, float price, ProductStatus status, String description, int stock, List<Long> imageLinkIds, Long merchantId) {
@@ -114,9 +114,22 @@ public class Mutation implements GraphQLMutationResolver {
         return imageLinkService.update(imageLink);
     }
 
-    public Merchant updateMerchant(Long merchantId, String name, Long userId, String createdAt) {
+    public Merchant updateMerchant(Long merchantId, String name, Long userId, String createdAt, List<Long> productIds) {
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
+
         Merchant merchant = merchantService.findMerchantById(merchantId);
+        if (productIds != null && !productIds.isEmpty()) {
+            List<Long> toDelete = merchant.getProducts().stream().
+                    map(Product::getId).
+                    collect(Collectors.toList());
+
+            toDelete.removeAll(productIds);
+
+            for (Long idToAdd : toDelete) {
+                productService.deleteProductById(idToAdd);
+            }
+        }
+
         if (userId != null) {
             merchant.getAdmin().getMerchants().remove(merchant);
             User user = userService.findUserById(userId);
@@ -136,7 +149,6 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Order updateOrder(Long orderId, OrderStatus orderStatus, List<Long> orderItemIds, Long userId) {
         Order order = orderService.findOrdersById(orderId);
-
         if (orderItemIds != null && !orderItemIds.isEmpty()) {
             List<Long> toDelete = order.getOrderItems().stream().
                     map(OrderItem::getId).
