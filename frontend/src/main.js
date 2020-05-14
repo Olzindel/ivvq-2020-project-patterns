@@ -19,7 +19,6 @@ const httpLinkDev = new HttpLink({
   uri: 'http://localhost:8080/graphql'
 })
 */
-
 // create the apollo client
 const apolloClient = new ApolloClient({
   link: httpLinkProd,
