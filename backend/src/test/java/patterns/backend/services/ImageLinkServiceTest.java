@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
-import patterns.backend.domain.ImageLink;
-import patterns.backend.domain.Merchant;
-import patterns.backend.domain.Product;
-import patterns.backend.domain.User;
+import patterns.backend.domain.*;
 import patterns.backend.repositories.ImageLinkRepository;
 
 import java.time.LocalDate;
@@ -26,13 +23,22 @@ class ImageLinkServiceTest {
     @MockBean
     private ImageLinkRepository imageLinkRepository;
 
-    @MockBean
+
     private ImageLink imageLink;
+
+    private User user;
+    private Merchant merchant;
+    private Product product;
 
     @BeforeEach
     public void setup() {
         imageLinkService = new ImageLinkService();
         imageLinkService.setImageLinkRepository(imageLinkRepository);
+
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        merchant = new Merchant("Market", LocalDate.now(), user);
+        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
+        imageLink = new ImageLink("http://www.lueur.fr", product);
     }
 
 
@@ -45,7 +51,6 @@ class ImageLinkServiceTest {
     @Test
     void findImageLinkById() {
         // given: an ImageLink and an ImageLinkService
-        ImageLink imageLink = new ImageLink();
         when(imageLinkService.getImageLinkRepository().findById(0L)).thenReturn(java.util.Optional.of(imageLink));
         // when: the findAll method is invoked
         imageLinkService.findImageLinkById(0L);
@@ -56,11 +61,6 @@ class ImageLinkServiceTest {
     @Test
     void saveImageLink() {
         // given: an imageLink and an ImageLinkService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
-        Merchant merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
-        Product product = new Product("Saber", 1.0, "status", "description", LocalDate.now(), merchant);
-        ImageLink imageLink = new ImageLink("htt://www.lueur.fr", product);
-        imageLink.setProduct(product);
         when(imageLinkService.getImageLinkRepository().save(imageLink)).thenReturn(imageLink);
 
         // when: saveImageLink is invoked
@@ -82,7 +82,6 @@ class ImageLinkServiceTest {
     @Test
     void deleteImageLink() {
         // given: an ImageLink and an ImageLinkService
-        ImageLink imageLink = new ImageLink();
         when(imageLinkService.getImageLinkRepository().findById(0L)).thenReturn(java.util.Optional.of(imageLink));
         // when: the deleteImageLinkById method is invoked
         imageLinkService.deleteImageLinkById(0L);
