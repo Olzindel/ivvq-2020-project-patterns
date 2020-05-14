@@ -1,16 +1,17 @@
 type OrderItem {
-    id: ID!,
-    quantity: Int!,
-    product: Product!,
+    id: ID!
+    quantity: Int!
+    product: Product!
     order: Order!
 }
 
-
 extend type Query {
     orderItems(count: Int!):[OrderItem]
-    orderItem(id: ID!):OrderItem
+    orderItem(orderItemId: ID!):OrderItem
 }
 
 extend type Mutation {
+    updateOrderItem(orderItemId:ID!, quantity:Int, productId:ID, orderId:ID):OrderItem
     createOrderItem(quantity:Int!, productId:ID!, orderId:ID!):OrderItem
+    deleteOrderItem(orderItemId:ID!):ID
 }

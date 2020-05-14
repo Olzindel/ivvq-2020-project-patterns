@@ -5,8 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.OrderStatus;
+import patterns.backend.domain.User;
 import patterns.backend.repositories.OrderRepository;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -24,10 +29,18 @@ class OrderServiceTest {
     @MockBean
     private Order order;
 
+
+    private User user;
+    private Merchant merchant;
+
     @BeforeEach
     public void setup() {
         orderService = new OrderService();
         orderService.setOrderRepository(orderRepository);
+
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        merchant = new Merchant("Market", LocalDate.now(), user);
+        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
     }
 
 
@@ -40,7 +53,6 @@ class OrderServiceTest {
     @Test
     void findOrdersById() {
         // given: an Orders and an OrdersService
-        Order order = new Order();
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
         // when: the findAll method is invoked
         orderService.findOrdersById(0L);
@@ -51,7 +63,9 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Order order = new Order();
+        order.setUser(user);
         when(orderService.getOrderRepository().save(order)).thenReturn(order);
 
         // when: saveOrders is invoked
@@ -73,10 +87,10 @@ class OrderServiceTest {
     @Test
     void deleteOrders() {
         // given: an Orders and an OrdersService
-        Order order = new Order();
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
+        //when(orderItemService.deleteOrderItemById(any(Long.class))).thenReturn()
         // when: the deleteOrdersById method is invoked
-        orderService.deleteOrdersById(0L);
+        orderService.deleteOrderById(0L);
         // then: the delete method of the Repository is invoked
         verify(orderService.getOrderRepository()).delete(order);
     }
