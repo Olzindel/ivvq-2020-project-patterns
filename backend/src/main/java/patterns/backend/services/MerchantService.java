@@ -5,16 +5,15 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Merchant;
-import patterns.backend.domain.Product;
-import patterns.backend.domain.ProductStatus;
-import patterns.backend.domain.User;
+import patterns.backend.domain.*;
 import patterns.backend.exception.MerchantNotFoundException;
 import patterns.backend.repositories.MerchantRepository;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -42,10 +41,16 @@ public class MerchantService {
         }
     }
 
-    public Merchant create(final Merchant merchant, Long userId) {
+    public Merchant create(final Merchant merchant, Long userId, List<Long> productIds) {
         if (userId != null) {
             User admin = userService.findUserById(userId);
             merchant.setAdmin(admin);
+        }
+        Set<Product> products = new HashSet<>();
+        if (productIds != null && !productIds.isEmpty()) {
+            for (Long id : productIds) {
+                products.add(productService.findProductById(id));
+            }
         }
         return create(merchant);
     }
@@ -88,10 +93,6 @@ public class MerchantService {
 
     public List<Merchant> findMerchantByUser(Long adminId) {
         return merchantRepository.findMerchantByAdmin_Id(adminId);
-    }
-
-    public void deleteMerchantAdminId(Long adminId) {
-        merchantRepository.findMerchantByAdmin_Id(adminId);
     }
 
     public List<Merchant> findAll(int count) {

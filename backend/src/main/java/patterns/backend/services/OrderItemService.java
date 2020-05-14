@@ -41,14 +41,19 @@ public class OrderItemService {
         }
     }
 
+    public OrderItem create(OrderItem orderItem, Long productId, Long orderId) {
+        Product product = productService.findProductById(productId);
+        Order order = orderService.findOrdersById(orderId);
+        orderItem.setProduct(product);
+        orderItem.setOrder(order);
+        return create(orderItem);
+    }
+
     public OrderItem create(OrderItem orderItem) {
         OrderItem savedOrderItem;
 
-        if (orderItem != null && orderItem.getProduct() != null && orderItem.getOrder() != null) {
-            Product product = orderItem.getProduct();
-            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
-                product.decreaseStock(orderItem.getQuantity());
-            }
+        if (orderItem != null) {
+            decreaseStockIfPaid(orderItem);
             savedOrderItem = orderItemRepository.save(orderItem);
         } else {
             throw new IllegalArgumentException();
@@ -59,11 +64,8 @@ public class OrderItemService {
     public OrderItem update(OrderItem orderItem) {
         OrderItem savedOrderItem;
 
-        if (orderItem != null && orderItem.getProduct() != null && orderItem.getOrder() != null) {
-            Product product = orderItem.getProduct();
-            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
-                product.decreaseStock(orderItem.getQuantity());
-            }
+        if (orderItem != null) {
+            decreaseStockIfPaid(orderItem);
             savedOrderItem = orderItemRepository.save(orderItem);
         } else {
             throw new IllegalArgumentException();
@@ -77,11 +79,6 @@ public class OrderItemService {
         orderItemRepository.delete(orderItem);
     }
 
-    public void deleteProductFromOrderItem(final Long orderId, final Long productId) {
-        OrderItem order = findOrderItemById(orderId);
-
-    }
-
     public long countOrderItem() {
         return orderItemRepository.count();
     }
@@ -92,12 +89,12 @@ public class OrderItemService {
                 .collect(Collectors.toList());
     }
 
-
-    public OrderItem create(OrderItem orderItem, Long productId, Long orderId) {
-        Product product = productService.findProductById(productId);
-        Order order = orderService.findOrdersById(orderId);
-        orderItem.setProduct(product);
-        orderItem.setOrder(order);
-        return create(orderItem);
+    public void decreaseStockIfPaid(OrderItem orderItem) {
+        if (orderItem.getOrder() != null && orderItem.getProduct() != null) {
+            Product product = orderItem.getProduct();
+            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
+                product.decreaseStock(orderItem.getQuantity());
+            }
+        }
     }
 }
