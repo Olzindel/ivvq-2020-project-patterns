@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.domain.Order;
 import patterns.backend.domain.OrderItem;
+import patterns.backend.domain.OrderStatus;
+import patterns.backend.domain.Product;
 import patterns.backend.exception.OrderItemNotFoundException;
 import patterns.backend.repositories.OrderItemRepository;
 
@@ -16,10 +20,17 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class OrderItemService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private OrderService orderService;
 
     public OrderItem findOrderItemById(final Long id) {
         Optional<OrderItem> optionalOrderItem = orderItemRepository.findById(id);
@@ -30,9 +41,14 @@ public class OrderItemService {
         }
     }
 
-    public OrderItem create(final OrderItem orderItem) {
+    public OrderItem create(OrderItem orderItem) {
         OrderItem savedOrderItem;
-        if (orderItem != null) {
+
+        if (orderItem != null && orderItem.getProduct() != null && orderItem.getOrder() != null) {
+            Product product = orderItem.getProduct();
+            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
+                product.decreaseStock(orderItem.getQuantity());
+            }
             savedOrderItem = orderItemRepository.save(orderItem);
         } else {
             throw new IllegalArgumentException();
@@ -40,15 +56,21 @@ public class OrderItemService {
         return savedOrderItem;
     }
 
-    public OrderItem update(final OrderItem orderItem) {
+    public OrderItem update(OrderItem orderItem) {
         OrderItem savedOrderItem;
-        if (orderItem != null) {
+
+        if (orderItem != null && orderItem.getProduct() != null && orderItem.getOrder() != null) {
+            Product product = orderItem.getProduct();
+            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
+                product.decreaseStock(orderItem.getQuantity());
+            }
             savedOrderItem = orderItemRepository.save(orderItem);
         } else {
             throw new IllegalArgumentException();
         }
         return savedOrderItem;
     }
+
 
     public void deleteOrderItemById(final Long id) {
         OrderItem orderItem = findOrderItemById(id);
@@ -70,4 +92,12 @@ public class OrderItemService {
                 .collect(Collectors.toList());
     }
 
+
+    public OrderItem create(OrderItem orderItem, Long productId, Long orderId) {
+        Product product = productService.findProductById(productId);
+        Order order = orderService.findOrdersById(orderId);
+        orderItem.setProduct(product);
+        orderItem.setOrder(order);
+        return create(orderItem);
+    }
 }

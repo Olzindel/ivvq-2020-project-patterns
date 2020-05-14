@@ -30,9 +30,9 @@ public class ImageLinkServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", "Description", LocalDate.now(), merchant);
+        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
         imageLink = new ImageLink("http://www.lueur.fr", product);
     }
 
@@ -106,7 +106,7 @@ public class ImageLinkServiceIntegrationTest {
         long before = imageLinkService.countImageLink();
         // given: is new imageLink
         // when: this USer is persisted
-        imageLinkService.create(new ImageLink("http://www.lueur.fr", product));
+        imageLinkService.create(imageLink);
         // then : the number of ImageLink persisted is increased by 1
         assertEquals(before + 1, imageLinkService.countImageLink());
     }

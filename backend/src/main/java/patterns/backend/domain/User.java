@@ -1,21 +1,24 @@
 package patterns.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "users")
 public class User {
 
@@ -23,7 +26,9 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    private String fullName;
+    private String firstName;
+
+    private String lastName;
 
     @Email
     @NotNull
@@ -36,32 +41,41 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
+    private String street;
+
+    @Pattern(regexp = "^(([0-8][0-9])|(9[0-5]))[0-9]{3}$")
+    private String postalCode;
+
+    private String city;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "admin", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<Merchant> merchants;
+    @JsonIgnore
+    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Merchant> merchants = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private List<Order> orders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Order> orders = new HashSet<>();
 
-    public User(String fullName, String email, String gender, LocalDate dateOfBirth, LocalDate createdAt) {
-        this.fullName = fullName;
+    public User(String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String street, String postalCode, String city, LocalDate createdAt) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
-        this.merchants = new ArrayList<>();
-        this.orders = new ArrayList<>();
+        this.street = street;
+        this.postalCode = postalCode;
+        this.city = city;
     }
 
     public void addMerchant(Merchant merchant) {
-        if (!merchants.contains(merchant))
-            merchants.add(merchant);
+        merchants.add(merchant);
     }
 
     public void addOrder(Order order) {
-        if (!orders.contains(order))
-            orders.add(order);
+        orders.add(order);
     }
 }

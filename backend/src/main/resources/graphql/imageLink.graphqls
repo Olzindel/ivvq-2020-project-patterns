@@ -1,9 +1,8 @@
 type ImageLink {
-    id: ID!,
-    imageLink: String!,
-    product: Product!,
+    id: ID!
+    imageLink: String!
+    product: Product!
 }
-
 
 extend type Query {
     imageLinks(count: Int!):[ImageLink]
@@ -11,6 +10,7 @@ extend type Query {
 }
 
 extend type Mutation {
+    updateImageLink(imageLinkId:ID!, imageLink:String!, productId:ID!):ImageLink
     createImageLink(imageLink:String!, productId:ID!):ImageLink
     deleteImageLink(imageLinkId:ID!):ID
 }

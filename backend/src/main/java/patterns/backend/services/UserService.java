@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Merchant;
+import patterns.backend.domain.Order;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
 import patterns.backend.repositories.UserRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,12 +21,16 @@ import java.util.stream.StreamSupport;
 @Service
 @Getter
 @Setter
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private MerchantService merchantService;
+
+    @Autowired
+    private OrderService orderService;
 
 
     public User findUserById(final Long id) {
@@ -40,6 +47,16 @@ public class UserService {
         if (user != null) {
             user.setCreatedAt(LocalDate.now());
             savedUser = userRepository.save(user);
+            if (user.getMerchants() != null) {
+                for (Merchant merchant : user.getMerchants()) {
+                    merchant.setAdmin(user);
+                }
+            }
+            if (user.getOrders() != null) {
+                for (Order order : user.getOrders()) {
+                    order.setUser(user);
+                }
+            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -76,4 +93,19 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public User create(User user, List<Long> merchantIds, List<Long> orderIds) {
+        List<Merchant> merchants = new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
+        if (merchantIds != null) {
+            for (Long id : merchantIds) {
+                merchants.add(merchantService.findMerchantById(id));
+            }
+        }
+        if (orderIds != null) {
+            for (Long id : orderIds) {
+                orders.add(orderService.findOrdersById(id));
+            }
+        }
+        return create(user);
+    }
 }

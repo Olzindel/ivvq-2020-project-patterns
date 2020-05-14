@@ -1,8 +1,8 @@
 type Order {
-    id: ID!,
-    createdAt: String!,
-    orderStatus: OrderStatus!,
-    OrderItems: [OrderItem!]!,
+    id: ID!
+    createdAt: String!
+    orderStatus: OrderStatus!
+    OrderItems: [OrderItem!]!
     User: User!
 }
 
@@ -18,6 +18,7 @@ extend type Query {
 }
 
 extend type Mutation {
+    updateOrder(orderId:ID!,orderStatus:OrderStatus,orderItemIds:[ID!], userId:ID ):Order
     createOrder(orderStatus:OrderStatus!,orderItemIds:[ID!]!, userId:ID! ):Order
     deleteOrder(orderId:ID!):ID
 }
