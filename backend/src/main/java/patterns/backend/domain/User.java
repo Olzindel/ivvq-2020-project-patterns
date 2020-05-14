@@ -41,12 +41,12 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
-    private String rue;
+    private String street;
 
     @Pattern(regexp = "^(([0-8][0-9])|(9[0-5]))[0-9]{3}$")
-    private String codePostal;
+    private String postalCode;
 
-    private String ville;
+    private String city;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate createdAt;
@@ -59,16 +59,16 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Order> orders = new HashSet<>();
 
-    public User(String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String rue, String codePostal, String ville, LocalDate createdAt) {
+    public User(String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String street, String postalCode, String city, LocalDate createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
-        this.rue = rue;
-        this.codePostal = codePostal;
-        this.ville = ville;
+        this.street = street;
+        this.postalCode = postalCode;
+        this.city = city;
     }
 
     public void addMerchant(Merchant merchant) {

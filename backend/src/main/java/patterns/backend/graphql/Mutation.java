@@ -36,10 +36,10 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     ImageLinkService imageLinkService;
 
-    public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String rue, String codePostal, String ville, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
+    public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
-        User user = new User(firstName, lastName, email, gender, localDateOfBirth, rue, codePostal, ville, localcreatedAt);
+        User user = new User(firstName, lastName, email, gender, localDateOfBirth, street, postalCode, city, localcreatedAt);
         return userService.create(user, merchantIds, orderIds);
     }
 
@@ -216,12 +216,12 @@ public class Mutation implements GraphQLMutationResolver {
         return productService.update(product);
     }
 
-    public User updateUser(Long userId, String firstName, String lastName, String email, String gender, String dateOfBirth, String rue, String codePostal, String ville, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
+    public User updateUser(Long userId, String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
         User user = userService.findUserById(userId);
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
 
-        if (lastName != null) {
+        if (firstName != null) {
             user.setFirstName(firstName);
         }
         if (lastName != null) {
@@ -239,14 +239,14 @@ public class Mutation implements GraphQLMutationResolver {
         if (localcreatedAt != null) {
             user.setCreatedAt(localcreatedAt);
         }
-        if (rue != null) {
-            user.setRue(rue);
+        if (street != null) {
+            user.setStreet(street);
         }
-        if (codePostal != null) {
-            user.setCodePostal(codePostal);
+        if (postalCode != null) {
+            user.setPostalCode(postalCode);
         }
-        if (ville != null) {
-            user.setVille(ville);
+        if (city != null) {
+            user.setCity(city);
         }
         if (merchantIds != null && !merchantIds.isEmpty()) {
             List<Long> toDelete = user.getMerchants().stream().
