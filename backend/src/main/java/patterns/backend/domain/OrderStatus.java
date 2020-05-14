@@ -4,5 +4,4 @@ public enum OrderStatus {
     BASKET,
     PAID,
     ABORTED
-
 }

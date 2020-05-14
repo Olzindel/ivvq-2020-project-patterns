@@ -61,6 +61,9 @@ public class ProductService {
         Product savedProduct;
         if (product != null) {
             savedProduct = productRepository.save(product);
+            if (product.getMerchant() != null) {
+                product.getMerchant().addProduct(product);
+            }
         } else {
             throw new IllegalArgumentException();
         }
