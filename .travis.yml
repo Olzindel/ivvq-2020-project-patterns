@@ -18,3 +18,4 @@ deploy:
   app : ivvq-patterns
   on:
     repo: M2DL/ivvq-2020-project-patterns
+    branch: heroku
