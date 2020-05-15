@@ -3,10 +3,10 @@ type Product {
     name: String!
     price: Float!
     status: ProductStatus!
-    description: String!
+    description: String
     stock: Int!
     createdAt: String
-    imageLinks: [ImageLink!]!
+    imageLinks: [ImageLink!]
     merchant: Merchant!
 }
 
@@ -21,7 +21,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateProduct(productId:ID!,name:String, price:Float, status:ProductStatus, description:String, stock:Int imageLinkIds:[ID!], merchantId:ID):Product
+    updateProduct(productId:ID!,name:String, price:Float, status:ProductStatus, description:String, stock:Int, createdAt:String, imageLinkIds:[ID!], merchantId:ID):Product
     createProduct(name:String!, price:Float!, status:ProductStatus!, description:String, stock:Int! imageLinkIds:[ID!], merchantId:ID!):Product
     deleteProduct(productId:ID!):ID
 }

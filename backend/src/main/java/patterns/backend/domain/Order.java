@@ -44,5 +44,4 @@ public class Order {
         this.user = user;
         this.orderStatus = orderStatus;
     }
-
 }
