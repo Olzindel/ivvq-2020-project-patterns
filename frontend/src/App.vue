@@ -10,10 +10,12 @@
 <script>
 import Header from './components/header-part/HeaderPart'
 import Banner from './components/header-part/Banner'
-import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import Vue from 'vue'
+import VueApollo from 'vue-apollo'
 
+Vue.use(VueApollo)
 Vue.use(Buefy)
 
 export default {

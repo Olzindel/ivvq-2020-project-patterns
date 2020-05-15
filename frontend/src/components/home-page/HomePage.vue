@@ -1,19 +1,39 @@
 <template>
-  <!-- style="display: grid; grid-template-columns: 25% 25% 25% 25%"  -->
-  <div class="columns is-multiline is-centered is-flex " >
-    <WaifuCard class="column " />
-    <WaifuCard class="column" />
-    <WaifuCard class="column" />
-    <WaifuCard class="column" />
-    <WaifuCard class="column" />
-    <WaifuCard class="column" />
-    <WaifuCard class="column" />
+  <div class="columns is-multiline is-centered is-flex ">
+    <div v-for='product in products' :key="product.id">
+      <WaifuCard :product='product'/>
+    </div>
   </div>
 </template>
 
 <script>
 import WaifuCard from './WaifuCard'
-export default {name: 'HomePage',
+import gql from 'graphql-tag'
+export default {
+  name: 'HomePage',
+  data () {
+    return {
+      products: []
+    }
+  },
+  apollo: {
+    products: {
+      query: gql`query ProductInfos($count: Int!) {
+            products(count: $count){
+            id
+            name
+            price
+            imageLinks{
+            imageLink
+            }
+            status
+         }
+        }`,
+      variables: {
+        count: 10
+      }
+    }
+  },
   components: {WaifuCard}
 }
 </script>
