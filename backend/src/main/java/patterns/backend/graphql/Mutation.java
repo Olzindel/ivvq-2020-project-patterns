@@ -36,21 +36,19 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     ImageLinkService imageLinkService;
 
-    public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
+    public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, List<Long> merchantIds, List<Long> orderIds) {
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
-        LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
-        User user = new User(firstName, lastName, email, gender, localDateOfBirth, street, postalCode, city, localcreatedAt);
+        User user = new User(firstName, lastName, email, gender, localDateOfBirth, street, postalCode, city, null);
         return userService.create(user, merchantIds, orderIds);
     }
 
-    public Merchant createMerchant(String name, Long userId, String createdAt, List<Long> productIds) {
-        LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
-        Merchant merchant = new Merchant(name, localcreatedAt, null);
+    public Merchant createMerchant(String name, Long userId, List<Long> productIds) {
+        Merchant merchant = new Merchant(name, null, null);
         return merchantService.create(merchant, userId, productIds);
     }
 
     public Product createProduct(String name, float price, ProductStatus status, String description, int stock, List<Long> imageLinkIds, Long merchantId) {
-        Product product = new Product(name, price, status, description, stock, LocalDate.now(), null);
+        Product product = new Product(name, price, status, description, stock, null, null);
         return productService.create(product, imageLinkIds, merchantId);
     }
 
@@ -60,7 +58,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public Order createOrder(OrderStatus orderStatus, List<Long> orderItemIds, Long userId) {
-        Order order = new Order(LocalDate.now(), orderStatus, null);
+        Order order = new Order(null, orderStatus, null);
         return orderService.create(order, orderItemIds, userId);
     }
 
@@ -147,7 +145,8 @@ public class Mutation implements GraphQLMutationResolver {
         return merchantService.update(merchant);
     }
 
-    public Order updateOrder(Long orderId, OrderStatus orderStatus, List<Long> orderItemIds, Long userId) {
+    public Order updateOrder(Long orderId, OrderStatus orderStatus, List<Long> orderItemIds, String createdAt, Long userId) {
+        LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
         Order order = orderService.findOrdersById(orderId);
         if (orderItemIds != null && !orderItemIds.isEmpty()) {
             List<Long> toDelete = order.getOrderItems().stream().
@@ -168,6 +167,10 @@ public class Mutation implements GraphQLMutationResolver {
 
         if (orderStatus != null) {
             order.setOrderStatus(orderStatus);
+        }
+
+        if (localcreatedAt != null) {
+            order.setCreatedAt(localcreatedAt);
         }
 
         return orderService.update(order);
@@ -191,7 +194,9 @@ public class Mutation implements GraphQLMutationResolver {
         return orderItemService.update(orderItem);
     }
 
-    public Product updateProduct(long productId, String name, Float price, ProductStatus status, String description, Integer stock, List<Long> imageLinkIds, Long merchantId) {
+    public Product updateProduct(long productId, String name, Float price, ProductStatus status, String description, String createdAt, Integer stock, List<Long> imageLinkIds, Long merchantId) {
+        LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
+
         Product product = productService.findProductById(productId);
 
         if (imageLinkIds != null && !imageLinkIds.isEmpty()) {
@@ -224,6 +229,9 @@ public class Mutation implements GraphQLMutationResolver {
         }
         if (stock != null) {
             product.setStock(stock);
+        }
+        if (localcreatedAt != null) {
+            product.setCreatedAt(localcreatedAt);
         }
         return productService.update(product);
     }
@@ -279,7 +287,7 @@ public class Mutation implements GraphQLMutationResolver {
             toDelete.removeAll(orderIds);
 
             for (Long idToAdd : toDelete) {
-                // TODO enelver de la liste
+                // TODO enlever de la liste
                 orderService.deleteOrderById(idToAdd);
             }
         }
