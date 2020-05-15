@@ -21,6 +21,7 @@ import java.util.Set;
 @Transactional
 @Entity(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue
     private Long id;

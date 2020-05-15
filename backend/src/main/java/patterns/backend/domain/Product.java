@@ -21,6 +21,7 @@ import java.util.Set;
 @Transactional
 @Entity(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -34,6 +35,8 @@ public class Product {
 
     private ProductStatus status;
 
+
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @NotNull
