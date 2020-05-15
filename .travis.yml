@@ -11,3 +11,10 @@ cache:
   directories:
     - $HOME/.m2
 
+deploy:
+  provider: heroku
+  api_key:
+    secure: "IaXItHLpoevmr9B4bqA5x8htzEB1MtXvBYpST5bP/oBR3TTtJROZzLPp6fQr7SEx3zI7KXzc5BBr8o2ENvs0nhA/lo1X57nnFkRBPP9Bm3ZqNeZadmKtWeos/miPtAJJh2adTgO0wOpgUjBfH5c9S6eNPXBG7tSqOXidj/fkGs2gxXI7ZQI8YTV5mBU63RTQqsBkEA+zCr+ix/G9T/aGFg3UXCmF3eyc+lbAELJj+HSLIlJMk6tgcbxhVuoGdpvVOVHw877aiMv6IiT+1NQR3mz7L6HRzGLwAYHOSxzwy7o+pU9dnQn4YzTZd7EVfxi4NqDT48+o2EDPma+bwStQGV5pDtrk7cZ1bAlRnDaiF8Kf5fBq/cWMFqhFBRthN/9r3FZFjbJmGniP9ns4GWtV7hY895rsfrpiq5mIbVnlMv21ZaDNSy/ShDRvVuP31sMi+9zo7+Gor9tSQWJbgJfnpVk2BoMyl9ySDiYI5xX6JG9lzlnoRTa3Nj0HdsX4J9roXVRwsWeTdfnjbKXHtgFayvwjGesmWMB6saJ9zIrEMh2DI5qXVKru56Tc+mrTrrdAZTu4byQ3mY4D5+8w8FEKROQucJbtSkD9MmhRXzf/vweTO9E4JllyNpgaAD+uUbXnbwOJmxm4i0nOQ5mlDdOLlnyqrNKWWN0vVTPJyywzNNs="
+  app : ivvq-patterns
+  on:
+    repo: M2DL/ivvq-2020-project-patterns
