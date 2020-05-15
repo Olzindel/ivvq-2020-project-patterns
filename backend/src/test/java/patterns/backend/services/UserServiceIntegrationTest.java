@@ -22,7 +22,7 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("fullName", "toto@toto.fr", "F", LocalDate.now(), LocalDate.now());
+        user = new User("Nathan", "Roche", "toto@toto.fr", "F", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
     }
 
     @Test
@@ -70,7 +70,8 @@ public class UserServiceIntegrationTest {
         // when: we call findUserById with the id of that User
         User fetched = userService.findUserById(user.getId());
         // then: All the attributes of the User obtained has the correct values
-        assertEquals(user.getFullName(), fetched.getFullName());
+        assertEquals(user.getFirstName(), fetched.getFirstName());
+        assertEquals(user.getLastName(), fetched.getLastName());
         assertEquals(user.getCreatedAt(), fetched.getCreatedAt());
         assertEquals(user.getDateOfBirth(), fetched.getDateOfBirth());
         assertEquals(user.getEmail(), fetched.getEmail());
@@ -98,7 +99,7 @@ public class UserServiceIntegrationTest {
         long before = userService.countUser();
         // given: is new user
         // when: this USer is persisted
-        userService.create(new User("john", "john@john.fr", "M", LocalDate.now(), LocalDate.now()));
+        userService.create(user);
         // then : the number of User persisted is increased by 1
         assertEquals(before + 1, userService.countUser());
     }

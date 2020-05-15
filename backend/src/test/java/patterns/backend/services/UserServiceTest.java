@@ -23,6 +23,9 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private MerchantService merchantService;
+
 
     @MockBean
     private User user;
@@ -31,6 +34,7 @@ class UserServiceTest {
     @BeforeEach
     public void setup() {
         userService = new UserService();
+        userService.setMerchantService(merchantService);
         userService.setUserRepository(userRepository);
     }
 
@@ -43,7 +47,7 @@ class UserServiceTest {
     @Test
     void findUserById() {
         // given: an user and an UserService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
         // when: the findAll method is invoked
         userService.findUserById(0L);
@@ -54,7 +58,7 @@ class UserServiceTest {
     @Test
     void saveUser() {
         // given: an user and an userService
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         when(userService.getUserRepository().save(user)).thenReturn(user);
 
         // when: saveUser is invoked
@@ -76,7 +80,8 @@ class UserServiceTest {
     @Test
     void deleteUser() {
         // given: an UserService and an user persisted
-        User user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        user.setId(0L);
         when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
         // when: the deleteUserById method is invoked
         userService.deleteUserById(0L);

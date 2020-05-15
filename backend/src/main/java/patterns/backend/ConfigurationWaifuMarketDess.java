@@ -10,4 +10,6 @@ public class ConfigurationWaifuMarketDess {
     public TestRestTemplate testRestTemplate() {
         return new TestRestTemplate();
     }
+
+
 }

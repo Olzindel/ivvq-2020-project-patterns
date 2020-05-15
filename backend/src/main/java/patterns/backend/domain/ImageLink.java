@@ -3,34 +3,32 @@ package patterns.backend.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Transactional
-@Entity(name = "order_items")
-public class OrderItem {
+@Entity(name = "ImageLinks")
+public class ImageLink {
+
     @Id
     @GeneratedValue
     private Long id;
 
-    @Min(0)
-    private int quantity;
-
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Product product;
+    @NotNull
+    @URL
+    private String imageLink;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Order order;
+    private Product product;
 
-    public OrderItem(int quantity, Product product, Order order) {
-        this.quantity = quantity;
+    public ImageLink(String imageLink, Product product) {
+        this.imageLink = imageLink;
         this.product = product;
-        this.order = order;
     }
-
 }

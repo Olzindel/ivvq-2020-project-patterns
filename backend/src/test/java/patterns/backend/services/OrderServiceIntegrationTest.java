@@ -9,8 +9,8 @@ import patterns.backend.domain.*;
 import patterns.backend.exception.OrdersNotFoundException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,12 +32,12 @@ public class OrderServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "nathan.roche31@gmail.com", "M", LocalDate.now(), LocalDate.now());
+        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
+        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 10, LocalDate.now(), merchant);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
         orderItem = new OrderItem(2, product, order);
-        List<OrderItem> orderItems = new ArrayList<>();
+        Set<OrderItem> orderItems = new HashSet<>();
         orderItems.add(orderItem);
         order.setOrderItems(orderItems);
     }
@@ -112,7 +112,7 @@ public class OrderServiceIntegrationTest {
         long before = orderService.countOrders();
         // given: is new orders
         // when: this USer is persisted
-        orderService.create(new Order(LocalDate.now(), OrderStatus.PAID, user));
+        orderService.create(order);
         // then : the number of Orders persisted is increased by 1
         assertEquals(before + 1, orderService.countOrders());
     }
@@ -146,7 +146,7 @@ public class OrderServiceIntegrationTest {
         Order fetched = orderService.findOrdersById(order.getId());
 
         // when: deleteUserById is called with an id corresponding to an object in database
-        orderService.deleteOrdersById(fetched.getId());
+        orderService.deleteOrderById(fetched.getId());
         // then: the orders is delete
         assertThrows(OrdersNotFoundException.class, () -> orderService.findOrdersById(fetched.getId()));
     }
@@ -155,6 +155,6 @@ public class OrderServiceIntegrationTest {
     public void testDeleteOerdersWithUnexistingId() {
         // when: deleteUserById is called with an id not corresponding to any object in database
         // then: an exception is thrown
-        assertThrows(OrdersNotFoundException.class, () -> orderService.deleteOrdersById(0L));
+        assertThrows(OrdersNotFoundException.class, () -> orderService.deleteOrderById(0L));
     }
 }
