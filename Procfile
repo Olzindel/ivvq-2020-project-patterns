@@ -1,0 +1,1 @@
+web: java -Xmx500m -jar app.jar

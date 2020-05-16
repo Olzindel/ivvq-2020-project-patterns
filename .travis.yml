@@ -5,17 +5,15 @@ services:
   - docker
 
 install: true
-script: mvn clean install
+script: docker build -t registry.heroku.com/ivvq-patterns/web .
 
 cache:
   directories:
     - $HOME/.m2
 
 deploy:
-  provider: heroku
-  api_key:
-    secure: "MfQ/YAibI13rRa9aXVvFbS0F2AaioViSigU3+rnu/R1hLnI64aDIIn5I6hht5K+EssI18a6oxydxJHucEvP8Wmqc1jJie7jWVWR3PyfSUt3O2xmMtW0ygQJiZN2R/5HbpoxpxISSUgpA+mEcv9ipT30JkQ7Zk8wtgbsZF10yoAUWStHitJqJ9S8+BY6KvdysZFF2aFGqxWUPxE7n1YaUTTtrulu54ALl1Tv8WEQCWShJJ4prtaeAeBPQZnDj4P8iNNPozdn2SeFFcESVjDkvZxxpZeokNMuPhxOleeOsvci/HXbZd3JeXcIwCRLoCYV7UINLX9t7jpJ/OskbVGbuHDskOHWDPN7rcgztw4Z27uzmraskN/qYZR3+fW7/Sqt3BRPLc5CMoXxxYtY9Hu9VvchoP416Ghq/qfPWixnAotxup+bdQ8hKa8cRz1JZXCGWjxhDxpQayQfzVb8F70zCxCwsPDMf6/AA43RTwXkuXExgytNlSYoh/F76MW75m3S9Dku3N4PHDHZ9LRqqVa1WqZ9DAFbdXQ92rD0vbrmha341UycpNSLZO8W4dqbxgH/5jl0PvxblGWmDhpmOVAM/0kWqe35yqR5VvPn04J8gFiDKzyuBY5VJWB0EmhFzKTYwby4oVONnTlK/lRvcEoVnRXQ4ZkH+pLCw09vFbjI/zOo="
-  app : ivvq-patterns
+  provider: script
+  script: bash docker_push
   on:
     repo: M2DL/ivvq-2020-project-patterns
     branch: heroku
