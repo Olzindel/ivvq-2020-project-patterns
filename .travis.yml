@@ -5,11 +5,7 @@ services:
   - docker
 
 install: true
-script: docker build -t registry.heroku.com/ivvq-patterns/web .
-
-cache:
-  directories:
-    - $HOME/.m2
+script: docker build -t registry.heroku.com/ivvq-patterns/waifu-market .
 
 deploy:
   provider: script
