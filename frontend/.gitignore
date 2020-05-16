@@ -13,6 +13,7 @@ package-lock.json
 
 # Editor directories and files
 .idea
+.directory
 .vscode
 *.suo
 *.ntvs*
