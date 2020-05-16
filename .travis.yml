@@ -1,20 +1,21 @@
 language: java
 jdk: openjdk8
+
 services:
-- docker
+  - docker
+
 install: true
 script: mvn clean install
+
 cache:
   directories:
-  - "$HOME/.m2"
+    - $HOME/.m2
+
 deploy:
   provider: heroku
   api_key:
-    secure: os+DQ2r3+j8n6ry7nF6AaQRk1ajI5uYhI2vw9ZTSg2enJ1iC/FBPhagpL8AogR8SBxRb0S/lV99cIVggyBGHrYhr52HYMS+u4UsJUIE5UObctjG/qOFOo6xwRg0byJLEEPzaVRtSK3d9z0qyGIE3srgqilGfow8MoN1bGjCpmgbnw/pPQFlb9DCi6omiD4pMzc7EgEIHSs+bMzbUBQLpqFb7CekX1b/xPYQuf0CYTN57tFJmsuDbtJH2G+IMajsSA3Usb4TK1KF0iEKt9u4gyZBJe1IDPi7bBGBn/ZaORjY573a2cEGt0LS+VVM1VpkLmTDAv3CwY4P+t/iB+MjlwPb89vK7SXFjG/4bKg+nts9Y09ihS5PmKzfoExpjN86xv5kzQkW1xmtA9B5avMMonqloDrIl+lB8P0Yd3YE5+Iu9LNteCvmctnymGIqi8Xgg343SH7jkLw7IP1T0rzD5oTZjLqACxGvAh36723Brf//2tnOVRgzUGYzyN5R6Y22EAyBzb2HOtpEVyIeqTdBcDQLDtghyMzZT1G/PpWWp1rOkQdjLwgibJp3jzSSBYO6qU2HYd0xti9JjXoPjchTagiSyxXVc7HCF6GG1kKxB2xyu3gfKfSjKnvIty/cAHAnDbfk28cJen6jTiEsL9vaRBjgaKwLL+g/mc/45ocsvlfo=
-  app: ivvq-patterns
+    secure: "MfQ/YAibI13rRa9aXVvFbS0F2AaioViSigU3+rnu/R1hLnI64aDIIn5I6hht5K+EssI18a6oxydxJHucEvP8Wmqc1jJie7jWVWR3PyfSUt3O2xmMtW0ygQJiZN2R/5HbpoxpxISSUgpA+mEcv9ipT30JkQ7Zk8wtgbsZF10yoAUWStHitJqJ9S8+BY6KvdysZFF2aFGqxWUPxE7n1YaUTTtrulu54ALl1Tv8WEQCWShJJ4prtaeAeBPQZnDj4P8iNNPozdn2SeFFcESVjDkvZxxpZeokNMuPhxOleeOsvci/HXbZd3JeXcIwCRLoCYV7UINLX9t7jpJ/OskbVGbuHDskOHWDPN7rcgztw4Z27uzmraskN/qYZR3+fW7/Sqt3BRPLc5CMoXxxYtY9Hu9VvchoP416Ghq/qfPWixnAotxup+bdQ8hKa8cRz1JZXCGWjxhDxpQayQfzVb8F70zCxCwsPDMf6/AA43RTwXkuXExgytNlSYoh/F76MW75m3S9Dku3N4PHDHZ9LRqqVa1WqZ9DAFbdXQ92rD0vbrmha341UycpNSLZO8W4dqbxgH/5jl0PvxblGWmDhpmOVAM/0kWqe35yqR5VvPn04J8gFiDKzyuBY5VJWB0EmhFzKTYwby4oVONnTlK/lRvcEoVnRXQ4ZkH+pLCw09vFbjI/zOo="
+  app : ivvq-patterns
   on:
     repo: M2DL/ivvq-2020-project-patterns
     branch: heroku
-env:
-  global:
-    secure: xLAwBXtcq9z5DTo3UaEadV0I+svGJAVBlgRa9YTyK74lrxXATCymYQ4xNCWH0CstGxAI8MdnosXPxWKN0j/hmyI/GVnbf/Ar3tROdISDoQnGWuIvl/9UB1Ygq0rVLUcsjQY34Z0O9f3ksfRAtKnYQBRWhDjHOYpMnH/v/GVR6RpAEfHiIUjWDdewkuW1TYZGfp5eLmf0nLaI7bf9jtMmPjJacrGWmZRSYC8k8+L+0LSAQl/+uXsXR1TLvA1T9SwzIG3xOhACAMgXRUpy/KkHM1NRVYne73r3Yp0kqxQOq8Qd9v3oAsuGWhFbBmpthhyHpZDeeTgz+UwYrJOXLiNmmb1OJA+lLAKY/ikXokMz7LEXyx0fNSzLcxMkvwZUvDQ8jmunGnEsVOpLDeMis2mWJDaXmU0CiY8ZCOT6VZ+DE2jGySW+tuVq4/Z4sx+3oNrH8IJfHaIRZ0XFHRTz5NK8y/TsWx6o0CoOGWVYEoZj6mEaqZSwce/NAiW5ZiJ+FozH4gixZYYad3mMnekW2TG2k7zO+n56zA74nW5cvGJH/4oCbznwd577ZJCGHySbcIQAqG974dEUjWcsjPyPK6oYw5YaCEBa5GQ/Oa1MbS+sto3xegs/XL5+swg7ipJRQaR+UgfwIegASbTcGQv+5mhms4HxkxZTTiV97U7S0J3D2RA=
