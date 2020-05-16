@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import HeaderPart from '../components/home-page/HomePage'
+import UserAccount from '../components/user-option/UserAccount'
 
 Vue.use(Router)
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/hello',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/account',
+      name: 'UserAccount',
+      component: UserAccount
     }
   ]
 })

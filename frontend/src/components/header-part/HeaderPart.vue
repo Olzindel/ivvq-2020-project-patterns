@@ -1,11 +1,11 @@
 <template>
   <div >
     <b-sidebar  :open.sync="showNavigation" :fullheight="true" :overlay="true">
-      <img src="../../assets/imageDefault.png" alt="People">
+      <img src="../../assets/imageDefault.png" alt="People" @click="goToHome()">
       <b-menu style="padding:12px">
         <b-menu-list label="Mon compte">
-          <b-menu-item icon-pack="fa" icon="info-circle" label="Info"></b-menu-item>
-          <b-menu-item icon-pack="fa"  icon="settings" label="Mon panier"></b-menu-item>
+          <b-menu-item icon-pack="fa" icon="info-circle" label="Info" @click="goToAccount()"></b-menu-item>
+          <b-menu-item icon-pack="fa"  icon="settings" label="Mon panier" ></b-menu-item>
           <b-menu-item icon="account" label="historique d'achat">
           </b-menu-item>
         </b-menu-list>
@@ -14,7 +14,7 @@
         </b-menu-list>
       </b-menu>
     </b-sidebar>
-    <b-navbar fixed-top="true" class="toolbar">
+    <b-navbar :fixed-top=navbarOptions.fixedTop class="toolbar">
       <template slot="brand">
         <b-navbar-item tag="div">
           <b-button @click="showNavigation = true">Show</b-button>
@@ -31,11 +31,27 @@
 
 <script>
 import Login from './Login'
+import router from '../../router/index'
+
 export default {name: 'headerPart',
   components: {Login},
   data: () => ({
-    showNavigation: false
-  })}
+    showNavigation: false,
+    navbarOptions: {
+      fixedTop: true
+    }
+  }),
+  methods: {
+    goToAccount () {
+      router.push({path: '/account'})
+      this.showNavigation = false
+    },
+    goToHome () {
+      router.push({path: '/'})
+      this.showNavigation = false
+    }
+  }
+}
 </script>
 
 <style scoped>
