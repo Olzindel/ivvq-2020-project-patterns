@@ -8,4 +8,4 @@ build:
     web: Dockerfile
 
 run:
-  web: java -jar app.jar
+  web: java -Xmx500m -jar app.jar
