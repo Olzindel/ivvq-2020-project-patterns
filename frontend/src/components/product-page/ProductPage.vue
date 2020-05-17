@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="column add-to-basket">
-            <b-button @click="clickMe">Click Me</b-button>
+            <b-button @click="clickMe">Ajouter au panier</b-button>
           </div>
         </div>
       </div>
@@ -162,6 +162,6 @@ export default {
 
   .add-to-basket {
     display: flex;
-    align-items: center;
+    align-items: end;
   }
 </style>
