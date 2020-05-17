@@ -1,7 +1,7 @@
 <template>
   <div class="cardSize" style="margin: 20px">
-    <div class="card" >
-      <div >
+    <div class="card">
+      <div>
         <div class="card-header-title is-centered">
           {{product.name}}
         </div>
@@ -21,6 +21,7 @@
 
 <script>
 import router from '../../router/index'
+
 export default {
   name: 'WaifuCard',
   data () {
@@ -40,24 +41,27 @@ export default {
 </script>
 
 <style scoped>
-.cardSize {
-     max-width: 250px;
-     min-width: 250px;
- }
- .img{
-   display: flex;
-   justify-content: center;
-   align-content: center;
- }
- .img1{
-   display: flex;
-   height: 200px;
-   width: 250px;
-   object-fit: cover;
- }
- .card{
-    box-shadow: 4px 4px 1px 1px rgba(100,100,100, .5);
-    border-radius : 2em;
-    border : rgba(50,50,50,.2) solid 1px
+  .cardSize {
+    max-width: 250px;
+    min-width: 250px;
+  }
+
+  .img {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .img1 {
+    display: flex;
+    height: 200px;
+    width: 250px;
+    object-fit: cover;
+  }
+
+  .card {
+    box-shadow: 4px 4px 1px 1px rgba(100, 100, 100, .5);
+    border-radius: 2em;
+    border: rgba(50, 50, 50, .2) solid 1px
   }
 </style>
