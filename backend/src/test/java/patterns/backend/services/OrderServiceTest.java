@@ -42,7 +42,7 @@ class OrderServiceTest {
         orderService = new OrderService();
         orderService.setOrderRepository(orderRepository);
 
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        user = new User("username", "password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
         order = new Order(LocalDate.now(), OrderStatus.PAID, user);
     }
@@ -67,7 +67,7 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
-        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        User user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Order order = new Order();
         order.setUser(user);
         when(orderService.getOrderRepository().save(order)).thenReturn(order);

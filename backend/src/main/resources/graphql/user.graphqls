@@ -1,5 +1,7 @@
 type User {
     id: ID!
+    username: String
+    password: String
     firstName: String!
     lastName: String!
     email: String!
@@ -19,7 +21,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateUser(userId:ID!, firstName:String, lastName:String, email:String, gender:String, dateOfBirth:String, street:String, postalCode:String, city:String, createdAt:String, merchantIds:[ID!], orderIds:[ID!]):User
-    createUser(firstName:String!, lastName:String!, email:String!, gender:String, dateOfBirth:String, street:String, postalCode:String, city:String, merchantIds:[ID!], orderIds:[ID!] ):User
+    updateUser(userId:ID!, username:String, password:String, firstName:String, lastName:String, email:String, gender:String, dateOfBirth:String, street:String, postalCode:String, city:String, createdAt:String, merchantIds:[ID!], orderIds:[ID!]):User
+    createUser(username:String, password:String, firstName:String!, lastName:String!, email:String!, gender:String, dateOfBirth:String, street:String, postalCode:String, city:String, merchantIds:[ID!], orderIds:[ID!] ):User
     deleteUser(userId:ID!):ID
 }

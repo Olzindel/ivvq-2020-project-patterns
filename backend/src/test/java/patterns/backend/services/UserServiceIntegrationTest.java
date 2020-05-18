@@ -22,7 +22,7 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "Roche", "toto@toto.fr", "F", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        user = new User("username","password","Nathan", "Roche", "toto@toto.fr", "F", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
     }
 
     @Test

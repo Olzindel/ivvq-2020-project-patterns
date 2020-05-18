@@ -36,7 +36,7 @@ class MerchantServiceTest {
         merchantService = new MerchantService();
         merchantService.setMerchantRepository(merchantRepository);
 
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
     }
 

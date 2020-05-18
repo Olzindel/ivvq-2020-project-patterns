@@ -60,7 +60,7 @@ class ProductServiceTest {
     @Test
     void saveProduct() {
         // given: a product and a productService
-        User user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        User user = new User("username", "password", "Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         Merchant merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
         Product product = new Product();
         product.setMerchant(merchant);
