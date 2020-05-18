@@ -9,8 +9,8 @@
           <b-menu-item icon="account" label="historique d'achat">
           </b-menu-item>
         </b-menu-list>
-        <b-menu-list label="Actions">
-          <b-menu-item label="Logout"></b-menu-item>
+        <b-menu-list label="Information">
+          <b-menu-item label="A propos" @click="goToAPropos()"></b-menu-item>
         </b-menu-list>
       </b-menu>
     </b-sidebar>
@@ -48,6 +48,10 @@ export default {name: 'headerPart',
     },
     goToHome () {
       router.push({path: '/'})
+      this.showNavigation = false
+    },
+    goToAPropos () {
+      router.push({path: '/aPropos'})
       this.showNavigation = false
     }
   }
