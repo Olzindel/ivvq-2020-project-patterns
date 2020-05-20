@@ -1,10 +1,15 @@
 language: java
 jdk: openjdk8
 
+services:
+  - docker
+
 install: true
-script: mvn clean install
+script: docker build -t registry.heroku.com/ivvq-patterns/waifu-market .
 
-cache:
-  directories:
-    - $HOME/.m2
-
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    repo: M2DL/ivvq-2020-project-patterns
+    branch: master
