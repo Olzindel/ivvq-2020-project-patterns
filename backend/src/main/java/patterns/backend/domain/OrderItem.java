@@ -14,6 +14,7 @@ import javax.validation.constraints.Min;
 @Transactional
 @Entity(name = "order_items")
 public class OrderItem {
+
     @Id
     @GeneratedValue
     private Long id;

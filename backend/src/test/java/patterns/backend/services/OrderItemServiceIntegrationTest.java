@@ -6,12 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.*;
+import patterns.backend.DataLoader;
+import patterns.backend.domain.OrderItem;
 import patterns.backend.exception.OrderItemNotFoundException;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,24 +20,10 @@ public class OrderItemServiceIntegrationTest {
 
     private OrderItem orderItem;
 
-    private Order order;
-
-    private Product product;
-
-    private Merchant merchant;
-
-    private User user;
-
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 4, LocalDate.now(), merchant);
-        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
-        orderItem = new OrderItem(2, product, order);
-        Set<OrderItem> orderItems = new HashSet<>();
-        orderItems.add(orderItem);
-        order.setOrderItems(orderItems);
+        DataLoader dataLoader = new DataLoader();
+        orderItem = dataLoader.getOrderItem();
     }
 
     @Test
@@ -58,7 +41,7 @@ public class OrderItemServiceIntegrationTest {
     public void testSaveOrderItemNull() {
         // when: null is persisted via an OrderItemService
         // then: an exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> orderItemService.create(null));
+        assertThrows(IllegalArgumentException.class, () -> orderItemService.create((OrderItem) null));
     }
 
     @Test

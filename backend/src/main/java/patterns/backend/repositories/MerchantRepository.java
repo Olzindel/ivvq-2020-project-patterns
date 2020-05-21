@@ -10,6 +10,4 @@ import java.util.List;
 public interface MerchantRepository extends CrudRepository<Merchant, Long> {
 
     List<Merchant> findMerchantByAdmin_Id(Long id);
-
-    void deleteByAdmin_Id(Long id);
 }

@@ -6,12 +6,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.test.annotation.DirtiesContext;
-import patterns.backend.domain.*;
+import patterns.backend.DataLoader;
+import patterns.backend.domain.OrderItem;
 import patterns.backend.repositories.OrderItemRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -30,20 +27,13 @@ class OrderItemServiceTest {
     @MockBean
     private OrderItem orderItem;
 
-    private Product product;
-    private User user;
-    private Merchant merchant;
-    private Order order;
-
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        orderItem = dataLoader.getOrderItem();
+
         orderItemService = new OrderItemService();
         orderItemService.setOrderItemRepository(orderItemRepository);
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
-        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
-        orderItem = new OrderItem(2, product, order);
     }
 
 
@@ -67,12 +57,12 @@ class OrderItemServiceTest {
     void saveOrderItem() {
         // given: an orderItem and an orderItemService
         when(orderItemService.getOrderItemRepository().save(orderItem)).thenReturn(orderItem);
-
+        int stockBeforeSave = orderItem.getProduct().getStock();
         // when: saveOrderItem is invoked
         orderItemService.create(orderItem);
-
         // then: the save method of OrderItemRepository is invoked
         verify(orderItemService.getOrderItemRepository()).save(orderItem);
+        assert stockBeforeSave - orderItem.getQuantity() == orderItem.getProduct().getStock();
     }
 
     @Test

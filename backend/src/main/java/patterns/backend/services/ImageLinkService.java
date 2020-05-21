@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.ImageLink;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.ImageLinkNotFoundException;
+import patterns.backend.graphql.input.ImageLinkInput;
 import patterns.backend.repositories.ImageLinkRepository;
 
 import java.util.List;
@@ -48,19 +49,12 @@ public class ImageLinkService {
         return savedImageLink;
     }
 
-    public ImageLink update(final ImageLink imageLink) {
-        ImageLink savedImageLink;
-        if (imageLink != null) {
-            savedImageLink = imageLinkRepository.save(imageLink);
-        } else {
-            throw new IllegalArgumentException();
-        }
-        return savedImageLink;
-    }
-
     public void deleteImageLinkById(final Long id) {
         ImageLink imageLink = findImageLinkById(id);
-        imageLink.getProduct().getImageLinks().remove(imageLink);
+        if (imageLink.getProduct() != null && imageLink.getProduct().getImageLinks() != null
+                && !imageLink.getProduct().getImageLinks().isEmpty()) {
+            imageLink.getProduct().getImageLinks().remove(imageLink);
+        }
         imageLinkRepository.delete(imageLink);
     }
 
@@ -75,9 +69,28 @@ public class ImageLinkService {
                 .collect(Collectors.toList());
     }
 
-    public ImageLink create(ImageLink imageLink, Long productId) {
-        Product product = productService.findProductById(productId);
-        imageLink.setProduct(product);
+    public ImageLink create(ImageLinkInput imageLinkInput) {
+        ImageLink imageLink = new ImageLink(imageLinkInput.getImageLink(), null);
+
+        if (imageLinkInput.getProductId() != null) {
+            Product product = productService.findProductById(imageLinkInput.getProductId());
+            imageLink.setProduct(product);
+        }
+
+        return create(imageLink);
+    }
+
+    public ImageLink update(Long imageLinkId, ImageLinkInput imageLinkInput) {
+        ImageLink imageLink = findImageLinkById(imageLinkId);
+        if (imageLinkInput.getImageLink() != null) {
+            imageLink.setImageLink(imageLinkInput.getImageLink());
+        }
+        if (imageLinkInput.getProductId() != null) {
+            imageLink.getProduct().getImageLinks().remove(imageLink);
+            Product product = productService.findProductById(imageLinkInput.getProductId());
+            imageLink.setProduct(product);
+        }
+
         return create(imageLink);
     }
 }
