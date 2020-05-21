@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'Banner'
+  name: 'Banner',
+  mounted () {
+    localStorage.setItem('user', 1)
+  }
 }
 </script>
 

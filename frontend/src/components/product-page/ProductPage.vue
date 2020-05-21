@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="column add-to-basket">
-            <b-button @click="clickMe">Ajouter au panier</b-button>
+            <b-button @click="addToBasket()">Ajouter au panier</b-button>
           </div>
         </div>
       </div>
@@ -99,7 +99,6 @@ export default {
       }
     }
   },
-
   data () {
     return {
       productInfos: {
@@ -114,7 +113,27 @@ export default {
           useArrow: true,
           useBulletPoints: true
         }
-      }
+      },
+      order: -1,
+      quantity: 1,
+      test: -1,
+      user: 1
+    }
+  },
+  methods: {
+    addToBasket () {
+      this.$apollo.mutate({
+        mutation: gql`mutation createOrder($userId: ID!) {
+          createOrder: createOrder(
+            orderStatus: BASKET,
+            userId: $userId){
+            id
+          }}`,
+        variables: {
+          userId: this.user
+        }
+      }).then(data =>
+        console.log('my test' + data))
     }
   }
 }
