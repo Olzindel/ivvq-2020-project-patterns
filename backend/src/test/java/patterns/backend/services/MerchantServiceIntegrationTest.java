@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Merchant;
-import patterns.backend.domain.User;
 import patterns.backend.exception.MerchantNotFoundException;
-
-import java.time.LocalDate;
+import patterns.backend.graphql.input.MerchantInput;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,14 +18,12 @@ public class MerchantServiceIntegrationTest {
     @Autowired
     private MerchantService merchantService;
 
-    private User user;
-
     private Merchant merchant;
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
+        DataLoader dataLoader = new DataLoader();
+        merchant = dataLoader.getMerchant();
     }
 
     @Test
@@ -44,7 +41,7 @@ public class MerchantServiceIntegrationTest {
     public void testSaveMerchantNull() {
         // when: null is persisted via a MerchantService
         // then: a exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> merchantService.create(null));
+        assertThrows(IllegalArgumentException.class, () -> merchantService.create((Merchant) null));
     }
 
     @Test
@@ -74,20 +71,17 @@ public class MerchantServiceIntegrationTest {
         // when: we call findMerchantById with the id of that Merchant
         Merchant fetched = merchantService.findMerchantById(merchant.getId());
         // then: All the attributes of the Merchant obtained has the correct values
-        assertEquals(merchant.getCreatedAt(), fetched.getCreatedAt());
         assertEquals(merchant.getName(), fetched.getName());
     }
 
     @Test
     public void testUpdatedMerchantIsUpdated() {
         // given: a Merchant merchant persisted
-        merchantService.create(merchant);
-
-        Merchant fetched = merchantService.findMerchantById(merchant.getId());
-        // when: the email is modified at the "object" level
-        fetched.setName("Husbando Market-dess");
+        Merchant fetched = merchantService.create(merchant);
+        // when: a MerchantInput with a different email
+        MerchantInput merchantInput = new MerchantInput("Husbando Market-dess", null, null);
         // when: the object merchant is updated in the database
-        merchantService.update(fetched);
+        merchantService.update(fetched.getId(), merchantInput);
         // when: the object merchant is re-read in the database
         Merchant fetchedUpdated = merchantService.findMerchantById(merchant.getId());
         // then: the email has been successfully updated
@@ -107,14 +101,12 @@ public class MerchantServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: a Merchant merchant persisted
-        merchantService.create(merchant);
+        Merchant fetched = merchantService.create(merchant);
         long count = merchantService.countMerchant();
-
-        Merchant fetched = merchantService.findMerchantById(merchant.getId());
-        // when: the email is modified at the "object" level
-        fetched.setName("Husbando market-dess");
+        // when: a MerchantInput with a different email
+        MerchantInput merchantInput = new MerchantInput("Husbando Market-dess", null, null);
         // when: the object is updated in the database
-        merchantService.update(fetched);
+        merchantService.update(fetched.getId(), merchantInput);
         // then: a new entry has not been created in the database
         assertEquals(count, merchantService.countMerchant());
     }

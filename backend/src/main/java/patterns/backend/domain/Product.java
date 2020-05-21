@@ -1,7 +1,6 @@
 package patterns.backend.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.exception.NotEnoughStockException;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,9 +44,6 @@ public class Product {
     @Min(0)
     private int stock;
 
-    @PastOrPresent
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate createdAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
@@ -54,11 +52,10 @@ public class Product {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
 
-    public Product(String name, double price, ProductStatus status, String description, int stock, LocalDate createdAt, Merchant merchant) {
+    public Product(String name, double price, ProductStatus status, String description, int stock, Merchant merchant) {
         this.name = name;
         this.price = price;
         this.status = status;
-        this.createdAt = createdAt;
         this.merchant = merchant;
         this.description = description;
         this.stock = stock;
