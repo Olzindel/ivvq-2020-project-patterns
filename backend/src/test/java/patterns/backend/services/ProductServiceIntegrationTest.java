@@ -29,7 +29,7 @@ public class ProductServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "Roche", "nathan@edf.fr", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        user = new User("username","password","Nathan", "Roche", "nathan@edf.fr", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         merchant = new Merchant("Market", LocalDate.now(), user);
         product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
     }

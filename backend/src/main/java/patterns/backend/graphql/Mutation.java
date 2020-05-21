@@ -36,9 +36,9 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     ImageLinkService imageLinkService;
 
-    public User createUser(String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, List<Long> merchantIds, List<Long> orderIds) {
+    public User createUser(String username, String password, String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, List<Long> merchantIds, List<Long> orderIds) {
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
-        User user = new User(firstName, lastName, email, gender, localDateOfBirth, street, postalCode, city, null);
+        User user = new User(username, password, firstName, lastName, email, gender, localDateOfBirth, street, postalCode, city, null);
         return userService.create(user, merchantIds, orderIds);
     }
 
@@ -236,11 +236,17 @@ public class Mutation implements GraphQLMutationResolver {
         return productService.update(product);
     }
 
-    public User updateUser(Long userId, String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
+    public User updateUser(Long userId, String username, String password, String firstName, String lastName, String email, String gender, String dateOfBirth, String street, String postalCode, String city, String createdAt, List<Long> merchantIds, List<Long> orderIds) {
         User user = userService.findUserById(userId);
         LocalDate localDateOfBirth = dateOfBirth != null ? LocalDate.parse(dateOfBirth, formatter) : null;
         LocalDate localcreatedAt = createdAt != null ? LocalDate.parse(createdAt, formatter) : null;
 
+        if (username != null) {
+            user.setUsername(username);
+        }
+        if (password != null) {
+            user.setPassword(password);
+        }
         if (firstName != null) {
             user.setFirstName(firstName);
         }
