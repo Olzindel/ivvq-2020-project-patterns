@@ -9,6 +9,7 @@
 <script>
 import WaifuCard from './WaifuCard'
 import gql from 'graphql-tag'
+
 export default {
   name: 'HomePage',
   data () {

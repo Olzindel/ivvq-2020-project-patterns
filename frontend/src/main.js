@@ -3,31 +3,23 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { ApolloClient } from 'apollo-client'
-import { HttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
-
-/*
-const httpLinkProd = new HttpLink({
-  // URL to graphql server, you should use an absolute URL here
-  uri: 'http://' + window.location.host + '/graphql'
-})
-*/
-
-const httpLinkDev = new HttpLink({
-  // URL to graphql server, you should use an absolute URL here
-  uri: 'http://localhost:8080/graphql'
-})
+import CustomAppoloClient from './vue-appolo-config'
 
 // create the apollo client
-const apolloClient = new ApolloClient({
-  link: httpLinkDev,
-  cache: new InMemoryCache()
-})
+const apolloClient = CustomAppoloClient
 
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient: apolloClient,
+  defaultOptions: {
+    $query: {
+      fetchPolicy: 'cache-and-network'
+    }
+  },
+  errorHandler (error) {
+    // eslint-disable-next-line no-console
+    console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+  }
 })
 
 // install the vue plugin
@@ -39,6 +31,6 @@ new Vue({
   el: '#app',
   router,
   apolloProvider,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

@@ -20,22 +20,21 @@
 </template>
 
 <script>
-  import router from '../../router/index'
+import router from '../../router/index'
 
-  export default {
-    name: 'WaifuCard',
-    data() {
-      return {
-        price: Math.floor(Math.random() * (50) + 5)
-      }
-    },
-    props: {
-      product: {type: Object, required: true}
-    },
-    methods: {
-      changeToProductInfo() {
-        router.push({path: '/product/' + this.product.id})
-      }
+export default {
+  name: 'WaifuCard',
+  data () {
+    return {
+      price: Math.floor(Math.random() * (50) + 5)
+    }
+  },
+  props: {
+    product: {type: Object, required: true}
+  },
+  methods: {
+    changeToProductInfo () {
+      router.push({path: '/product/' + this.product.id})
     }
   }
 </script>
