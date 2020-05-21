@@ -1,0 +1,23 @@
+#!/bin/bash
+set -ev
+
+# HEROKU_AUTH_TOKEN is a Travis CI protected variable, generated using
+# https://dashboard.heroku.com/account/applications then set in Travis
+# cf. https://docs.travis-ci.com/user/environment-variables/#defining-variables-in-repository-settings
+# and https://devcenter.heroku.com/articles/container-registry-and-runtime#logging-in-to-the-registry
+# and https://docs.travis-ci.com/user/docker/#private-registry-login
+echo "$HEROKU_AUTH_TOKEN" | docker login -u _ --password-stdin registry.heroku.com
+
+docker push registry.heroku.com/ivvq-patterns/waifu-market
+
+docker logout
+
+# cf. https://devcenter.heroku.com/articles/container-registry-and-runtime#api
+# and https://toedter.com/2018/06/02/heroku-docker-deployment-update/
+imageId=$(docker inspect registry.heroku.com/ivvq-patterns/waifu-market --format="{{.Id}}")
+payload="{\"updates\": [{\"type\": \"web\", \"docker_image\": \"$imageId\"}]}"
+curl -n -X PATCH https://api.heroku.com/apps/ivvq-patterns/formation \
+  -d "$payload" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+-H "Authorization: Bearer $HEROKU_AUTH_TOKEN"
