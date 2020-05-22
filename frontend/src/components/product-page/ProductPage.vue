@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="column add-to-basket">
-            <b-button @click="addToBasket()">Ajouter au panier</b-button>
+            <b-button @click="getUser()">Ajouter au panier</b-button>
           </div>
         </div>
       </div>
@@ -82,6 +82,7 @@ export default {
       return {
         query: gql`query ProductInfos($productId: ID!) {
           productInfos: product(productId: $productId){
+            id
             name
              imageLinks{
               imageLink
@@ -102,6 +103,7 @@ export default {
   data () {
     return {
       productInfos: {
+        id: -1,
         name: '',
         imageLinks: [],
         price: '',
@@ -116,24 +118,85 @@ export default {
       },
       order: -1,
       quantity: 1,
-      test: -1,
-      user: 1
+      test: -1
     }
   },
   methods: {
-    addToBasket () {
+    addABasket () {
       this.$apollo.mutate({
-        mutation: gql`mutation createOrder($userId: ID!) {
+        mutation: gql`mutation createOrder($input: OrderInput) {
           createOrder: createOrder(
-            orderStatus: BASKET,
-            userId: $userId){
+            input: $input){
             id
           }}`,
         variables: {
-          userId: this.user
+          input: {
+            userId: localStorage.getItem('user'),
+            status: 'BASKET'
+          }
         }
-      }).then(data =>
-        console.log('my test' + data))
+      }).then(data => {
+        console.log(data.data.createOrder.id)
+        this.addThisProduct(data.data.createOrder.id)
+      })
+    },
+    addThisProduct (orderId) {
+      this.$apollo.mutate({
+        mutation: gql`mutation createOrderItem($input: OrderItemInput) {
+          createOrderItem: createOrderItem(
+            input: $input){
+            id
+          }}`,
+        variables: {
+          input: {
+            quantity: 1,
+            productId: this.productInfos.id,
+            orderId: orderId
+          }
+        }
+      }).then(data => this.success()).catch((error) => this.danger(error))
+    },
+    getUser () {
+      this.$apollo.query({
+        query: gql`query user($id: ID!){
+            getuser:user(userId: $id){
+               orders{
+                  id,
+                  status
+                 }
+            }
+        }`,
+        variables: {
+          id: localStorage.getItem('user')
+        }
+      }
+      ).then(data => {
+        const basket = data.data.getuser.orders.filter(function (order) {
+          if (order.status === 'BASKET') {
+            return order
+          }
+        })
+        if (basket.length === 0) {
+          this.addABasket()
+        } else {
+          this.addThisProduct(basket[0].id)
+        }
+      }).catch((error) => { this.danger(error) })
+    },
+    danger (text) {
+      console.log(text)
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: 'Vous devez vous connecter',
+        position: 'is-bottom',
+        type: 'is-danger'
+      })
+    },
+    success () {
+      this.$buefy.toast.open({
+        message: this.productInfos.name + ' a été ajouté à votre panier',
+        type: 'is-success'
+      })
     }
   }
 }
