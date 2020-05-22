@@ -2,17 +2,23 @@ package patterns.backend.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.test.annotation.DirtiesContext;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Merchant;
+import patterns.backend.domain.Product;
+import patterns.backend.domain.ProductStatus;
 import patterns.backend.domain.User;
+import patterns.backend.graphql.input.MerchantInput;
 import patterns.backend.repositories.MerchantRepository;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -28,16 +34,23 @@ class MerchantServiceTest {
     @MockBean
     private MerchantRepository merchantRepository;
 
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private ProductService productService;
+
     private Merchant merchant;
-    private User user;
 
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        merchant = dataLoader.getMerchant();
+
         merchantService = new MerchantService();
         merchantService.setMerchantRepository(merchantRepository);
-
-        user = new User("Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
+        merchantService.setProductService(productService);
+        merchantService.setUserService(userService);
     }
 
 
@@ -61,12 +74,33 @@ class MerchantServiceTest {
     void saveMerchant() {
         // given: a merchant and an merchantService
         when(merchantService.getMerchantRepository().save(merchant)).thenReturn(merchant);
-
         // when: saveMerchant is invoked
         merchantService.create(merchant);
-
         // then: the save method of MerchantRepository is invoked
         verify(merchantService.getMerchantRepository()).save(merchant);
+    }
+
+    @Test
+    void createMerchant() {
+        // given: a merchant, merchantInput and merchantService
+        User admin = merchant.getAdmin();
+        admin.setId(0L);
+        HashSet<Product> products = (HashSet<Product>) merchant.getProducts();
+        List<Long> productIds = products.stream().map(Product::getId).collect(Collectors.toList());
+        MerchantInput merchantInput = new MerchantInput(merchant.getName(), admin.getId(), productIds);
+        Merchant merchantToReturn = new Merchant(merchant.getName(), merchant.getAdmin());
+        merchantToReturn.setProducts(products);
+        when(merchantRepository.save(Mockito.any())).thenReturn(merchantToReturn);
+        when(userService.findUserById(admin.getId())).thenReturn(admin);
+        when(productService.findProductById(productIds.get(0))).thenReturn(products.stream().findFirst().get());
+
+        merchant.setAdmin(null);
+        merchant.setProducts(new HashSet<>());
+        // when: saveMerchant is invoked
+        Merchant merchantFetch = merchantService.create(merchantInput);
+        // then: the save method of MerchantRepository is invoked
+        assert merchantFetch.getAdmin().equals(admin);
+        assert merchantFetch.getProducts().stream().allMatch(product -> products.contains(product));
     }
 
     @Test
@@ -81,11 +115,18 @@ class MerchantServiceTest {
     @Test
     void deleteMerchant() {
         // given: a Merchant and a MerchantService
+        Set<Product> products = merchant.getProducts();
         when(merchantService.getMerchantRepository().findById(0L)).thenReturn(java.util.Optional.of(merchant));
         // when: the deleteMerchantById method is invoked
         merchantService.deleteMerchantById(0L);
         // then: the delete method of the Repository is invoked
         verify(merchantService.getMerchantRepository()).delete(merchant);
+        for (Product product : products) {
+            assert product.getStock() == 0;
+            assert product.getStatus().equals(ProductStatus.NOT_AVAILABLE);
+            assert product.getMerchant() == null;
+        }
+        assert !merchant.getAdmin().getMerchants().contains(merchant);
     }
 
     @Test

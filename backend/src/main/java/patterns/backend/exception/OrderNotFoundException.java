@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class OrdersNotFoundException extends RuntimeException implements GraphQLError {
+public class OrderNotFoundException extends RuntimeException implements GraphQLError {
     private final Long id;
 
-    public OrdersNotFoundException(Long id) {
+    public OrderNotFoundException(Long id) {
         super("Orders could not be found with id : " + id);
         this.id = id;
     }

@@ -9,9 +9,9 @@ import patterns.backend.domain.ImageLink;
 import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.ProductNotFoundException;
+import patterns.backend.graphql.input.ProductInput;
 import patterns.backend.repositories.ProductRepository;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -46,21 +46,12 @@ public class ProductService {
     public Product create(final Product product) {
         Product savedProduct;
         if (product != null) {
-            product.setCreatedAt(LocalDate.now());
             savedProduct = productRepository.save(product);
-            if (product.getMerchant() != null) {
-                product.getMerchant().addProduct(product);
+            if (product.getImageLinks() != null) {
+                for (ImageLink imageLink : product.getImageLinks()) {
+                    imageLink.setProduct(product);
+                }
             }
-        } else {
-            throw new IllegalArgumentException();
-        }
-        return savedProduct;
-    }
-
-    public Product update(final Product product) {
-        Product savedProduct;
-        if (product != null) {
-            savedProduct = productRepository.save(product);
             if (product.getMerchant() != null) {
                 product.getMerchant().addProduct(product);
             }
@@ -72,6 +63,10 @@ public class ProductService {
 
     public void deleteProductById(final Long id) {
         Product product = findProductById(id);
+        product.getMerchant().removeProduct(product);
+        for (ImageLink imageLink : product.getImageLinks()) {
+            imageLinkService.deleteImageLinkById(imageLink.getId());
+        }
         productRepository.delete(product);
     }
 
@@ -85,16 +80,63 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Product create(Product product, List<Long> imageLinkIds, Long merchantId) {
-        Merchant merchant = merchantService.findMerchantById(merchantId);
-        product.setMerchant(merchant);
-        Set<ImageLink> imageLinks = new HashSet<>();
-        if (imageLinkIds != null) {
-            for (Long id : imageLinkIds) {
+    public Product create(ProductInput productInput) {
+        Product product = new Product(productInput.getName(), productInput.getPrice(), productInput.getStatus(),
+                productInput.getDescription(), productInput.getStock(), null);
+
+        if (productInput.getMerchantId() != null) {
+            Merchant merchant = merchantService.findMerchantById(productInput.getMerchantId());
+            product.setMerchant(merchant);
+        }
+
+        if (productInput.getImageLinkIds() != null && !productInput.getImageLinkIds().isEmpty()) {
+            Set<ImageLink> imageLinks = new HashSet<>();
+            for (Long id : productInput.getImageLinkIds()) {
                 imageLinks.add(imageLinkService.findImageLinkById(id));
             }
+            product.setImageLinks(imageLinks);
         }
-        product.setImageLinks(imageLinks);
+
+        return create(product);
+    }
+
+    public Product update(long productId, ProductInput productInput) {
+        Product product = findProductById(productId);
+
+        if (productInput.getDescription() != null) {
+            product.setDescription(productInput.getDescription());
+        }
+        if (productInput.getName() != null) {
+            product.setName(productInput.getName());
+        }
+        if (productInput.getStatus() != null) {
+            product.setStatus(productInput.getStatus());
+        }
+        if (productInput.getPrice() != null) {
+            product.setPrice(productInput.getPrice());
+        }
+        if (productInput.getStock() != null) {
+            product.setStock(productInput.getStock());
+        }
+
+        if (productInput.getImageLinkIds() != null && !productInput.getImageLinkIds().isEmpty()) {
+            List<Long> toDelete = product.getImageLinks().stream().
+                    map(ImageLink::getId).
+                    collect(Collectors.toList());
+
+            toDelete.removeAll(productInput.getImageLinkIds());
+
+            for (Long idToAdd : toDelete) {
+                imageLinkService.deleteImageLinkById(idToAdd);
+            }
+        }
+
+        if (productInput.getMerchantId() != null) {
+            product.getMerchant().getProducts().remove(product);
+            Merchant merchant = merchantService.findMerchantById(productInput.getMerchantId());
+            product.setMerchant(merchant);
+        }
+
         return create(product);
     }
 }

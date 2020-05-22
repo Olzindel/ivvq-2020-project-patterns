@@ -1,4 +1,4 @@
-# Waifu market-dess
+# Waifu market-desu
 _Pierre SELEBRAN, Nathan ROCHE, Alexandre ELLERO, Timothée THIBAULT_
 
 ## Présentation
