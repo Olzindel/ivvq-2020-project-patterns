@@ -1,11 +1,11 @@
 <template>
-  <div >
-    <b-sidebar  :open.sync="showNavigation" :fullheight="true" :overlay="true">
+  <div>
+    <b-sidebar :open.sync="showNavigation" :fullheight="true" :overlay="true">
       <img src="../../assets/imageDefault.png" alt="People" @click="goToHome()">
       <b-menu style="padding:12px">
         <b-menu-list label="Mon compte">
           <b-menu-item icon-pack="fa" icon="info-circle" label="Info" @click="goToAccount()"></b-menu-item>
-          <b-menu-item icon-pack="fa"  icon="settings" label="Mon panier" ></b-menu-item>
+          <b-menu-item icon-pack="fa" icon="settings" label="Mon panier"></b-menu-item>
           <b-menu-item icon="account" label="historique d'achat">
           </b-menu-item>
         </b-menu-list>
@@ -30,10 +30,11 @@
 </template>
 
 <script>
-import Login from './Login'
+import Login from './login/Login'
 import router from '../../router/index'
 
-export default {name: 'headerPart',
+export default {
+  name: 'headerPart',
   components: {Login},
   data: () => ({
     showNavigation: false,
@@ -55,9 +56,9 @@ export default {name: 'headerPart',
 </script>
 
 <style scoped>
-.toolbar{
-  min-height: 56px;
-  max-height: 56px;
-}
+  .toolbar {
+    min-height: 56px;
+    max-height: 56px;
+  }
 
 </style>
