@@ -1,24 +1,28 @@
 package patterns.backend.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.URL;
+import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.exception.NotEnoughStockException;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@Transactional
 @Entity(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -30,26 +34,42 @@ public class Product {
     @DecimalMin("0.0")
     private double price;
 
-    @NotEmpty
-    private String status;
+    private ProductStatus status;
 
-    @PastOrPresent
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate createdAt;
 
-    @URL
-    private String imageLink;
+    @Column(columnDefinition="TEXT")
+    private String description;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @NotNull
+    @Min(0)
+    private int stock;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<ImageLink> imageLinks = new HashSet<>();
+
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
     private Merchant merchant;
 
-    public Product(String name, double price, String status, LocalDate createdAt, String imageLink, Merchant merchant) {
+    public Product(String name, double price, ProductStatus status, String description, int stock, Merchant merchant) {
         this.name = name;
         this.price = price;
         this.status = status;
-        this.createdAt = createdAt;
-        this.imageLink = imageLink;
         this.merchant = merchant;
+        this.description = description;
+        this.stock = stock;
     }
 
+    public void addImageLink(ImageLink imageLink) {
+        imageLinks.add(imageLink);
+    }
+
+    public void decreaseStock(int value) {
+        if (stock >= value) {
+            this.stock = this.stock - value;
+        } else {
+            throw new NotEnoughStockException(id, name);
+        }
+    }
 }

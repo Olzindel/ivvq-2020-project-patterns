@@ -2,9 +2,11 @@ package patterns.backend.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.OrderItem;
 import patterns.backend.repositories.OrderItemRepository;
 
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class OrderItemServiceTest {
 
     private OrderItemService orderItemService;
@@ -26,6 +29,9 @@ class OrderItemServiceTest {
 
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        orderItem = dataLoader.getOrderItem();
+
         orderItemService = new OrderItemService();
         orderItemService.setOrderItemRepository(orderItemRepository);
     }
@@ -40,7 +46,6 @@ class OrderItemServiceTest {
     @Test
     void findOrderItemById() {
         // given: an OrderItem and  an OrderItemService
-        OrderItem orderItem = new OrderItem();
         when(orderItemService.getOrderItemRepository().findById(0L)).thenReturn(java.util.Optional.of(orderItem));
         // when: the findAll method is invoked
         orderItemService.findOrderItemById(0L);
@@ -51,14 +56,13 @@ class OrderItemServiceTest {
     @Test
     void saveOrderItem() {
         // given: an orderItem and an orderItemService
-        OrderItem orderItem = new OrderItem();
         when(orderItemService.getOrderItemRepository().save(orderItem)).thenReturn(orderItem);
-
+        int stockBeforeSave = orderItem.getProduct().getStock();
         // when: saveOrderItem is invoked
         orderItemService.create(orderItem);
-
         // then: the save method of OrderItemRepository is invoked
         verify(orderItemService.getOrderItemRepository()).save(orderItem);
+        assert stockBeforeSave - orderItem.getQuantity() == orderItem.getProduct().getStock();
     }
 
     @Test
@@ -73,7 +77,6 @@ class OrderItemServiceTest {
     @Test
     void deleteOrderItem() {
         // given: an OrderItem and  an OrderItemService
-        OrderItem orderItem = new OrderItem();
         when(orderItemService.getOrderItemRepository().findById(0L)).thenReturn(java.util.Optional.of(orderItem));
         // when: the deleteOrderItemById method is invoked
         orderItemService.deleteOrderItemById(0L);

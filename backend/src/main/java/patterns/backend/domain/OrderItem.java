@@ -3,18 +3,21 @@ package patterns.backend.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@Transactional
 @Entity(name = "order_items")
 public class OrderItem {
+
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @Min(0)
     private int quantity;

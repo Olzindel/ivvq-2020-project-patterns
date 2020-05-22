@@ -2,9 +2,11 @@ package patterns.backend.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Order;
 import patterns.backend.repositories.OrderRepository;
 
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class OrderServiceTest {
 
     private OrderService orderService;
@@ -22,12 +25,20 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @MockBean
+    private OrderItemService orderItemService;
+
+    @MockBean
     private Order order;
+
 
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        order = dataLoader.getOrder();
+
         orderService = new OrderService();
         orderService.setOrderRepository(orderRepository);
+        orderService.setOrderItemService(orderItemService);
     }
 
 
@@ -40,10 +51,9 @@ class OrderServiceTest {
     @Test
     void findOrdersById() {
         // given: an Orders and an OrdersService
-        Order order = new Order();
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
         // when: the findAll method is invoked
-        orderService.findOrdersById(0L);
+        orderService.findOrderById(0L);
         // then: the findAll method of the Repository is invoked
         verify(orderService.getOrderRepository()).findById(0L);
     }
@@ -51,12 +61,9 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
-        Order order = new Order();
         when(orderService.getOrderRepository().save(order)).thenReturn(order);
-
         // when: saveOrders is invoked
         orderService.create(order);
-
         // then: the save method of OrdersRepository is invoked
         verify(orderService.getOrderRepository()).save(order);
     }
@@ -73,10 +80,10 @@ class OrderServiceTest {
     @Test
     void deleteOrders() {
         // given: an Orders and an OrdersService
-        Order order = new Order();
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
+        //when(orderItemService.deleteOrderItemById(any(Long.class))).thenReturn()
         // when: the deleteOrdersById method is invoked
-        orderService.deleteOrdersById(0L);
+        orderService.deleteOrderById(0L);
         // then: the delete method of the Repository is invoked
         verify(orderService.getOrderRepository()).delete(order);
     }

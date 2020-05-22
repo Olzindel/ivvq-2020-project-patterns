@@ -5,10 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.DataLoader;
+import patterns.backend.domain.Merchant;
+import patterns.backend.domain.Order;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
+import patterns.backend.graphql.input.UserInput;
 
-import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +26,8 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("fullName", "toto@toto.fr", "F", LocalDate.now(), LocalDate.now());
+        DataLoader dataLoader = new DataLoader();
+        user = dataLoader.getUser();
     }
 
     @Test
@@ -40,7 +45,7 @@ public class UserServiceIntegrationTest {
     public void testSaveUserNull() {
         // when: null is persisted via an UserService
         // then: an exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> userService.create(null));
+        assertThrows(IllegalArgumentException.class, () -> userService.create((User) null));
     }
 
     @Test
@@ -70,9 +75,8 @@ public class UserServiceIntegrationTest {
         // when: we call findUserById with the id of that User
         User fetched = userService.findUserById(user.getId());
         // then: All the attributes of the User obtained has the correct values
-        assertEquals(user.getFullName(), fetched.getFullName());
-        assertEquals(user.getCreatedAt(), fetched.getCreatedAt());
-        assertEquals(user.getDateOfBirth(), fetched.getDateOfBirth());
+        assertEquals(user.getFirstName(), fetched.getFirstName());
+        assertEquals(user.getLastName(), fetched.getLastName());
         assertEquals(user.getEmail(), fetched.getEmail());
         assertEquals(user.getGender(), fetched.getGender());
     }
@@ -80,13 +84,14 @@ public class UserServiceIntegrationTest {
     @Test
     public void testUpdatedUserIsUpdated() {
         // given: an User user persisted
-        userService.create(user);
+        User fetched = userService.create(user);
 
-        User fetched = userService.findUserById(user.getId());
-        // when: the email is modified at the "object" level
-        fetched.setEmail("tyty@tyty.fr");
+        UserInput userInput = new UserInput(user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
+                user.getGender(), user.getStreet(), user.getPostalCode(), user.getCity(),
+                user.getMerchants().stream().map(Merchant::getId).collect(Collectors.toList()),
+                user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
         // when: the object user is updated in the database
-        userService.update(fetched);
+        userService.update(user.getId(), userInput);
         // when: the object user is re-read in the database
         User fetchedUpdated = userService.findUserById(user.getId());
         // then: the email has been successfully updated
@@ -98,22 +103,23 @@ public class UserServiceIntegrationTest {
         long before = userService.countUser();
         // given: is new user
         // when: this USer is persisted
-        userService.create(new User("john", "john@john.fr", "M", LocalDate.now(), LocalDate.now()));
+        userService.create(user);
         // then : the number of User persisted is increased by 1
         assertEquals(before + 1, userService.countUser());
     }
 
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
-        // given: an User user persisted
-        userService.create(user);
-        long count = userService.countUser();
 
-        User fetched = userService.findUserById(user.getId());
-        // when: the email is modified at the "object" level
-        fetched.setEmail("titi@titi.fr");
-        // when: the object is updated in the database
-        userService.update(fetched);
+        // given: an User user persisted
+        User fetched = userService.create(user);
+        long count = userService.countUser();
+        UserInput userInput = new UserInput(user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
+                user.getGender(), user.getStreet(), user.getPostalCode(), user.getCity(),
+                user.getMerchants().stream().map(Merchant::getId).collect(Collectors.toList()),
+                user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
+        // when: the object user is updated in the database
+        userService.update(user.getId(), userInput);
         // then: a new entry has not been created in the database
         assertEquals(count, userService.countUser());
     }

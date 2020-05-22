@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Merchant;
+import patterns.backend.DataLoader;
+import patterns.backend.domain.ImageLink;
 import patterns.backend.domain.Product;
-import patterns.backend.domain.User;
 import patterns.backend.exception.ProductNotFoundException;
+import patterns.backend.graphql.input.ProductInput;
 
-import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,15 +23,10 @@ public class ProductServiceIntegrationTest {
 
     private Product product;
 
-    private Merchant merchant;
-
-    private User user;
-
     @BeforeEach
     public void setup() {
-        user = new User("Nathan", "nathan@edf.fr", "M", LocalDate.now(), LocalDate.now());
-        merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, "Ready", LocalDate.now(), "https://www.google.fr/", merchant);
+        DataLoader dataLoader = new DataLoader();
+        product = dataLoader.getProduct();
     }
 
     @Test
@@ -48,7 +44,7 @@ public class ProductServiceIntegrationTest {
     public void testSaveProductNull() {
         // when: null is persisted via a ProductService
         // then: a exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> productService.create(null));
+        assertThrows(IllegalArgumentException.class, () -> productService.create((Product) null));
     }
 
     @Test
@@ -78,8 +74,7 @@ public class ProductServiceIntegrationTest {
         // when: we call findProductById with the id of that Product
         Product fetched = productService.findProductById(product.getId());
         // then: All the attributes of the Product obtained has the correct values
-        assertEquals(product.getCreatedAt(), fetched.getCreatedAt());
-        assertEquals(product.getImageLink(), fetched.getImageLink());
+        assertEquals(product.getImageLinks(), fetched.getImageLinks());
         assertEquals(product.getName(), fetched.getName());
         assertEquals(product.getPrice(), fetched.getPrice());
         assertEquals(product.getStatus(), fetched.getStatus());
@@ -88,17 +83,19 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testUpdatedProductIsUpdated() {
         // given: a Product product persisted
-        productService.create(product);
+        Product fetched = productService.create(product);
 
-        Product fetched = productService.findProductById(product.getId());
-        // when: the image link is modified at the "object" level
-        fetched.setImageLink("https://www.google.com/");
+        ProductInput productInput = new ProductInput(product.getName(), Float.valueOf("0.8"), product.getStatus(),
+                product.getDescription(), product.getStock(),
+                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()),
+                fetched.getMerchant().getId());
+
         // when: the object product is updated in the database
-        productService.update(fetched);
+        productService.update(fetched.getId(), productInput);
         // when: the object product is re-read in the database
         Product fetchedUpdated = productService.findProductById(product.getId());
         // then: the email has been successfully updated
-        assertEquals(fetched.getImageLink(), fetchedUpdated.getImageLink());
+        assertEquals(fetched.getPrice(), fetchedUpdated.getPrice());
     }
 
     @Test
@@ -106,7 +103,7 @@ public class ProductServiceIntegrationTest {
         long before = productService.countProduct();
         // given: is new product
         // when: this USer is persisted
-        productService.create(new Product("Rikka", 1000000.0, "Ready", LocalDate.now(), "https://www.google.com/", merchant));
+        productService.create(product);
         // then : the number of Product persisted is increased by 1
         assertEquals(before + 1, productService.countProduct());
     }
@@ -114,14 +111,13 @@ public class ProductServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: a Product product persisted
-        productService.create(product);
+        Product fetched = productService.create(product);
         long count = productService.countProduct();
 
-        Product fetched = productService.findProductById(product.getId());
-        // when: the image link is modified at the "object" level
-        fetched.setImageLink("https://www.google.com/");
-        // when: the object is updated in the database
-        productService.update(fetched);
+        ProductInput productInput = new ProductInput(product.getName(), Float.valueOf("0.8"), product.getStatus(),
+                product.getDescription(), product.getStock(),
+                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()),
+                product.getMerchant().getId());
         // then: a new entry has not been created in the database
         assertEquals(count, productService.countProduct());
     }

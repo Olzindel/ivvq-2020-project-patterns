@@ -1,19 +1,18 @@
 <template>
-  <div class="cardSize">
-    <div class="card" style="margin: 24px">
-      <div >
+  <div class="cardSize" style="margin: 20px">
+    <div class="card">
+      <div>
         <div class="card-header-title is-centered">
-          Poster avec les meilleurs Waifu
+          {{product.name}}
         </div>
-        <div>
-          <img src="../../assets/imageDefault.png" alt="People">
+        <div class="img">
+          <img class="img1" :src=product.imageLinks[0].imageLink alt="waifuPicture">
         </div>
         <div class="card-content" style="padding:0">
-          <div>{{price}}€</div>
-          <div v-if="test !== undefined">{{test.data.users[0].fullName}}</div>
+          <div>{{product.price}}€</div>
         </div>
       </div>
-      <b-button>
+      <b-button @click="changeToProductInfo">
         <b-icon pack="fa" icon="shopping-basket"></b-icon>
       </b-button>
     </div>
@@ -21,31 +20,43 @@
 </template>
 
 <script>
-import {GET_ALL_USERS_QUERY} from '../../service/api'
+import router from '../../router/index'
+
 export default {
   name: 'WaifuCard',
-  data () {
-    return {
-      price: Math.floor(Math.random() * (50) + 5),
-      test: undefined
-    }
+  props: {
+    product: {type: Object, required: true}
   },
-  async mounted () {
-    this.test = await this.$apollo.query({query: GET_ALL_USERS_QUERY,
-      variables: {count: 5}})
+  methods: {
+    changeToProductInfo () {
+      router.push({path: '/product/' + this.product.id})
+    }
   }
 }
 </script>
 
 <style scoped>
-   .cardSize{
-  max-width: 400px;
-  min-width: 400px;
-}
+  .cardSize {
+    max-width: 250px;
+    min-width: 250px;
+  }
 
-  .card{
-    box-shadow: 6px 6px 1px 1px rgba(10,10,10, .2);
-    border-radius : 2em;
-    border : rgba(50,50,50,.2) solid 1px
+  .img {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .img1 {
+    display: flex;
+    height: 200px;
+    width: 250px;
+    object-fit: cover;
+  }
+
+  .card {
+    box-shadow: 4px 4px 1px 1px rgba(100, 100, 100, .5);
+    border-radius: 2em;
+    border: rgba(50, 50, 50, .2) solid 1px
   }
 </style>

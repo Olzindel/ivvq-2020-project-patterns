@@ -2,9 +2,11 @@ package patterns.backend.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Product;
 import patterns.backend.repositories.ProductRepository;
 
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class ProductServiceTest {
 
     private ProductService productService;
@@ -21,6 +24,8 @@ class ProductServiceTest {
     @MockBean
     private ProductRepository productRepository;
 
+    @MockBean
+    private ImageLinkService imageLinkService;
 
     @MockBean
     private Product product;
@@ -28,8 +33,12 @@ class ProductServiceTest {
 
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        product = dataLoader.getProduct();
+
         productService = new ProductService();
         productService.setProductRepository(productRepository);
+        productService.setImageLinkService(imageLinkService);
     }
 
     @Test
@@ -41,7 +50,6 @@ class ProductServiceTest {
     @Test
     void findProductById() {
         // given: a Product and a ProductService
-        Product product = new Product();
         when(productService.getProductRepository().findById(0L)).thenReturn(java.util.Optional.of(product));
         // when: the findAll method is invoked
         productService.findProductById(0L);
@@ -52,12 +60,9 @@ class ProductServiceTest {
     @Test
     void saveProduct() {
         // given: a product and a productService
-        Product product = new Product();
         when(productService.getProductRepository().save(product)).thenReturn(product);
-
         // when: saveProduct is invoked
         productService.create(product);
-
         // then: the save method of ProductRepository is invoked
         verify(productService.getProductRepository()).save(product);
     }
@@ -74,7 +79,6 @@ class ProductServiceTest {
     @Test
     void deleteProduct() {
         // given: a Product and aProductService
-        Product product = new Product();
         when(productService.getProductRepository().findById(0L)).thenReturn(java.util.Optional.of(product));
         // when: the deleteProductById method is invoked
         productService.deleteProductById(0L);
