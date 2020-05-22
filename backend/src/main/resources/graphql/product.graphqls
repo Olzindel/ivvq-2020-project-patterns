@@ -1,13 +1,28 @@
 type Product {
-    id: ID!,
-    name: String!,
-    price: Float!,
-    status: String!,
-    createdAt: String,
-    imageLinks: [ImageLink!]!,
+    id: ID!
+    name: String!
+    price: Float!
+    status: ProductStatus!
+    description: String
+    stock: Int!
+    imageLinks: [ImageLink!]
     merchant: Merchant!
 }
 
+input ProductInput {
+    name:String,
+    price:Float
+    status:ProductStatus
+    description:String
+    stock:Int
+    imageLinkIds:[ID!]
+    merchantId:ID
+}
+
+enum ProductStatus {
+    AVAILABLE
+    NOT_AVAILABLE
+}
 
 extend type Query {
     products(count: Int!):[Product]
@@ -15,6 +30,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    createProduct(name:String!, price:Float!, status:String!, description:String, imageLinkIds:[ID!], merchantId:ID!):Product
+    updateProduct(productId:ID!, input:ProductInput!):Product
+    createProduct(input:ProductInput):Product
     deleteProduct(productId:ID!):ID
 }

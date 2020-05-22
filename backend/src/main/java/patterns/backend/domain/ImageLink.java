@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.transaction.annotation.Transactional;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "ImageLinks")
+@Transactional
+@Entity(name = "image_links")
 public class ImageLink {
 
   @Id @GeneratedValue private Long id;

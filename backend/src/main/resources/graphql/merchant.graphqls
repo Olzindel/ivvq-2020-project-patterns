@@ -1,8 +1,14 @@
 type Merchant {
     id: ID!
     name: String!
-    createdAt: String,
     admin: User!
+    products: [Product!]
+}
+
+input MerchantInput {
+    name:String
+    userId:ID
+    productIds:[ID!]
 }
 
 extend type Query {
@@ -11,6 +17,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    createMerchant(name:String! , userId:ID!, createdAt:String):Merchant
+    updateMerchant(merchantId:ID!, input:MerchantInput!):Merchant
+    createMerchant(input:MerchantInput):Merchant
     deleteMerchant(merchantId:ID!):ID
 }

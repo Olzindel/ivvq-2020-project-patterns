@@ -1,34 +1,37 @@
 package patterns.backend.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "order_items")
 public class OrderItem {
-  @Id @GeneratedValue public Long id;
 
-  @Min(0)
-  private int quantity;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @OneToOne(
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
-  )
-  private Product product;
+    @Min(0)
+    private int quantity;
 
-  @ManyToOne(
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
-  )
-  private Order order;
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Product product;
 
-  public OrderItem(int quantity, Product product, Order order) {
-    this.quantity = quantity;
-    this.product = product;
-    this.order = order;
-  }
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Order order;
+
+    public OrderItem(int quantity, Product product, Order order) {
+        this.quantity = quantity;
+        this.product = product;
+        this.order = order;
+    }
+
 }

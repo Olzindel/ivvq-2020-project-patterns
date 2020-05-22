@@ -1,12 +1,27 @@
 type User {
-    id: ID!,
-    fullName: String!,
-    email: String!,
-    gender: String!,
-    dateOfBirth: String,
-    createdAt: String
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    gender: String
+    street:String
+    postalCode:String
+    city:String
+    merchants: [Merchant!]
+    orders: [Order!]
 }
 
+input UserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    gender: String
+    street:String
+    postalCode:String
+    city:String
+    merchants: [ID!]
+    orders: [ID!]
+}
 
 extend type Query {
     users(count: Int!):[User]
@@ -14,6 +29,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    createUser(fullName:String!, email:String!, gender:String!, dateOfBirth:String, createdAt:String):User
+    updateUser(userId:ID!, input:UserInput!):User
+    createUser(input:UserInput):User
     deleteUser(userId:ID!):ID
 }

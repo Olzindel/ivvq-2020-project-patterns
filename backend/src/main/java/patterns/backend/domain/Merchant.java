@@ -1,54 +1,53 @@
 package patterns.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "merchants")
 public class Merchant {
 
-  @Id @GeneratedValue private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @NotNull @NotEmpty private String name;
+    @NotNull
+    @NotEmpty
+    private String name;
 
-  @PastOrPresent
-  @NotNull
-  @JsonFormat(pattern = "dd/MM/yyyy")
-  private LocalDate createdAt;
 
-  @ManyToOne(
-    cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH}
-  )
-  @NotNull
-  @Valid
-  private User admin;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
+    @Valid
+    private User admin;
 
-  @OneToMany(
-    mappedBy = "merchant",
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
-  )
-  private List<Product> products;
+    @JsonIgnore
+    @OneToMany(mappedBy = "merchant", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Product> products = new HashSet<>();
 
-  public Merchant(String name, LocalDate createdAt, User admin) {
-    this.name = name;
-    this.createdAt = createdAt;
-    this.admin = admin;
-    this.products = new ArrayList<>();
-  }
+    public Merchant(String name, User admin) {
+        this.name = name;
+        this.admin = admin;
+    }
 
-  public void addProduct(Product product) {
-    if (!products.contains(product)) products.add(product);
-  }
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+    }
 }

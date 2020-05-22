@@ -1,67 +1,71 @@
 package patterns.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Transactional
 @Entity(name = "users")
 public class User {
 
-  @Id @GeneratedValue private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  private String fullName;
+    private String firstName;
 
-  @Email @NotNull private String email;
+    private String lastName;
 
-  @Pattern(regexp = "[MF]")
-  @NotNull
-  private String gender;
+    @Email
+    @NotNull
+    private String email;
 
-  @JsonFormat(pattern = "dd/MM/yyyy")
-  private LocalDate dateOfBirth;
+    @Pattern(regexp = "[MF]")
+    @NotNull
+    private String gender;
 
-  @JsonFormat(pattern = "dd/MM/yyyy")
-  private LocalDate createdAt;
+    private String street;
 
-  @OneToMany(
-    mappedBy = "admin",
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
-  )
-  private List<Merchant> merchants;
+    @Pattern(regexp = "^(([0-8][0-9])|(9[0-5]))[0-9]{3}$")
+    private String postalCode;
 
-  @OneToMany(
-    mappedBy = "user",
-    cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}
-  )
-  private List<Order> orders;
+    private String city;
 
-  public User(
-      String fullName, String email, String gender, LocalDate dateOfBirth, LocalDate createdAt) {
-    this.fullName = fullName;
-    this.email = email;
-    this.gender = gender;
-    this.dateOfBirth = dateOfBirth;
-    this.createdAt = createdAt;
-    this.merchants = new ArrayList<>();
-    this.orders = new ArrayList<>();
-  }
+    @JsonIgnore
+    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Merchant> merchants = new HashSet<>();
 
-  public void addMerchant(Merchant merchant) {
-    if (!merchants.contains(merchant)) merchants.add(merchant);
-  }
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Order> orders = new HashSet<>();
 
-  public void addOrder(Order order) {
-    if (!orders.contains(order)) orders.add(order);
-  }
+    public User(String firstName, String lastName, String email, String gender, String street, String postalCode, String city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.gender = gender;
+        this.street = street;
+        this.postalCode = postalCode;
+        this.city = city;
+    }
+
+    public void addMerchant(Merchant merchant) {
+        merchants.add(merchant);
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
 }
