@@ -7,13 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.DataLoader;
 import patterns.backend.domain.ImageLink;
-import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
 import patterns.backend.graphql.input.ImageLinkInput;
-import patterns.backend.graphql.input.MerchantInput;
 import patterns.backend.graphql.input.ProductInput;
 import patterns.backend.graphql.mutation.ImageLinkMutation;
-import patterns.backend.graphql.mutation.MerchantMutation;
 import patterns.backend.graphql.mutation.ProductMutation;
 
 import java.util.Arrays;
@@ -32,29 +29,22 @@ public class ProductQueryIntegrationTest {
     ProductMutation productMutation;
 
     @Autowired
-    MerchantMutation merchantMutation;
-
-    @Autowired
     ImageLinkMutation imageLinkMutation;
 
     ProductInput productInput;
-    MerchantInput merchantInput;
     ImageLinkInput imageLinkInput;
 
     @BeforeEach
     public void setup() {
         DataLoader dataLoader = new DataLoader();
         productInput = dataLoader.getProductInput();
-        merchantInput = dataLoader.getMerchantInput();
         imageLinkInput = dataLoader.getImageLinkInput();
     }
 
     @Test
     void getProducts() {
-        Merchant merchant = merchantMutation.createMerchant(merchantInput);
         ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
         productInput.setImageLinkIds(Arrays.asList(imageLink.getId()));
-        productInput.setMerchantId(merchant.getId());
         Product product = productMutation.createProduct(productInput);
 
         List<Product> productsQueried = productQuery.getProducts(2);
@@ -62,7 +52,6 @@ public class ProductQueryIntegrationTest {
         for (Product productQueried : productsQueried) {
             assertEquals(product.getPrice(), productQueried.getPrice());
             assertEquals(product.getImageLinks(), productQueried.getImageLinks());
-            assertEquals(product.getMerchant(), productQueried.getMerchant());
             assertEquals(product.getStatus(), productQueried.getStatus());
             assertEquals(product.getStock(), productQueried.getStock());
             assertEquals(product.getName(), productQueried.getName());
@@ -72,10 +61,8 @@ public class ProductQueryIntegrationTest {
 
     @Test
     void getProduct() {
-        Merchant merchant = merchantMutation.createMerchant(merchantInput);
         ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
         productInput.setImageLinkIds(Arrays.asList(imageLink.getId()));
-        productInput.setMerchantId(merchant.getId());
         Product product = productMutation.createProduct(productInput);
 
 
@@ -83,7 +70,6 @@ public class ProductQueryIntegrationTest {
 
         assertEquals(product.getPrice(), productQueried.getPrice());
         assertEquals(product.getImageLinks(), productQueried.getImageLinks());
-        assertEquals(product.getMerchant(), productQueried.getMerchant());
         assertEquals(product.getStatus(), productQueried.getStatus());
         assertEquals(product.getStock(), productQueried.getStock());
         assertEquals(product.getName(), productQueried.getName());

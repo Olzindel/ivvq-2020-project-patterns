@@ -21,6 +21,6 @@ public class UserInput {
     String street;
     String postalCode;
     String city;
-    java.util.List<Long> merchantIds;
+    Boolean merchant;
     List<Long> orderIds;
 }

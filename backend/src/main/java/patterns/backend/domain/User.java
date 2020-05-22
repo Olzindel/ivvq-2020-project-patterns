@@ -43,15 +43,14 @@ public class User {
 
     private String city;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<Merchant> merchants = new HashSet<>();
+    @NotNull
+    private Boolean merchant;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Order> orders = new HashSet<>();
 
-    public User(String firstName, String lastName, String email, String gender, String street, String postalCode, String city) {
+    public User(String firstName, String lastName, String email, String gender, String street, String postalCode, String city, Boolean merchant) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -59,10 +58,7 @@ public class User {
         this.street = street;
         this.postalCode = postalCode;
         this.city = city;
-    }
-
-    public void addMerchant(Merchant merchant) {
-        merchants.add(merchant);
+        this.merchant = merchant;
     }
 
     public void addOrder(Order order) {

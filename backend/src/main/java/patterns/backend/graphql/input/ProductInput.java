@@ -21,5 +21,4 @@ public class ProductInput {
     String description;
     Integer stock;
     List<Long> imageLinkIds;
-    Long merchantId;
 }
