@@ -13,6 +13,7 @@ import patterns.backend.exception.OrderItemNotFoundException;
 import patterns.backend.graphql.input.OrderItemInput;
 import patterns.backend.repositories.OrderItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,17 +45,36 @@ public class OrderItemService {
 
     public OrderItem create(OrderItemInput orderItemInput) {
         OrderItem orderItem = new OrderItem(orderItemInput.getQuantity(), null, null);
+        boolean isUpdated = false;
+        Order order = null;
+        Product product = null;
 
         if (orderItemInput.getProductId() != null) {
-            Product product = productService.findProductById(orderItemInput.getProductId());
+            product = productService.findProductById(orderItemInput.getProductId());
             orderItem.setProduct(product);
         }
+
         if (orderItemInput.getOrderId() != null) {
-            Order order = orderService.findOrderById(orderItemInput.getOrderId());
+            order = orderService.findOrderById(orderItemInput.getOrderId());
             orderItem.setOrder(order);
         }
 
-        return create(orderItem);
+        if (orderItemInput.getOrderId() != null && orderItemInput.getProductId() != null) {
+            ArrayList<OrderItem> orderItemArrayList = new ArrayList<>(order.getOrderItems());
+            for (OrderItem o : orderItemArrayList) {
+                if (o.getProduct().getId() == product.getId()) {
+                    OrderItemInput oi = new OrderItemInput(o.getQuantity() + orderItem.getQuantity(), product.getId(), order.getId());
+                    orderItem = update(o.getId(), oi);
+                    isUpdated = true;
+                }
+            }
+        }
+
+        if (!isUpdated) {
+            orderItem = create(orderItem);
+        }
+
+        return orderItem;
     }
 
     public OrderItem create(OrderItem orderItem) {
@@ -74,18 +94,22 @@ public class OrderItemService {
 
     public OrderItem update(Long orderItemId, OrderItemInput orderItemInput) {
         OrderItem orderItem = findOrderItemById(orderItemId);
+
         if (orderItemInput.getQuantity() != null) {
             orderItem.setQuantity(orderItemInput.getQuantity());
         }
+
         if (orderItemInput.getProductId() != null) {
             Product product = productService.findProductById(orderItemInput.getProductId());
             orderItem.setProduct(product);
         }
+
         if (orderItemInput.getOrderId() != null) {
             orderItem.getOrder().getOrderItems().remove(orderItem);
             Order order = orderService.findOrderById(orderItemInput.getOrderId());
             orderItem.setOrder(order);
         }
+
         return create(orderItem);
     }
 
