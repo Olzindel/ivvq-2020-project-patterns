@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.ImageLink;
-import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.ProductNotFoundException;
 import patterns.backend.graphql.input.ProductInput;
@@ -31,9 +30,6 @@ public class ProductService {
     @Autowired
     private ImageLinkService imageLinkService;
 
-    @Autowired
-    private MerchantService merchantService;
-
     public Product findProductById(final Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (!optionalProduct.isPresent()) {
@@ -52,9 +48,6 @@ public class ProductService {
                     imageLink.setProduct(product);
                 }
             }
-            if (product.getMerchant() != null) {
-                product.getMerchant().addProduct(product);
-            }
         } else {
             throw new IllegalArgumentException();
         }
@@ -63,7 +56,6 @@ public class ProductService {
 
     public void deleteProductById(final Long id) {
         Product product = findProductById(id);
-        product.getMerchant().removeProduct(product);
         for (ImageLink imageLink : product.getImageLinks()) {
             imageLinkService.deleteImageLinkById(imageLink.getId());
         }
@@ -82,12 +74,7 @@ public class ProductService {
 
     public Product create(ProductInput productInput) {
         Product product = new Product(productInput.getName(), productInput.getPrice(), productInput.getStatus(),
-                productInput.getDescription(), productInput.getStock(), null);
-
-        if (productInput.getMerchantId() != null) {
-            Merchant merchant = merchantService.findMerchantById(productInput.getMerchantId());
-            product.setMerchant(merchant);
-        }
+                productInput.getDescription(), productInput.getStock());
 
         if (productInput.getImageLinkIds() != null && !productInput.getImageLinkIds().isEmpty()) {
             Set<ImageLink> imageLinks = new HashSet<>();
@@ -129,12 +116,6 @@ public class ProductService {
             for (Long idToAdd : toDelete) {
                 imageLinkService.deleteImageLinkById(idToAdd);
             }
-        }
-
-        if (productInput.getMerchantId() != null) {
-            product.getMerchant().getProducts().remove(product);
-            Merchant merchant = merchantService.findMerchantById(productInput.getMerchantId());
-            product.setMerchant(merchant);
         }
 
         return create(product);

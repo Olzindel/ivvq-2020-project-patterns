@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Order;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
@@ -25,9 +24,6 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private MerchantService merchantService;
-
-    @Autowired
     private OrderService orderService;
 
 
@@ -44,11 +40,6 @@ public class UserService {
         User savedUser;
         if (user != null) {
             savedUser = userRepository.save(user);
-            if (user.getMerchants() != null) {
-                for (Merchant merchant : user.getMerchants()) {
-                    merchant.setAdmin(user);
-                }
-            }
             if (user.getOrders() != null) {
                 for (Order order : user.getOrders()) {
                     order.setUser(user);
@@ -66,9 +57,6 @@ public class UserService {
 
     public void deleteUserById(final Long id) {
         User user = findUserById(id);
-        for (Merchant merchant : user.getMerchants()) {
-            merchantService.deleteMerchantById(merchant.getId());
-        }
         for (Order order : user.getOrders()) {
             orderService.deleteOrderById(order.getId());
         }
@@ -84,15 +72,7 @@ public class UserService {
 
     public User create(UserInput userInput) {
         User user = new User(userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
-                userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity());
-
-        if (userInput.getMerchantIds() != null && !userInput.getMerchantIds().isEmpty()) {
-            Set<Merchant> merchants = new HashSet<>();
-            for (Long id : userInput.getMerchantIds()) {
-                merchants.add(merchantService.findMerchantById(id));
-            }
-            user.setMerchants(merchants);
-        }
+                userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity(), userInput.getMerchant());
 
         if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
             Set<Order> orders = new HashSet<>();
@@ -133,21 +113,6 @@ public class UserService {
 
         if (userInput.getCity() != null) {
             user.setCity(userInput.getCity());
-        }
-        if (userInput.getMerchantIds() != null && !userInput.getMerchantIds().isEmpty()) {
-            List<Long> merchantIds = new ArrayList<>(userInput.getMerchantIds());
-            List<Long> toDelete = user.getMerchants().stream().
-                    map(Merchant::getId).
-                    collect(Collectors.toList());
-
-            toDelete.removeAll(userInput.getMerchantIds());
-
-            for (Long idToAdd : toDelete) {
-                merchantService.deleteMerchantById(idToAdd);
-            }
-            for (Long idToAdd : merchantIds) {
-                user.addMerchant(merchantService.findMerchantById(idToAdd));
-            }
         }
         if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
             List<Long> orderIds = new ArrayList<>(userInput.getOrderIds());

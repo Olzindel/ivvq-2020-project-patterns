@@ -27,7 +27,6 @@ class OrderServiceTest {
     @MockBean
     private OrderItemService orderItemService;
 
-    @MockBean
     private Order order;
 
 

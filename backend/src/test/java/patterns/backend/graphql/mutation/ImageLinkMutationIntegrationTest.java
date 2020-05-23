@@ -63,7 +63,7 @@ public class ImageLinkMutationIntegrationTest {
         long count = imageLinkMutation.getImageLinkService().countImageLink();
 
         ImageLinkInput imageLinkInputUpdate = new ImageLinkInput();
-        ProductInput productInput2 = new ProductInput("test", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null, null);
+        ProductInput productInput2 = new ProductInput("test", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null);
         Product product2 = productMutation.createProduct(productInput2);
         imageLinkInputUpdate.setImageLink("http://www.t.t");
         imageLinkInputUpdate.setProductId(product2.getId());

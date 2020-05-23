@@ -25,9 +25,6 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private MerchantService merchantService;
-
-    @MockBean
     private OrderService orderService;
 
     private User user;
@@ -37,7 +34,6 @@ class UserServiceTest {
         DataLoader dataLoader = new DataLoader();
 
         userService = new UserService();
-        userService.setMerchantService(merchantService);
         userService.setOrderService(orderService);
         userService.setUserRepository(userRepository);
 
