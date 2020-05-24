@@ -1,6 +1,5 @@
 package patterns.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,9 +40,6 @@ public class User {
     @NotNull
     private String gender;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirth;
-
     private String street;
 
     @Pattern(regexp = "^(([0-8][0-9])|(9[0-5]))[0-9]{3}$")
@@ -52,33 +47,24 @@ public class User {
 
     private String city;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate createdAt;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<Merchant> merchants = new HashSet<>();
+    @NotNull
+    private Boolean merchant;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Order> orders = new HashSet<>();
 
-    public User(String username, String password, String firstName, String lastName, String email, String gender, LocalDate dateOfBirth, String street, String postalCode, String city, LocalDate createdAt) {
+    public User(String username, String password, String firstName, String lastName, String email, String gender, String street, String postalCode, String city, Boolean merchant) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.createdAt = createdAt;
         this.street = street;
         this.postalCode = postalCode;
         this.city = city;
-    }
-
-    public void addMerchant(Merchant merchant) {
-        merchants.add(merchant);
+        this.merchant = merchant;
     }
 
     public void addOrder(Order order) {

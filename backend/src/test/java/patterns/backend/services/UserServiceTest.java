@@ -6,19 +6,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
+import patterns.backend.DataLoader;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import patterns.backend.domain.User;
 import patterns.backend.repositories.UserRepository;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
@@ -30,20 +27,23 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private MerchantService merchantService;
+    private OrderService orderService;
 
     @MockBean
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private User user;
 
-
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+
         userService = new UserService();
-        userService.setMerchantService(merchantService);
+        userService.setOrderService(orderService);
         userService.setUserRepository(userRepository);
         userService.setBCryptPasswordEncoder(bCryptPasswordEncoder);
+
+        user = dataLoader.getUser();
     }
 
     @Test
@@ -55,7 +55,6 @@ class UserServiceTest {
     @Test
     void findUserById() {
         // given: an user and an UserService
-        User user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
         // when: the findAll method is invoked
         userService.findUserById(0L);
@@ -66,7 +65,16 @@ class UserServiceTest {
     @Test
     void saveUser() {
         // given: an user and an userService
-        User user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
+        when(userService.getUserRepository().save(user)).thenReturn(user);
+        // when: saveUser is invoked
+        userService.create(user);
+        // then: the save method of UserRepository is invoked
+        verify(userService.getUserRepository()).save(user);
+    }
+
+    @Test
+    void createUser() {
+        // given: an user and an userService
         when(userService.getUserRepository().save(user)).thenReturn(user);
 
         // when: saveUser is invoked
@@ -88,7 +96,6 @@ class UserServiceTest {
     @Test
     void deleteUser() {
         // given: an UserService and an user persisted
-        User user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
         user.setId(0L);
         when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
         // when: the deleteUserById method is invoked

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @Transactional
-@Entity(name = "ImageLinks")
+@Entity(name = "image_links")
 public class ImageLink {
 
     @Id

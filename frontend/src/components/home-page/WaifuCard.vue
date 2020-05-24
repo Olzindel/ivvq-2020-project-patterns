@@ -6,7 +6,7 @@
           {{product.name}}
         </div>
         <div class="img">
-          <img class="img1" :src=product.imageLinks[0].imageLink alt="People">
+          <img class="img1" :src=product.imageLinks[0].imageLink alt="waifuPicture">
         </div>
         <div class="card-content" style="padding:0">
           <div>{{product.price}}€</div>
@@ -24,11 +24,6 @@ import router from '../../router/index'
 
 export default {
   name: 'WaifuCard',
-  data () {
-    return {
-      price: Math.floor(Math.random() * (50) + 5)
-    }
-  },
   props: {
     product: {type: Object, required: true}
   },

@@ -6,15 +6,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.test.annotation.DirtiesContext;
-import patterns.backend.domain.Merchant;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Order;
-import patterns.backend.domain.OrderStatus;
-import patterns.backend.domain.User;
 import patterns.backend.repositories.OrderRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -31,20 +25,19 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @MockBean
+    private OrderItemService orderItemService;
+
     private Order order;
 
 
-    private User user;
-    private Merchant merchant;
-
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        order = dataLoader.getOrder();
+
         orderService = new OrderService();
         orderService.setOrderRepository(orderRepository);
-
-        user = new User("username", "password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Market", LocalDate.now(), user);
-        order = new Order(LocalDate.now(), OrderStatus.PAID, user);
+        orderService.setOrderItemService(orderItemService);
     }
 
 
@@ -59,7 +52,7 @@ class OrderServiceTest {
         // given: an Orders and an OrdersService
         when(orderService.getOrderRepository().findById(0L)).thenReturn(java.util.Optional.of(order));
         // when: the findAll method is invoked
-        orderService.findOrdersById(0L);
+        orderService.findOrderById(0L);
         // then: the findAll method of the Repository is invoked
         verify(orderService.getOrderRepository()).findById(0L);
     }
@@ -67,14 +60,9 @@ class OrderServiceTest {
     @Test
     void saveOrders() {
         // given: an orders and an ordersService
-        User user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        Order order = new Order();
-        order.setUser(user);
         when(orderService.getOrderRepository().save(order)).thenReturn(order);
-
         // when: saveOrders is invoked
         orderService.create(order);
-
         // then: the save method of OrdersRepository is invoked
         verify(orderService.getOrderRepository()).save(order);
     }
