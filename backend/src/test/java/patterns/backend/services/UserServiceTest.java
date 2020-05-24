@@ -1,5 +1,10 @@
 package patterns.backend.services;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,100 +15,93 @@ import patterns.backend.DataLoader;
 import patterns.backend.domain.User;
 import patterns.backend.repositories.UserRepository;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class UserServiceTest {
 
-    private UserService userService;
+  private UserService userService;
 
-    @MockBean
-    private UserRepository userRepository;
+  @MockBean private UserRepository userRepository;
 
-    @MockBean
-    private OrderService orderService;
+  @MockBean private OrderService orderService;
 
-    private User user;
+  private User user;
 
-    @BeforeEach
-    public void setup() {
-        DataLoader dataLoader = new DataLoader();
+  @BeforeEach
+  public void setup() {
+    DataLoader dataLoader = new DataLoader();
 
-        userService = new UserService();
-        userService.setOrderService(orderService);
-        userService.setUserRepository(userRepository);
+    userService = new UserService();
+    userService.setOrderService(orderService);
+    userService.setUserRepository(userRepository);
 
-        user = dataLoader.getUser();
-    }
+    user = dataLoader.getUser();
+  }
 
-    @Test
-    public void testTypeRepository() {
-        // the associated Repository of an UserService is type of CrudRepository
-        assertThat(userService.getUserRepository(), instanceOf(CrudRepository.class));
-    }
+  @Test
+  public void testTypeRepository() {
+    // the associated Repository of an UserService is type of CrudRepository
+    assertThat(userService.getUserRepository(), instanceOf(CrudRepository.class));
+  }
 
-    @Test
-    void findUserById() {
-        // given: an user and an UserService
-        when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
-        // when: the findAll method is invoked
-        userService.findUserById(0L);
-        // then: the findAll method of the Repository is invoked
-        verify(userService.getUserRepository()).findById(0L);
-    }
+  @Test
+  void findUserById() {
+    // given: an user and an UserService
+    when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
+    // when: the findAll method is invoked
+    userService.findUserById(0L);
+    // then: the findAll method of the Repository is invoked
+    verify(userService.getUserRepository()).findById(0L);
+  }
 
-    @Test
-    void saveUser() {
-        // given: an user and an userService
-        when(userService.getUserRepository().save(user)).thenReturn(user);
-        // when: saveUser is invoked
-        userService.create(user);
-        // then: the save method of UserRepository is invoked
-        verify(userService.getUserRepository()).save(user);
-    }
+  @Test
+  void saveUser() {
+    // given: an user and an userService
+    when(userService.getUserRepository().save(user)).thenReturn(user);
+    // when: saveUser is invoked
+    userService.create(user);
+    // then: the save method of UserRepository is invoked
+    verify(userService.getUserRepository()).save(user);
+  }
 
-    @Test
-    void createUser() {
-        // given: an user and an userService
-        when(userService.getUserRepository().save(user)).thenReturn(user);
+  @Test
+  void createUser() {
+    // given: an user and an userService
+    when(userService.getUserRepository().save(user)).thenReturn(user);
 
-        // when: saveUser is invoked
-        userService.create(user);
+    // when: saveUser is invoked
+    userService.create(user);
 
-        // then: the save method of UserRepository is invoked
-        verify(userService.getUserRepository()).save(user);
-    }
+    // then: the save method of UserRepository is invoked
+    verify(userService.getUserRepository()).save(user);
+  }
 
-    @Test
-    void countUser() {
-        // given: an UserService
-        // when: the count method is invoked
-        userService.countUser();
-        // then: the count method of the Repository is invoked
-        verify(userService.getUserRepository()).count();
-    }
+  @Test
+  void countUser() {
+    // given: an UserService
+    // when: the count method is invoked
+    userService.countUser();
+    // then: the count method of the Repository is invoked
+    verify(userService.getUserRepository()).count();
+  }
 
-    @Test
-    void deleteUser() {
-        // given: an UserService and an user persisted
-        user.setId(0L);
-        when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
-        // when: the deleteUserById method is invoked
-        userService.deleteUserById(0L);
-        // then: the delete method of the Repository is invoked
-        verify(userService.getUserRepository()).delete(user);
-    }
+  @Test
+  void deleteUser() {
+    // given: an UserService and an user persisted
+    user.setId(0L);
+    when(userService.getUserRepository().findById(0L)).thenReturn(java.util.Optional.of(user));
+    // when: the deleteUserById method is invoked
+    userService.deleteUserById(0L);
+    // then: the delete method of the Repository is invoked
+    verify(userService.getUserRepository()).delete(user);
+  }
 
-    @Test
-    void findAll() {
-        // given: an UserService
-        // when: the findAll method is invoked
-        userService.findAll(8);
-        // then: the findAll method of the Repository is invoked
-        verify(userService.getUserRepository()).findAll();
-    }
+  @Test
+  void findAll() {
+    // given: an UserService
+    // when: the findAll method is invoked
+    userService.findAll(8);
+    // then: the findAll method of the Repository is invoked
+    verify(userService.getUserRepository()).findAll();
+  }
 }
