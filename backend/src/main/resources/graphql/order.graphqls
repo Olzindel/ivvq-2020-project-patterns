@@ -20,6 +20,7 @@ enum OrderStatus {
 extend type Query {
     orders(count: Int!):[Order]
     order(orderId: ID!):Order
+    enoughStock(orderId:ID!):[Product!]
 }
 
 extend type Mutation {

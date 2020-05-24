@@ -11,8 +11,8 @@ services:
       - 5432:5432
 
   app:
-    container_name: waifu_market-dess_container
-    image: waifu_market-dess
+    container_name: waifu_market-desu_container
+    image: waifu_market-desu
     build: ./
     depends_on:
       - db
