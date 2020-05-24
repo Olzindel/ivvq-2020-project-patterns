@@ -62,7 +62,7 @@ public class OrderItemService {
         if (orderItemInput.getOrderId() != null && orderItemInput.getProductId() != null) {
             ArrayList<OrderItem> orderItemArrayList = new ArrayList<>(order.getOrderItems());
             for (OrderItem o : orderItemArrayList) {
-                if (o.getProduct().getId() == product.getId()) {
+                if (o.getProduct().getId().equals(product.getId())) {
                     OrderItemInput oi = new OrderItemInput(o.getQuantity() + orderItem.getQuantity(), product.getId(), order.getId());
                     orderItem = update(o.getId(), oi);
                     isUpdated = true;
