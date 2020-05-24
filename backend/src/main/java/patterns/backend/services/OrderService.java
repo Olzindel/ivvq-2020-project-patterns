@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Order;
 import patterns.backend.domain.OrderItem;
+import patterns.backend.domain.OrderStatus;
 import patterns.backend.domain.User;
+import patterns.backend.exception.BasketAlreadyPresentException;
 import patterns.backend.exception.OrderNotFoundException;
 import patterns.backend.graphql.input.OrderInput;
 import patterns.backend.repositories.OrderRepository;
@@ -52,6 +54,13 @@ public class OrderService {
         if (orderInput.getUserId() != null) {
             User user = userService.findUserById(orderInput.getUserId());
             order.setUser(user);
+            if (orderInput.getStatus().equals(OrderStatus.BASKET)) {
+                for (Order o : user.getOrders()) {
+                    if (o.getStatus().equals(OrderStatus.BASKET)) {
+                        throw new BasketAlreadyPresentException(user.getId());
+                    }
+                }
+            }
         }
 
         if (orderInput.getOrderItemIds() != null && !orderInput.getOrderItemIds().isEmpty()) {
@@ -125,6 +134,13 @@ public class OrderService {
             order.getUser().getOrders().remove(order);
             User user = userService.findUserById(orderInput.getUserId());
             order.setUser(user);
+            if (orderInput.getStatus().equals(OrderStatus.BASKET)) {
+                for (Order o : user.getOrders()) {
+                    if (o.getStatus().equals(OrderStatus.BASKET)) {
+                        throw new BasketAlreadyPresentException(user.getId());
+                    }
+                }
+            }
         }
 
         return create(order);
