@@ -21,6 +21,9 @@
     <profiles>
         <profile>
             <id>all-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <build.profile.id>all-tests</build.profile.id>
                 <!-- All tests are run. -->
@@ -31,9 +34,6 @@
         <!-- The Configuration of the development profile -->
         <profile>
             <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <!--
                     Specifies the build.profile.id property that must be equal than the name of
@@ -161,13 +161,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.12</version>
-        </dependency>
-
-        <!-- Switch back from Spring Boot 2.x standard HikariCP to Tomcat JDBC,
-    configured later in Heroku (see https://stackoverflow.com/a/49970142/4964553) -->
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jdbc</artifactId>
         </dependency>
 
         <!-- Switch back from Spring Boot 2.x standard HikariCP to Tomcat JDBC,
@@ -308,6 +301,9 @@
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
+                        <configuration>
+                            <skip>${skip.unit.tests}</skip>
+                        </configuration>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -320,6 +316,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.unit.tests}</skip>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                         </configuration>
@@ -349,6 +346,9 @@
                     </execution>
                     <execution>
                         <id>pre-integration-test</id>
+                        <configuration>
+                            <skip>${skip.integration.tests}</skip>
+                        </configuration>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -361,6 +361,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.integration.tests}</skip>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                         </configuration>
@@ -381,7 +382,7 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.4</minimum>
+                                            <minimum>0.8</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -395,6 +396,8 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M4</version>
                 <configuration>
+                    <!-- Skips integration tests if the value of skip.integration.tests property is true -->
+                    <skipTests>${skip.integration.tests}</skipTests>
                     <includes>
                         <include>**/*IntegrationTest*.java</include>
                     </includes>

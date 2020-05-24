@@ -28,7 +28,7 @@ COPY ./backend/profiles ./profiles/
 COPY ./backend/src ./src/
 COPY --from=frontend /app/target/dist ./src/main/resources/public/
 
-RUN mvn package -P all-tests && cp ./target/backend-*exec.jar ../app.jar
+RUN mvn verify -P all-tests && cp ./target/backend-*exec.jar ../app.jar
 
 #========================================================================
 
