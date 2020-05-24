@@ -24,6 +24,10 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    private String username;
+
+    private String password;
+
     private String firstName;
 
     private String lastName;
@@ -43,15 +47,16 @@ public class User {
 
     private String city;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<Merchant> merchants = new HashSet<>();
+    @NotNull
+    private Boolean merchant;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Order> orders = new HashSet<>();
 
-    public User(String firstName, String lastName, String email, String gender, String street, String postalCode, String city) {
+    public User(String username, String password, String firstName, String lastName, String email, String gender, String street, String postalCode, String city, Boolean merchant) {
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -59,10 +64,7 @@ public class User {
         this.street = street;
         this.postalCode = postalCode;
         this.city = city;
-    }
-
-    public void addMerchant(Merchant merchant) {
-        merchants.add(merchant);
+        this.merchant = merchant;
     }
 
     public void addOrder(Order order) {

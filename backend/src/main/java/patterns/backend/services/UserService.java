@@ -3,9 +3,9 @@ package patterns.backend.services;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Order;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
@@ -25,10 +25,11 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private MerchantService merchantService;
+    private OrderService orderService;
 
     @Autowired
-    private OrderService orderService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
 
     public User findUserById(final Long id) {
@@ -43,12 +44,8 @@ public class UserService {
     public User create(final User user) {
         User savedUser;
         if (user != null) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             savedUser = userRepository.save(user);
-            if (user.getMerchants() != null) {
-                for (Merchant merchant : user.getMerchants()) {
-                    merchant.setAdmin(user);
-                }
-            }
             if (user.getOrders() != null) {
                 for (Order order : user.getOrders()) {
                     order.setUser(user);
@@ -66,9 +63,6 @@ public class UserService {
 
     public void deleteUserById(final Long id) {
         User user = findUserById(id);
-        for (Merchant merchant : user.getMerchants()) {
-            merchantService.deleteMerchantById(merchant.getId());
-        }
         for (Order order : user.getOrders()) {
             orderService.deleteOrderById(order.getId());
         }
@@ -83,16 +77,8 @@ public class UserService {
     }
 
     public User create(UserInput userInput) {
-        User user = new User(userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
-                userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity());
-
-        if (userInput.getMerchantIds() != null && !userInput.getMerchantIds().isEmpty()) {
-            Set<Merchant> merchants = new HashSet<>();
-            for (Long id : userInput.getMerchantIds()) {
-                merchants.add(merchantService.findMerchantById(id));
-            }
-            user.setMerchants(merchants);
-        }
+        User user = new User(userInput.getUsername(), userInput.getPassword(), userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
+                userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity(), userInput.getMerchant());
 
         if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
             Set<Order> orders = new HashSet<>();
@@ -133,21 +119,6 @@ public class UserService {
 
         if (userInput.getCity() != null) {
             user.setCity(userInput.getCity());
-        }
-        if (userInput.getMerchantIds() != null && !userInput.getMerchantIds().isEmpty()) {
-            List<Long> merchantIds = new ArrayList<>(userInput.getMerchantIds());
-            List<Long> toDelete = user.getMerchants().stream().
-                    map(Merchant::getId).
-                    collect(Collectors.toList());
-
-            toDelete.removeAll(userInput.getMerchantIds());
-
-            for (Long idToAdd : toDelete) {
-                merchantService.deleteMerchantById(idToAdd);
-            }
-            for (Long idToAdd : merchantIds) {
-                user.addMerchant(merchantService.findMerchantById(idToAdd));
-            }
         }
         if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
             List<Long> orderIds = new ArrayList<>(userInput.getOrderIds());

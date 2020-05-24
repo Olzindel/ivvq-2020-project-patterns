@@ -6,7 +6,6 @@ type Product {
     description: String
     stock: Int!
     imageLinks: [ImageLink!]
-    merchant: Merchant!
 }
 
 input ProductInput {
@@ -16,7 +15,6 @@ input ProductInput {
     description:String
     stock:Int
     imageLinkIds:[ID!]
-    merchantId:ID
 }
 
 enum ProductStatus {

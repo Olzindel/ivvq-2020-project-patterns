@@ -26,8 +26,7 @@ class ProductServiceTest {
 
     @MockBean
     private ImageLinkService imageLinkService;
-
-    @MockBean
+    
     private Product product;
 
 
