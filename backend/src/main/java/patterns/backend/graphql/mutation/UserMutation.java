@@ -16,19 +16,18 @@ import patterns.backend.services.UserService;
 @Setter
 public class UserMutation implements GraphQLMutationResolver {
 
-    @Autowired
-    UserService userService;
+  @Autowired UserService userService;
 
-    public User createUser(UserInput userInput) {
-        return userService.create(userInput);
-    }
+  public User createUser(UserInput userInput) {
+    return userService.create(userInput);
+  }
 
-    public Long deleteUser(Long userId) {
-        userService.deleteUserById(userId);
-        return userId;
-    }
+  public Long deleteUser(Long userId) {
+    userService.deleteUserById(userId);
+    return userId;
+  }
 
-    public User updateUser(Long userId, UserInput userInput) {
-        return userService.update(userId, userInput);
-    }
+  public User updateUser(Long userId, UserInput userInput) {
+    return userService.update(userId, userInput);
+  }
 }

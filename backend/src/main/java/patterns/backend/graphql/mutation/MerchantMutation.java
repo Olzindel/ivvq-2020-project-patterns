@@ -16,20 +16,18 @@ import patterns.backend.services.MerchantService;
 @Setter
 public class MerchantMutation implements GraphQLMutationResolver {
 
-    @Autowired
-    MerchantService merchantService;
+  @Autowired MerchantService merchantService;
 
-    public Merchant createMerchant(MerchantInput merchantInput) {
-        return merchantService.create(merchantInput);
-    }
+  public Merchant createMerchant(MerchantInput merchantInput) {
+    return merchantService.create(merchantInput);
+  }
 
-    public Long deleteMerchant(Long merchantId) {
-        merchantService.deleteMerchantById(merchantId);
-        return merchantId;
-    }
+  public Long deleteMerchant(Long merchantId) {
+    merchantService.deleteMerchantById(merchantId);
+    return merchantId;
+  }
 
-    public Merchant updateMerchant(Long merchantId, MerchantInput merchantInput) {
-        return merchantService.update(merchantId, merchantInput);
-    }
-
+  public Merchant updateMerchant(Long merchantId, MerchantInput merchantInput) {
+    return merchantService.update(merchantId, merchantInput);
+  }
 }

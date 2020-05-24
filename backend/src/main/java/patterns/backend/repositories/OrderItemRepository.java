@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import patterns.backend.domain.OrderItem;
 
 @Repository
-public interface OrderItemRepository extends CrudRepository<OrderItem, Long> {
-}
+public interface OrderItemRepository extends CrudRepository<OrderItem, Long> {}

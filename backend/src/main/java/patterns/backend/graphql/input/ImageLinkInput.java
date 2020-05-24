@@ -12,6 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 @Transactional
 public class ImageLinkInput {
-    String imageLink;
-    Long productId;
+  String imageLink;
+  Long productId;
 }

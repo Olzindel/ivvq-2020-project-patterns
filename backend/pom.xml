@@ -200,7 +200,7 @@
                         <configuration>
                             <!-- Configures the source directory of our integration tests -->
                             <sources>
-                                <source>src/integration-test/java</source>
+                                <source>src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -221,7 +221,7 @@
                                 -->
                                 <resource>
                                     <filtering>true</filtering>
-                                    <directory>src/integration-test/resources</directory>
+                                    <directory>src/test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -232,6 +232,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.2.6.RELEASE</version>
+                <configuration>
+                    <classifier>exec</classifier>
+                </configuration>
 
                 <executions>
                     <execution>
@@ -360,6 +363,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M4</version>
+                <configuration>
+                    <includes>
+                        <include>**/*IntegrationTest*.java</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

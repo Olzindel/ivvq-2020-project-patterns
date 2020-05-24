@@ -16,20 +16,18 @@ import patterns.backend.services.ImageLinkService;
 @Setter
 public class ImageLinkMutation implements GraphQLMutationResolver {
 
-    @Autowired
-    private ImageLinkService imageLinkService;
+  @Autowired private ImageLinkService imageLinkService;
 
-    public ImageLink createImageLink(ImageLinkInput imageLinkInput) {
-        return imageLinkService.create(imageLinkInput);
-    }
+  public ImageLink createImageLink(ImageLinkInput imageLinkInput) {
+    return imageLinkService.create(imageLinkInput);
+  }
 
-    public Long deleteImageLink(Long imageLinkId) {
-        imageLinkService.deleteImageLinkById(imageLinkId);
-        return imageLinkId;
-    }
+  public Long deleteImageLink(Long imageLinkId) {
+    imageLinkService.deleteImageLinkById(imageLinkId);
+    return imageLinkId;
+  }
 
-    public ImageLink updateImageLink(Long imageLinkId, ImageLinkInput imageLinkInput) {
-        return imageLinkService.update(imageLinkId, imageLinkInput);
-    }
-
+  public ImageLink updateImageLink(Long imageLinkId, ImageLinkInput imageLinkInput) {
+    return imageLinkService.update(imageLinkId, imageLinkInput);
+  }
 }
