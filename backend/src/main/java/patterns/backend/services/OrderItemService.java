@@ -10,8 +10,10 @@ import patterns.backend.domain.OrderItem;
 import patterns.backend.domain.OrderStatus;
 import patterns.backend.domain.Product;
 import patterns.backend.exception.OrderItemNotFoundException;
+import patterns.backend.graphql.input.OrderItemInput;
 import patterns.backend.repositories.OrderItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,12 +43,38 @@ public class OrderItemService {
         }
     }
 
-    public OrderItem create(OrderItem orderItem, Long productId, Long orderId) {
-        Product product = productService.findProductById(productId);
-        Order order = orderService.findOrdersById(orderId);
-        orderItem.setProduct(product);
-        orderItem.setOrder(order);
-        return create(orderItem);
+    public OrderItem create(OrderItemInput orderItemInput) {
+        OrderItem orderItem = new OrderItem(orderItemInput.getQuantity(), null, null);
+        boolean isUpdated = false;
+        Order order = null;
+        Product product = null;
+
+        if (orderItemInput.getProductId() != null) {
+            product = productService.findProductById(orderItemInput.getProductId());
+            orderItem.setProduct(product);
+        }
+
+        if (orderItemInput.getOrderId() != null) {
+            order = orderService.findOrderById(orderItemInput.getOrderId());
+            orderItem.setOrder(order);
+        }
+
+        if (orderItemInput.getOrderId() != null && orderItemInput.getProductId() != null) {
+            ArrayList<OrderItem> orderItemArrayList = new ArrayList<>(order.getOrderItems());
+            for (OrderItem o : orderItemArrayList) {
+                if (o.getProduct().getId().equals(product.getId())) {
+                    OrderItemInput oi = new OrderItemInput(o.getQuantity() + orderItem.getQuantity(), product.getId(), order.getId());
+                    orderItem = update(o.getId(), oi);
+                    isUpdated = true;
+                }
+            }
+        }
+
+        if (!isUpdated) {
+            orderItem = create(orderItem);
+        }
+
+        return orderItem;
     }
 
     public OrderItem create(OrderItem orderItem) {
@@ -55,27 +83,40 @@ public class OrderItemService {
         if (orderItem != null) {
             decreaseStockIfPaid(orderItem);
             savedOrderItem = orderItemRepository.save(orderItem);
+            if (orderItem.getOrder() != null) {
+                orderItem.getOrder().addOrderItem(orderItem);
+            }
         } else {
             throw new IllegalArgumentException();
         }
         return savedOrderItem;
     }
 
-    public OrderItem update(OrderItem orderItem) {
-        OrderItem savedOrderItem;
+    public OrderItem update(Long orderItemId, OrderItemInput orderItemInput) {
+        OrderItem orderItem = findOrderItemById(orderItemId);
 
-        if (orderItem != null) {
-            decreaseStockIfPaid(orderItem);
-            savedOrderItem = orderItemRepository.save(orderItem);
-        } else {
-            throw new IllegalArgumentException();
+        if (orderItemInput.getQuantity() != null) {
+            orderItem.setQuantity(orderItemInput.getQuantity());
         }
-        return savedOrderItem;
+
+        if (orderItemInput.getProductId() != null) {
+            Product product = productService.findProductById(orderItemInput.getProductId());
+            orderItem.setProduct(product);
+        }
+
+        if (orderItemInput.getOrderId() != null) {
+            orderItem.getOrder().getOrderItems().remove(orderItem);
+            Order order = orderService.findOrderById(orderItemInput.getOrderId());
+            orderItem.setOrder(order);
+        }
+
+        return create(orderItem);
     }
 
 
     public void deleteOrderItemById(final Long id) {
         OrderItem orderItem = findOrderItemById(id);
+        orderItem.getOrder().removeOrderItem(orderItem);
         orderItemRepository.delete(orderItem);
     }
 
@@ -92,7 +133,7 @@ public class OrderItemService {
     public void decreaseStockIfPaid(OrderItem orderItem) {
         if (orderItem.getOrder() != null && orderItem.getProduct() != null) {
             Product product = orderItem.getProduct();
-            if (orderItem.getOrder().getOrderStatus().equals(OrderStatus.PAID)) {
+            if (orderItem.getOrder().getStatus().equals(OrderStatus.PAID)) {
                 product.decreaseStock(orderItem.getQuantity());
             }
         }

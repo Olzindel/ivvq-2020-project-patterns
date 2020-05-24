@@ -5,9 +5,16 @@ type Product {
     status: ProductStatus!
     description: String
     stock: Int!
-    createdAt: String
     imageLinks: [ImageLink!]
-    merchant: Merchant!
+}
+
+input ProductInput {
+    name:String,
+    price:Float
+    status:ProductStatus
+    description:String
+    stock:Int
+    imageLinkIds:[ID!]
 }
 
 enum ProductStatus {
@@ -21,7 +28,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateProduct(productId:ID!,name:String, price:Float, status:ProductStatus, description:String, stock:Int, createdAt:String, imageLinkIds:[ID!], merchantId:ID):Product
-    createProduct(name:String!, price:Float!, status:ProductStatus!, description:String, stock:Int! imageLinkIds:[ID!], merchantId:ID!):Product
+    updateProduct(productId:ID!, input:ProductInput!):Product
+    createProduct(input:ProductInput):Product
     deleteProduct(productId:ID!):ID
 }

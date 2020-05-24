@@ -6,16 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Merchant;
 import patterns.backend.domain.Order;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
+import patterns.backend.graphql.input.UserInput;
 import patterns.backend.repositories.UserRepository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -26,9 +23,6 @@ import java.util.stream.StreamSupport;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private MerchantService merchantService;
 
     @Autowired
     private OrderService orderService;
@@ -51,28 +45,12 @@ public class UserService {
         User savedUser;
         if (user != null) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setCreatedAt(LocalDate.now());
             savedUser = userRepository.save(user);
-            if (user.getMerchants() != null) {
-                for (Merchant merchant : user.getMerchants()) {
-                    merchant.setAdmin(user);
-                }
-            }
             if (user.getOrders() != null) {
                 for (Order order : user.getOrders()) {
                     order.setUser(user);
                 }
             }
-        } else {
-            throw new IllegalArgumentException();
-        }
-        return savedUser;
-    }
-
-    public User update(final User user) {
-        User savedUser;
-        if (user != null) {
-            savedUser = userRepository.save(user);
         } else {
             throw new IllegalArgumentException();
         }
@@ -85,9 +63,8 @@ public class UserService {
 
     public void deleteUserById(final Long id) {
         User user = findUserById(id);
-        List<Merchant> merchants = merchantService.findMerchantByUser(user.getId());
-        for (Merchant merchant : merchants) {
-            merchantService.deleteMerchantById(merchant.getId());
+        for (Order order : user.getOrders()) {
+            orderService.deleteOrderById(order.getId());
         }
         userRepository.delete(user);
     }
@@ -99,19 +76,67 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public User create(User user, List<Long> merchantIds, List<Long> orderIds) {
-        List<Merchant> merchants = new ArrayList<>();
-        List<Order> orders = new ArrayList<>();
-        if (merchantIds != null) {
-            for (Long id : merchantIds) {
-                merchants.add(merchantService.findMerchantById(id));
+    public User create(UserInput userInput) {
+        User user = new User(userInput.getUsername(), userInput.getPassword(), userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
+                userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity(), userInput.getMerchant());
+
+        if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
+            Set<Order> orders = new HashSet<>();
+            for (Long id : userInput.getOrderIds()) {
+                orders.add(orderService.findOrderById(id));
+            }
+            user.setOrders(orders);
+        }
+        return create(user);
+    }
+
+    public User update(Long userId, UserInput userInput) {
+        User user = findUserById(userId);
+
+        if (userInput.getFirstName() != null) {
+            user.setFirstName(userInput.getFirstName());
+        }
+
+        if (userInput.getLastName() != null) {
+            user.setLastName(userInput.getLastName());
+        }
+
+        if (userInput.getEmail() != null) {
+            user.setEmail(userInput.getEmail());
+        }
+
+        if (userInput.getGender() != null) {
+            user.setGender(userInput.getGender());
+        }
+
+        if (userInput.getStreet() != null) {
+            user.setStreet(userInput.getStreet());
+        }
+
+        if (userInput.getPostalCode() != null) {
+            user.setPostalCode(userInput.getPostalCode());
+        }
+
+        if (userInput.getCity() != null) {
+            user.setCity(userInput.getCity());
+        }
+        if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
+            List<Long> orderIds = new ArrayList<>(userInput.getOrderIds());
+            List<Long> toDelete = user.getOrders().stream()
+                    .map(Order::getId)
+                    .collect(Collectors.toList());
+
+            toDelete.removeAll(userInput.getOrderIds());
+
+            for (Long idToAdd : toDelete) {
+                // TODO enlever de la liste
+                orderService.deleteOrderById(idToAdd);
+            }
+            for (Long idToAdd : orderIds) {
+                user.addOrder(orderService.findOrderById(idToAdd));
             }
         }
-        if (orderIds != null) {
-            for (Long id : orderIds) {
-                orders.add(orderService.findOrdersById(id));
-            }
-        }
+
         return create(user);
     }
 }

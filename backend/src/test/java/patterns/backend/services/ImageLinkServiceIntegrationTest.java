@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.*;
+import patterns.backend.DataLoader;
+import patterns.backend.domain.ImageLink;
 import patterns.backend.exception.ImageLinkNotFoundException;
-
-import java.time.LocalDate;
+import patterns.backend.graphql.input.ImageLinkInput;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,20 +20,10 @@ public class ImageLinkServiceIntegrationTest {
 
     private ImageLink imageLink;
 
-    private Order order;
-
-    private Product product;
-
-    private Merchant merchant;
-
-    private User user;
-
     @BeforeEach
     public void setup() {
-        user = new User("username","password","Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        merchant = new Merchant("Market", LocalDate.now(), user);
-        product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 2, LocalDate.now(), merchant);
-        imageLink = new ImageLink("http://www.lueur.fr", product);
+        DataLoader dataLoader = new DataLoader();
+        imageLink = dataLoader.getImageLink();
     }
 
     @Test
@@ -51,7 +41,7 @@ public class ImageLinkServiceIntegrationTest {
     public void testSaveImageLinkNull() {
         // when: null is persisted via an ImageLinkService
         // then: an exception IllegalArgumentException is lifted
-        assertThrows(IllegalArgumentException.class, () -> imageLinkService.create(null));
+        assertThrows(IllegalArgumentException.class, () -> imageLinkService.create((ImageLink) null));
     }
 
     @Test
@@ -88,13 +78,11 @@ public class ImageLinkServiceIntegrationTest {
     @Test
     public void testUpdatedImageLinkIsUpdated() {
         // given: an ImageLink imageLink persisted
-        imageLinkService.create(imageLink);
-
-        ImageLink fetched = imageLinkService.findImageLinkById(imageLink.getId());
-        // when: the email is modified at the "object" level
-        fetched.setImageLink("http://www.img.fr");
+        ImageLink fetched = imageLinkService.create(imageLink);
+        // when: an ImageLinkInput with a different email
+        ImageLinkInput imageLinkInput = new ImageLinkInput("t.t@gmail.com", fetched.getProduct().getId());
         // when: the object imageLink is updated in the database
-        imageLinkService.update(fetched);
+        imageLinkService.update(fetched.getId(), imageLinkInput);
         // when: the object imageLink is re-read in the database
         ImageLink fetchedUpdated = imageLinkService.findImageLinkById(imageLink.getId());
         // then: the email has been successfully updated
@@ -114,14 +102,13 @@ public class ImageLinkServiceIntegrationTest {
     @Test
     public void testUpdateDoesNotCreateANewEntry() {
         // given: an ImageLink imageLink persisted
-        imageLinkService.create(imageLink);
+        ImageLink fetched = imageLinkService.create(imageLink);
         long count = imageLinkService.countImageLink();
 
-        ImageLink fetched = imageLinkService.findImageLinkById(imageLink.getId());
-        // when: the email is modified at the "object" level
-        fetched.setImageLink("http://www.lueur.fr");
+        // when: an ImageLinkInput with a different email
+        ImageLinkInput imageLinkInput = new ImageLinkInput("http://www.t.com", fetched.getProduct().getId());
         // when: the object is updated in the database
-        imageLinkService.update(fetched);
+        imageLinkService.update(fetched.getId(), imageLinkInput);
         // then: a new entry has not been created in the database
         assertEquals(count, imageLinkService.countImageLink());
     }
@@ -135,7 +122,7 @@ public class ImageLinkServiceIntegrationTest {
 
     @Test
     public void testDeleteImageLinkWithExistingId() {
-        // given: an User user persisted
+        // given: an ImageLink user persisted
         imageLinkService.create(imageLink);
         ImageLink fetched = imageLinkService.findImageLinkById(imageLink.getId());
 

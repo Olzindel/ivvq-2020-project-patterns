@@ -6,14 +6,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.test.annotation.DirtiesContext;
-import patterns.backend.domain.Merchant;
+import patterns.backend.DataLoader;
 import patterns.backend.domain.Product;
-import patterns.backend.domain.User;
 import patterns.backend.repositories.ProductRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -29,15 +24,20 @@ class ProductServiceTest {
     @MockBean
     private ProductRepository productRepository;
 
-
     @MockBean
+    private ImageLinkService imageLinkService;
+    
     private Product product;
 
 
     @BeforeEach
     public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        product = dataLoader.getProduct();
+
         productService = new ProductService();
         productService.setProductRepository(productRepository);
+        productService.setImageLinkService(imageLinkService);
     }
 
     @Test
@@ -49,7 +49,6 @@ class ProductServiceTest {
     @Test
     void findProductById() {
         // given: a Product and a ProductService
-        Product product = new Product();
         when(productService.getProductRepository().findById(0L)).thenReturn(java.util.Optional.of(product));
         // when: the findAll method is invoked
         productService.findProductById(0L);
@@ -60,15 +59,9 @@ class ProductServiceTest {
     @Test
     void saveProduct() {
         // given: a product and a productService
-        User user = new User("username", "password", "Nathan", "Roche", "nathan.roche31@gmail.com", "M", LocalDate.now(), "8 chemin du", "31000", "Toulouse", LocalDate.now());
-        Merchant merchant = new Merchant("Waifu market-dess", LocalDate.now(), user);
-        Product product = new Product();
-        product.setMerchant(merchant);
         when(productService.getProductRepository().save(product)).thenReturn(product);
-
         // when: saveProduct is invoked
         productService.create(product);
-
         // then: the save method of ProductRepository is invoked
         verify(productService.getProductRepository()).save(product);
     }
@@ -85,7 +78,6 @@ class ProductServiceTest {
     @Test
     void deleteProduct() {
         // given: a Product and aProductService
-        Product product = new Product();
         when(productService.getProductRepository().findById(0L)).thenReturn(java.util.Optional.of(product));
         // when: the deleteProductById method is invoked
         productService.deleteProductById(0L);
