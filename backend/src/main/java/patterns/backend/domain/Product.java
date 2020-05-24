@@ -49,14 +49,10 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ImageLink> imageLinks = new HashSet<>();
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH})
-    private Merchant merchant;
-
-    public Product(String name, double price, ProductStatus status, String description, int stock, Merchant merchant) {
+    public Product(String name, double price, ProductStatus status, String description, int stock) {
         this.name = name;
         this.price = price;
         this.status = status;
-        this.merchant = merchant;
         this.description = description;
         this.stock = stock;
     }

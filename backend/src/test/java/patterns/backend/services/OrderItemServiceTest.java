@@ -24,7 +24,6 @@ class OrderItemServiceTest {
     @MockBean
     private OrderItemRepository orderItemRepository;
 
-    @MockBean
     private OrderItem orderItem;
 
     @BeforeEach

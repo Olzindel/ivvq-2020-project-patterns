@@ -87,8 +87,7 @@ public class ProductServiceIntegrationTest {
 
         ProductInput productInput = new ProductInput(product.getName(), Float.valueOf("0.8"), product.getStatus(),
                 product.getDescription(), product.getStock(),
-                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()),
-                fetched.getMerchant().getId());
+                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()));
 
         // when: the object product is updated in the database
         productService.update(fetched.getId(), productInput);
@@ -116,8 +115,7 @@ public class ProductServiceIntegrationTest {
 
         ProductInput productInput = new ProductInput(product.getName(), Float.valueOf("0.8"), product.getStatus(),
                 product.getDescription(), product.getStock(),
-                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()),
-                product.getMerchant().getId());
+                product.getImageLinks().stream().map(ImageLink::getId).collect(Collectors.toList()));
         // then: a new entry has not been created in the database
         assertEquals(count, productService.countProduct());
     }
