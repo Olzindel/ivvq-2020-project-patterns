@@ -7,7 +7,7 @@ type User {
     street:String
     postalCode:String
     city:String
-    merchants: [Merchant!]
+    merchant: Boolean!
     orders: [Order!]
 }
 
@@ -19,7 +19,7 @@ input UserInput {
     street:String
     postalCode:String
     city:String
-    merchants: [ID!]
+    merchant : Boolean
     orders: [ID!]
 }
 

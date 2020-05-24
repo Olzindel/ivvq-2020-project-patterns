@@ -1,7 +1,7 @@
 type Order {
     id: ID!
     status: OrderStatus!
-    OrderItems: [OrderItem!]
+    orderItems: [OrderItem!]
     User: User!
 }
 

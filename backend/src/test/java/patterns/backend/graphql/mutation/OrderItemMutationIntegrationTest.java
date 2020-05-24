@@ -1,7 +1,5 @@
 package patterns.backend.graphql.mutation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,93 +11,88 @@ import patterns.backend.graphql.input.OrderInput;
 import patterns.backend.graphql.input.OrderItemInput;
 import patterns.backend.graphql.input.ProductInput;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 public class OrderItemMutationIntegrationTest {
 
-  @Autowired OrderItemMutation orderItemMutation;
+    @Autowired
+    OrderItemMutation orderItemMutation;
 
-  @Autowired OrderMutation orderMutation;
+    @Autowired
+    OrderMutation orderMutation;
 
-  @Autowired ProductMutation productMutation;
+    @Autowired
+    ProductMutation productMutation;
 
-  OrderItemInput orderItemInput;
-  ProductInput productInput;
-  OrderInput orderInput;
 
-  @BeforeEach
-  public void setup() {
-    DataLoader dataLoader = new DataLoader();
-    orderItemInput = dataLoader.getOrderItemInput();
-    productInput = dataLoader.getProductInput();
-    orderInput = dataLoader.getOrderInput();
-  }
+    OrderItemInput orderItemInput;
+    ProductInput productInput;
+    OrderInput orderInput;
 
-  @Test
-  void createOrderItem() {
-    Product product = productMutation.createProduct(productInput);
-    Order order = orderMutation.createOrder(orderInput);
-    orderItemInput.setOrderId(order.getId());
-    orderItemInput.setProductId(product.getId());
+    @BeforeEach
+    public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        orderItemInput = dataLoader.getOrderItemInput();
+        productInput = dataLoader.getProductInput();
+        orderInput = dataLoader.getOrderInput();
+    }
 
-    OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
-    assertEquals(orderItemInput.getQuantity(), orderItem.getQuantity());
-    assert orderMutation
-        .getOrderService()
-        .findOrderById(order.getId())
-        .getOrderItems()
-        .contains(orderItem);
-  }
+    @Test
+    void createOrderItem() {
+        Product product = productMutation.createProduct(productInput);
+        Order order = orderMutation.createOrder(orderInput);
+        orderItemInput.setOrderId(order.getId());
+        orderItemInput.setProductId(product.getId());
 
-  @Test
-  void deleteOrderItem() {
-    Order order = orderMutation.createOrder(orderInput);
-    Product product = productMutation.createProduct(productInput);
-    orderItemInput.setOrderId(order.getId());
-    orderItemInput.setProductId(product.getId());
-    OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
-    long count = orderItemMutation.getOrderItemService().countOrderItem();
+        OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
+        assertEquals(orderItemInput.getQuantity(), orderItem.getQuantity());
+        assert orderMutation.getOrderService().findOrderById(order.getId()).getOrderItems().contains(orderItem);
+    }
 
-    orderItemMutation.deleteOrderItem(orderItem.getId());
+    @Test
+    void deleteOrderItem() {
+        Order order = orderMutation.createOrder(orderInput);
+        Product product = productMutation.createProduct(productInput);
+        orderItemInput.setOrderId(order.getId());
+        orderItemInput.setProductId(product.getId());
+        OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
+        long count = orderItemMutation.getOrderItemService().countOrderItem();
 
-    assertEquals(count - 1, orderItemMutation.getOrderItemService().countOrderItem());
-    assert !orderMutation
-        .getOrderService()
-        .findOrderById(order.getId())
-        .getOrderItems()
-        .contains(orderItem);
-  }
+        orderItemMutation.deleteOrderItem(orderItem.getId());
 
-  @Test
-  void updateOrderItem() {
-    Order order = orderMutation.createOrder(orderInput);
-    Product product = productMutation.createProduct(productInput);
-    orderItemInput.setOrderId(order.getId());
-    orderItemInput.setProductId(product.getId());
-    OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
-    long count = orderItemMutation.getOrderItemService().countOrderItem();
+        assertEquals(count - 1, orderItemMutation.getOrderItemService().countOrderItem());
+        assert !orderMutation.getOrderService().findOrderById(order.getId()).getOrderItems().contains(orderItem);
+    }
 
-    OrderItemInput orderItemInputUpdate = new OrderItemInput();
-    OrderInput orderInputUpdate = new OrderInput(OrderStatus.ABORTED, null, null);
-    Order orderUpdate = orderMutation.createOrder(orderInputUpdate);
+    @Test
+    void updateOrderItem() {
+        Order order = orderMutation.createOrder(orderInput);
+        Product product = productMutation.createProduct(productInput);
+        orderItemInput.setOrderId(order.getId());
+        orderItemInput.setProductId(product.getId());
+        OrderItem orderItem = orderItemMutation.createOrderItem(orderItemInput);
+        long count = orderItemMutation.getOrderItemService().countOrderItem();
 
-    ProductInput productInputUpdate =
-        new ProductInput(
-            "t", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null, null);
-    Product productUpdate = productMutation.createProduct(productInputUpdate);
+        OrderItemInput orderItemInputUpdate = new OrderItemInput();
+        OrderInput orderInputUpdate = new OrderInput(OrderStatus.ABORTED, null, null);
+        Order orderUpdate = orderMutation.createOrder(orderInputUpdate);
 
-    orderItemInputUpdate.setQuantity(1);
-    orderItemInputUpdate.setOrderId(orderUpdate.getId());
-    orderItemInputUpdate.setProductId(productUpdate.getId());
+        ProductInput productInputUpdate = new ProductInput("t", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null);
+        Product productUpdate = productMutation.createProduct(productInputUpdate);
 
-    OrderItem orderItemUpdated =
-        orderItemMutation.updateOrderItem(orderItem.getId(), orderItemInputUpdate);
+        orderItemInputUpdate.setQuantity(1);
+        orderItemInputUpdate.setOrderId(orderUpdate.getId());
+        orderItemInputUpdate.setProductId(productUpdate.getId());
 
-    assertEquals(count, orderItemMutation.getOrderItemService().countOrderItem());
-    assertEquals(1, orderItemUpdated.getQuantity());
-    assertEquals(orderUpdate.getId(), orderItemUpdated.getOrder().getId());
-    assertEquals(productUpdate.getId(), orderItemUpdated.getProduct().getId());
-    assert orderUpdate.getOrderItems().contains(orderItemUpdated);
-    assert !order.getOrderItems().contains(orderItemUpdated);
-  }
+        OrderItem orderItemUpdated = orderItemMutation.updateOrderItem(orderItem.getId(), orderItemInputUpdate);
+
+        assertEquals(count, orderItemMutation.getOrderItemService().countOrderItem());
+        assertEquals(1, orderItemUpdated.getQuantity());
+        assertEquals(orderUpdate.getId(), orderItemUpdated.getOrder().getId());
+        assertEquals(productUpdate.getId(), orderItemUpdated.getProduct().getId());
+        assert orderUpdate.getOrderItems().contains(orderItemUpdated);
+        assert !order.getOrderItems().contains(orderItemUpdated);
+    }
 }

@@ -1,7 +1,5 @@
 package patterns.backend.graphql.mutation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,73 +12,69 @@ import patterns.backend.domain.ProductStatus;
 import patterns.backend.graphql.input.ImageLinkInput;
 import patterns.backend.graphql.input.ProductInput;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 public class ImageLinkMutationIntegrationTest {
 
-  @Autowired ImageLinkMutation imageLinkMutation;
 
-  @Autowired ProductMutation productMutation;
+    @Autowired
+    ImageLinkMutation imageLinkMutation;
 
-  ImageLinkInput imageLinkInput;
-  ProductInput productInput;
+    @Autowired
+    ProductMutation productMutation;
 
-  @BeforeEach
-  public void setup() {
-    DataLoader dataLoader = new DataLoader();
-    imageLinkInput = dataLoader.getImageLinkInput();
-    productInput = dataLoader.getProductInput();
-  }
+    ImageLinkInput imageLinkInput;
+    ProductInput productInput;
 
-  @Test
-  public void createImageLink() {
-    Product product = productMutation.createProduct(productInput);
-    imageLinkInput.setProductId(product.getId());
-    ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
-    assertEquals(imageLinkInput.getImageLink(), imageLink.getImageLink());
-    assert productMutation
-        .getProductService()
-        .findProductById(product.getId())
-        .getImageLinks()
-        .contains(imageLink);
-  }
+    @BeforeEach
+    public void setup() {
+        DataLoader dataLoader = new DataLoader();
+        imageLinkInput = dataLoader.getImageLinkInput();
+        productInput = dataLoader.getProductInput();
+    }
 
-  @Test
-  public void deleteImageLink() {
-    Product product = productMutation.createProduct(productInput);
-    imageLinkInput.setProductId(product.getId());
-    ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
-    long count = imageLinkMutation.getImageLinkService().countImageLink();
-    imageLinkMutation.deleteImageLink(imageLink.getId());
-    assertEquals(count - 1, imageLinkMutation.getImageLinkService().countImageLink());
-    assert !productMutation
-        .getProductService()
-        .findProductById(product.getId())
-        .getImageLinks()
-        .contains(imageLink);
-  }
+    @Test
+    public void createImageLink() {
+        Product product = productMutation.createProduct(productInput);
+        imageLinkInput.setProductId(product.getId());
+        ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
+        assertEquals(imageLinkInput.getImageLink(), imageLink.getImageLink());
+        assert productMutation.getProductService().findProductById(product.getId()).getImageLinks().contains(imageLink);
+    }
 
-  @Test
-  public void updateImageLink() {
-    Product product = productMutation.createProduct(productInput);
-    imageLinkInput.setProductId(product.getId());
-    ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
-    long count = imageLinkMutation.getImageLinkService().countImageLink();
+    @Test
+    public void deleteImageLink() {
+        Product product = productMutation.createProduct(productInput);
+        imageLinkInput.setProductId(product.getId());
+        ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
+        long count = imageLinkMutation.getImageLinkService().countImageLink();
+        imageLinkMutation.deleteImageLink(imageLink.getId());
+        assertEquals(count - 1, imageLinkMutation.getImageLinkService().countImageLink());
+        assert !productMutation.getProductService().findProductById(product.getId()).getImageLinks().contains(imageLink);
+    }
 
-    ImageLinkInput imageLinkInputUpdate = new ImageLinkInput();
-    ProductInput productInput2 =
-        new ProductInput(
-            "test", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null, null);
-    Product product2 = productMutation.createProduct(productInput2);
-    imageLinkInputUpdate.setImageLink("http://www.t.t");
-    imageLinkInputUpdate.setProductId(product2.getId());
-    ImageLink imageLinkUpdated =
-        imageLinkMutation.updateImageLink(imageLink.getId(), imageLinkInputUpdate);
+    @Test
+    public void updateImageLink() {
+        Product product = productMutation.createProduct(productInput);
+        imageLinkInput.setProductId(product.getId());
+        ImageLink imageLink = imageLinkMutation.createImageLink(imageLinkInput);
+        long count = imageLinkMutation.getImageLinkService().countImageLink();
 
-    assertEquals(count, imageLinkMutation.getImageLinkService().countImageLink());
-    assertEquals("http://www.t.t", imageLinkUpdated.getImageLink());
-    assertEquals(product2.getId(), imageLinkUpdated.getProduct().getId());
-    assert product2.getImageLinks().contains(imageLinkUpdated);
-    assert !product.getImageLinks().contains(imageLinkUpdated);
-  }
+        ImageLinkInput imageLinkInputUpdate = new ImageLinkInput();
+        ProductInput productInput2 = new ProductInput("test", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null);
+        Product product2 = productMutation.createProduct(productInput2);
+        imageLinkInputUpdate.setImageLink("http://www.t.t");
+        imageLinkInputUpdate.setProductId(product2.getId());
+        ImageLink imageLinkUpdated = imageLinkMutation.updateImageLink(imageLink.getId(), imageLinkInputUpdate);
+
+        assertEquals(count, imageLinkMutation.getImageLinkService().countImageLink());
+        assertEquals("http://www.t.t", imageLinkUpdated.getImageLink());
+        assertEquals(product2.getId(), imageLinkUpdated.getProduct().getId());
+        assert product2.getImageLinks().contains(imageLinkUpdated);
+        assert !product.getImageLinks().contains(imageLinkUpdated);
+    }
+
+
 }
