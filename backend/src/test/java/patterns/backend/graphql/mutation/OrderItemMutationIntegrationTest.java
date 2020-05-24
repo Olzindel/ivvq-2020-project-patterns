@@ -79,7 +79,7 @@ public class OrderItemMutationIntegrationTest {
         OrderInput orderInputUpdate = new OrderInput(OrderStatus.ABORTED, null, null);
         Order orderUpdate = orderMutation.createOrder(orderInputUpdate);
 
-        ProductInput productInputUpdate = new ProductInput("t", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null, null);
+        ProductInput productInputUpdate = new ProductInput("t", Float.parseFloat("1.0"), ProductStatus.NOT_AVAILABLE, "t", 1, null);
         Product productUpdate = productMutation.createProduct(productInputUpdate);
 
         orderItemInputUpdate.setQuantity(1);

@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class UserInput {
+    String username;
+    String password;
     String firstName;
     String lastName;
     String email;
@@ -21,6 +23,6 @@ public class UserInput {
     String street;
     String postalCode;
     String city;
-    java.util.List<Long> merchantIds;
+    Boolean merchant;
     List<Long> orderIds;
 }

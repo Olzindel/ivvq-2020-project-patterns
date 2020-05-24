@@ -8,11 +8,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class MerchantNotFoundException extends RuntimeException implements GraphQLError {
+public class BasketAlreadyPresentException extends RuntimeException implements GraphQLError {
     private final Long id;
 
-    public MerchantNotFoundException(Long id) {
-        super("Merchant could not be found with id : " + id);
+    public BasketAlreadyPresentException(Long id) {
+        super("Un panier est déjà présent pour cette utilisateur.");
         this.id = id;
     }
 
