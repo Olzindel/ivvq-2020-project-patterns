@@ -1,5 +1,6 @@
 <template>
   <div>
+  <div v-if="basket">
     <div class="title">
       Mon panier
     </div>
@@ -13,19 +14,24 @@
     <b-button @click="validateBasket">je valide mon panier</b-button>
     </div>
   </div>
+    <div v-if="!basket">
+      <paiement-by-card :user="user" />
+    </div>
+  </div>
 </template>
 
 <script>
 import BasketCard from './basketCard'
 import gql from 'graphql-tag'
-import router from '../../router/index'
+import PaiementByCard from './paiementByCard'
 
 export default {
   name: 'basketPage',
-  components: {BasketCard},
+  components: {PaiementByCard, BasketCard},
   data () {
     return {
-      order: []
+      order: [],
+      basket: true
     }
   },
   computed: {
@@ -59,7 +65,8 @@ export default {
     },
     validateBasket () {
       console.log('coucou')
-      this.$apollo.mutate({
+      this.basket = false
+      /* this.$apollo.mutate({
         mutation: gql`mutation updateOrder ($orderId: ID!, $input: OrderInput!){
         updateOrderToPaid: updateOrder( orderId: $orderId, input: $input){
           id
@@ -72,10 +79,10 @@ export default {
           }
         }
       }).then(data => {
-        router.push({path: '/paiement'})
+      this.basket = false
       }).catch((error) => {
         this.errorMessage(error.message)
-      })
+      }) */
     },
     errorMessage (error) {
       let message = error.split(':')
@@ -97,6 +104,13 @@ export default {
       return {
         query: gql`query user($id: ID!){
             getuser:user(userId: $id){
+               id,
+               firstName,
+               lastName,
+               gender,
+               street,
+               postalCode,
+               city,
                orders{
                   id,
                   status,
@@ -108,7 +122,6 @@ export default {
                       name,
                       price,
                       stock,
-                      description,
                       imageLinks{
                         imageLink
                       }
@@ -123,6 +136,7 @@ export default {
           }
         },
         update: data => {
+          console.log(data.getuser)
           this.order = data.getuser.orders.filter(function (order) {
             if (order.status === 'BASKET') {
               return order
