@@ -6,6 +6,7 @@ import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
 import BasketPage from '../components/paiement-page/basketPage'
+import paiementByCard from '../components/paiement-page/paiementByCard'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/account',
       name: 'UserAccount',
       component: UserAccount
+    },
+    {
+      path: '/paiement',
+      name: 'paiemenByCard',
+      component: paiementByCard
     },
     {
       path: '/basket',

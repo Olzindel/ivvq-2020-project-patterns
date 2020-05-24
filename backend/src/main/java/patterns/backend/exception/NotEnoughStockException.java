@@ -12,7 +12,7 @@ public class NotEnoughStockException extends RuntimeException implements GraphQL
     private final Long id;
 
     public NotEnoughStockException(Long id, String productName) {
-        super("Not enough stock for this product : " + productName + " (" + id + ")");
+        super("Not enough stock for this product : " + productName + " |" + id + "");
         this.id = id;
     }
 

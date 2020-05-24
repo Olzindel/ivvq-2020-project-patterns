@@ -17,7 +17,7 @@
         </div>
         <b-field @="changeProductNumber()" style="display: flex;justify-content: center">
         <b-numberinput controls-position="compact" v-on:input="changeProductNumber"
-                       controls-rounded icon-pack="mdi" min="1" :editable="false" :max="orderItem.product.stock" style="width: 180px" v-model="this.orderItem.quantity">
+                       controls-rounded icon-pack="mdi" min="1" style="width: 180px" v-model="orderItem.quantity">
         </b-numberinput>
       </b-field>
       </div>
@@ -32,8 +32,14 @@ export default {
   props: {
     orderItem: {type: Object, required: true}
   },
+  data () {
+    return {
+      patate: 5
+    }
+  },
   methods: {
     changeProductNumber () {
+      console.log(this.orderItem.quantity)
       this.$apollo.mutate({
         mutation: gql`mutation updateOrderItem ($orderItemId:ID!, $input: OrderItemInput!){
           updateOrderItem : updateOrderItem(

@@ -184,7 +184,6 @@ export default {
       }).catch((error) => { this.danger(error) })
     },
     danger (text) {
-      console.log(text)
       this.$buefy.toast.open({
         duration: 5000,
         message: 'Vous devez vous connecter',

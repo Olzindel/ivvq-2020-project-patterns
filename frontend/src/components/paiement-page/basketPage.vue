@@ -4,13 +4,13 @@
       Mon panier
     </div>
    <div class="columns is-multiline is-centered is-flex " v-if="order.length !== 0" >
-      <div v-for='orderItem in order[0].OrderItems' :key="orderItem.id">
+      <div v-for='orderItem in order[0].orderItems' :key="orderItem.id">
         <basket-card class="cardSize" :orderItem='orderItem' @deleteItem="deleteItem"/>
       </div>
     </div>
     <div>
       montant de votre commande {{this.price}} €
-    <b-button @Click="validateBasket()">je valide mon panier</b-button>
+    <b-button @click="validateBasket">je valide mon panier</b-button>
     </div>
   </div>
 </template>
@@ -18,6 +18,7 @@
 <script>
 import BasketCard from './basketCard'
 import gql from 'graphql-tag'
+import router from '../../router/index'
 
 export default {
   name: 'basketPage',
@@ -31,8 +32,8 @@ export default {
     price: function () {
       let sum = 0
       if (this.order.length !== 0) {
-        this.order[0].OrderItems.forEach(function (OrderItem) {
-          sum += OrderItem.quantity * OrderItem.product.price
+        this.order[0].orderItems.forEach(function (orderItem) {
+          sum += orderItem.quantity * orderItem.product.price
         })
       }
       return sum
@@ -49,11 +50,45 @@ export default {
           orderItemId: idItem
         }
       }).then(data => {
-        this.order[0].OrderItems = this.order[0].OrderItems.filter(function (orderItem) {
+        this.order[0].orderItems = this.order[0].orderItems.filter(function (orderItem) {
           if (orderItem.id !== data.data.deleteOrderItem) {
             return orderItem
           }
         })
+      })
+    },
+    validateBasket () {
+      console.log('coucou')
+      this.$apollo.mutate({
+        mutation: gql`mutation updateOrder ($orderId: ID!, $input: OrderInput!){
+        updateOrderToPaid: updateOrder( orderId: $orderId, input: $input){
+          id
+        }
+        }`,
+        variables: {
+          orderId: this.order[0].id,
+          input: {
+            status: 'PAID'
+          }
+        }
+      }).then(data => {
+        router.push({path: '/paiement'})
+      }).catch((error) => {
+        this.errorMessage(error.message)
+      })
+    },
+    errorMessage (error) {
+      let message = error.split(':')
+      let id = message[3].toString().split('|')
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: 'pas assez de stock pour ' + id[0] + 'juste ' + this.order[0].orderItems.filter(function (item) {
+          if (id[1] === item.product.id) {
+            return item
+          }
+        })[0].product.stock + ' produit(s) disponible',
+        position: 'is-bottom',
+        type: 'is-danger'
       })
     }
   },
@@ -65,7 +100,7 @@ export default {
                orders{
                   id,
                   status,
-                  OrderItems{
+                  orderItems{
                     id,
                     quantity,
                     product{
