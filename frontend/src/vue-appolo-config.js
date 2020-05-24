@@ -4,7 +4,7 @@ import ApolloClient from 'apollo-client'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 
 const httpLink = createHttpLink({
-  uri: process.env.VUE_APP_API_HTTP || 'http://localhost:8080'
+  uri: process.env.VUE_APP_API_HTTP
 })
 
 const authLink = setContext((_, {headers}) => {

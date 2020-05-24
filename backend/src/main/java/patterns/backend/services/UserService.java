@@ -3,6 +3,7 @@ package patterns.backend.services;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.domain.Order;
@@ -26,6 +27,10 @@ public class UserService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
     public User findUserById(final Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -39,6 +44,7 @@ public class UserService {
     public User create(final User user) {
         User savedUser;
         if (user != null) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             savedUser = userRepository.save(user);
             if (user.getOrders() != null) {
                 for (Order order : user.getOrders()) {
@@ -71,7 +77,7 @@ public class UserService {
     }
 
     public User create(UserInput userInput) {
-        User user = new User(userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
+        User user = new User(userInput.getUsername(), userInput.getPassword(), userInput.getFirstName(), userInput.getLastName(), userInput.getEmail(),
                 userInput.getGender(), userInput.getStreet(), userInput.getPostalCode(), userInput.getCity(), userInput.getMerchant());
 
         if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {

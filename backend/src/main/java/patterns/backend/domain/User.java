@@ -24,6 +24,10 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    private String username;
+
+    private String password;
+
     private String firstName;
 
     private String lastName;
@@ -50,7 +54,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Order> orders = new HashSet<>();
 
-    public User(String firstName, String lastName, String email, String gender, String street, String postalCode, String city, Boolean merchant) {
+    public User(String username, String password, String firstName, String lastName, String email, String gender, String street, String postalCode, String city, Boolean merchant) {
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

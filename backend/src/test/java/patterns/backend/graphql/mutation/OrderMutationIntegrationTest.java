@@ -84,7 +84,7 @@ public class OrderMutationIntegrationTest {
         long count = orderItemMutation.getOrderItemService().countOrderItem();
 
         OrderInput orderInputUpdate = new OrderInput();
-        UserInput userInputUpdate = new UserInput("t", "t", "t.t@g.c", "F", "F", "31450", "c", true, null);
+        UserInput userInputUpdate = new UserInput("t", "t","t", "t", "t.t@g.c", "F", "F", "31450", "c", true, null);
         User userUpdate = userMutation.createUser(userInputUpdate);
 
         OrderItemInput orderItemInputUpdate = new OrderItemInput(4, null, null);
