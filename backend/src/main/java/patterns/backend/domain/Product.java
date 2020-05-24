@@ -62,10 +62,14 @@ public class Product {
     }
 
     public void decreaseStock(int value) {
-        if (stock >= value) {
+        if (enoughStock(value)) {
             this.stock = this.stock - value;
         } else {
             throw new NotEnoughStockException(id, name);
         }
+    }
+
+    public boolean enoughStock(int value) {
+        return stock >= value;
     }
 }

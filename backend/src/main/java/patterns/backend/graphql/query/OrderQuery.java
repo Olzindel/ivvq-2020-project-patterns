@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.Product;
 import patterns.backend.services.OrderService;
 
 import java.util.List;
@@ -23,5 +24,9 @@ public class OrderQuery implements GraphQLQueryResolver {
 
     public Order getOrder(final Long orderId) {
         return orderService.findOrderById(orderId);
+    }
+
+    public List<Product> enoughStock(Long orderId) {
+        return orderService.enoughStock(orderId);
     }
 }

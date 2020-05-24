@@ -5,20 +5,14 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import patterns.backend.domain.Order;
-import patterns.backend.domain.OrderItem;
-import patterns.backend.domain.OrderStatus;
-import patterns.backend.domain.User;
+import patterns.backend.domain.*;
 import patterns.backend.exception.BasketAlreadyPresentException;
 import patterns.backend.exception.OrderNotFoundException;
 import patterns.backend.graphql.input.OrderInput;
 import patterns.backend.repositories.OrderRepository;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -144,5 +138,17 @@ public class OrderService {
         }
 
         return create(order);
+    }
+
+    public List<Product> enoughStock(Long orderId) {
+        Order order = findOrderById(orderId);
+        List<Product> products = new ArrayList<>();
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Product product = orderItem.getProduct();
+            if (!product.enoughStock(orderItem.getQuantity())) {
+                products.add(product);
+            }
+        }
+        return products;
     }
 }
