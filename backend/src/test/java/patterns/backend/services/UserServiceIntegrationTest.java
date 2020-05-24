@@ -85,7 +85,7 @@ public class UserServiceIntegrationTest {
         // given: an User user persisted
         User fetched = userService.create(user);
 
-        UserInput userInput = new UserInput(user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
+        UserInput userInput = new UserInput(user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
                 user.getGender(), user.getStreet(), user.getPostalCode(), user.getCity(), false,
                 user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
         // when: the object user is updated in the database
@@ -112,7 +112,7 @@ public class UserServiceIntegrationTest {
         // given: an User user persisted
         User fetched = userService.create(user);
         long count = userService.countUser();
-        UserInput userInput = new UserInput(user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
+        UserInput userInput = new UserInput(user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName(), "tyty@tyty.fr",
                 user.getGender(), user.getStreet(), user.getPostalCode(), user.getCity(), false,
                 user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
         // when: the object user is updated in the database

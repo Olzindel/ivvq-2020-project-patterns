@@ -32,7 +32,7 @@ public class DataLoader {
     }
 
     private void load() {
-        user = new User("Robert", "Tralala", "robert.Tralala@gmail.com", "M", "51 chemin du Pastis", "51000", "Jaune", false);
+        user = new User("user", "user","Robert", "Tralala", "robert.Tralala@gmail.com", "M", "51 chemin du Pastis", "51000", "Jaune", false);
         product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 10);
         imageLink = new ImageLink("http://www.l.com", product);
         order = new Order(OrderStatus.PAID, user);
@@ -52,7 +52,7 @@ public class DataLoader {
     }
 
     private void loadInput() {
-        userInput = new UserInput("Robert", "Tralala", "robert.Tralala@gmail.com", "M", "51 chemin du Pastis", "51000", "Jaune", false, null);
+        userInput = new UserInput("user", "user","Robert", "Tralala", "robert.Tralala@gmail.com", "M", "51 chemin du Pastis", "51000", "Jaune", false, null);
         productInput = new ProductInput("Saber", Float.parseFloat("100000.0"), ProductStatus.AVAILABLE, "Description", 10, null);
         imageLinkInput = new ImageLinkInput("http://www.l.com", null);
         orderInput = new OrderInput(OrderStatus.PAID, null, null);

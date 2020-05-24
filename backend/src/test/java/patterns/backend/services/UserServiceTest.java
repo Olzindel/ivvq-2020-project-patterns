@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
 import patterns.backend.DataLoader;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import patterns.backend.domain.User;
 import patterns.backend.repositories.UserRepository;
 
@@ -27,6 +29,9 @@ class UserServiceTest {
     @MockBean
     private OrderService orderService;
 
+    @MockBean
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private User user;
 
     @BeforeEach
@@ -36,6 +41,7 @@ class UserServiceTest {
         userService = new UserService();
         userService.setOrderService(orderService);
         userService.setUserRepository(userRepository);
+        userService.setBCryptPasswordEncoder(bCryptPasswordEncoder);
 
         user = dataLoader.getUser();
     }
