@@ -1,6 +1,7 @@
 <template>
   <div id="app" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
     <Header/>
     <Banner/>
     <router-view/>
@@ -17,7 +18,6 @@ import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
 Vue.use(Buefy, {
-
 })
 
 export default {
