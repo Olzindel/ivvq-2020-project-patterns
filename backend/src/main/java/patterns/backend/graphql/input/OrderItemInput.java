@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 @Transactional
 public class OrderItemInput {
-    Integer quantity;
-    Long productId;
-    Long orderId;
+  Integer quantity;
+  Long productId;
+  Long orderId;
 }

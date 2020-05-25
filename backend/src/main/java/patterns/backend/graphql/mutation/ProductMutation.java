@@ -16,20 +16,18 @@ import patterns.backend.services.ProductService;
 @Setter
 public class ProductMutation implements GraphQLMutationResolver {
 
-    @Autowired
-    ProductService productService;
+  @Autowired ProductService productService;
 
-    public Product createProduct(ProductInput productInput) {
-        return productService.create(productInput);
-    }
+  public Product createProduct(ProductInput productInput) {
+    return productService.create(productInput);
+  }
 
-    public Long deleteProduct(Long productId) {
-        productService.deleteProductById(productId);
-        return productId;
-    }
+  public Long deleteProduct(Long productId) {
+    productService.deleteProductById(productId);
+    return productId;
+  }
 
-    public Product updateProduct(long productId, ProductInput productInput) {
-        return productService.update(productId, productInput);
-    }
-
+  public Product updateProduct(long productId, ProductInput productInput) {
+    return productService.update(productId, productInput);
+  }
 }
