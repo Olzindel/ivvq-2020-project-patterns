@@ -136,7 +136,6 @@ export default {
           }
         }
       }).then(data => {
-        console.log(data.data.createOrder.id)
         this.addThisProduct(data.data.createOrder.id)
       })
     },

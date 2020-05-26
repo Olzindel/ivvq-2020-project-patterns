@@ -169,7 +169,7 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log('paid')
+        console.log('commande en preparation')
         router.push({path: '/home'})
       }).catch((error) => {
         console.log(error)

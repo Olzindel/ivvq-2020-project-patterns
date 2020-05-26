@@ -17,8 +17,7 @@ import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
-Vue.use(Buefy, {
-})
+Vue.use(Buefy)
 
 export default {
   name: 'App',

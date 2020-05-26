@@ -32,14 +32,8 @@ export default {
   props: {
     orderItem: {type: Object, required: true}
   },
-  data () {
-    return {
-      patate: 5
-    }
-  },
   methods: {
     changeProductNumber () {
-      console.log(this.orderItem.quantity)
       this.$apollo.mutate({
         mutation: gql`mutation updateOrderItem ($orderItemId:ID!, $input: OrderItemInput!){
           updateOrderItem : updateOrderItem(
@@ -56,8 +50,6 @@ export default {
           },
           orderItemId: this.orderItem.id
         }
-      }).then(data => {
-        console.log(data)
       })
     },
     deleteMe () {
