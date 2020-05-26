@@ -7,6 +7,8 @@ import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
 import BasketPage from '../components/paiement-page/basketPage'
 import paiementByCard from '../components/paiement-page/paiementByCard'
+import ProductStockPage from '../components/mercant-page/ProductStockPage'
+import OrderPage from '../components/mercant-page/OrderPage'
 
 Vue.use(Router)
 
@@ -46,6 +48,16 @@ export default new Router({
       path: '/aPropos',
       name: 'APropos',
       component: APropos
+    },
+    {
+      path: '/stock',
+      name: 'ProductStockPage',
+      component: ProductStockPage
+    },
+    {
+      path: '/order',
+      name: 'OrderPage',
+      component: OrderPage
     },
     {
       path: '*',
