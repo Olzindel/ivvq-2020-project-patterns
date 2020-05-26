@@ -15,7 +15,7 @@
           <b-input v-model="user.firstName"/>
         </b-field>
         <b-field label="Nom" label-position='inside' expanded>
-          <b-input v-model="user.name"/>
+          <b-input v-model="user.lastName"/>
         </b-field>
       </b-field>
       <b-field grouped position="is-centered">
@@ -27,7 +27,7 @@
         </b-field>
       </b-field>
       <b-field position="is-left" label="Ville" label-position='inside' style="margin-right: 50%">
-        <b-input v-model="user.town"/>
+        <b-input v-model="user.city"/>
       </b-field>
     </div>
     <b-field label="Numero de carte" label-position='inside' expanded>
@@ -46,12 +46,15 @@
       <b-input minlength="3" maxlength="3" pattern="[0-9]*" v-model="card.code"/>
     </b-field>
     </b-field>
-    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="valideInfo">Je paie
+    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateUser">Je valide mes informations et je paie
     </b-button>
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import router from '../../router/index'
+
 export default {
   name: 'paiementByCard',
   props: {
@@ -67,6 +70,51 @@ export default {
     }
   },
   methods: {
+    updateUser () {
+      if (this.user.postalCode.length !== 5) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: 'votre code postal n\'est pas correct',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
+        return
+      }
+      if (this.user.firstName === '' || this.user.lastName === '' || this.user.street === '' || this.user.city === '') {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: 'un champ est vide',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
+        return
+      }
+      this.$apollo.mutate({
+        mutation: gql`mutation updateUser ($userId: ID!, $input: UserInput!){
+        updateUserAdress : updateUser(userId: $userId,input: $input){
+        id
+         }}`,
+        variables: {
+          userId: this.user.id,
+          input: {
+            gender: this.user.gender,
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            street: this.user.street,
+            postalCode: this.user.postalCode,
+            city: this.user.city,
+            email: this.user.email
+          }
+        }
+      }).then(data => {
+        this.valideInfo()
+      }).catch((error) => this.$buefy.toast.open({
+        duration: 5000,
+        message: error.message,
+        position: 'is-bottom',
+        type: 'is-danger'
+      }))
+    },
     valideInfo () {
       let date = new Date()
       if (this.card.date.getTime() >= date.setMonth(date.getMonth() - 1)) {
@@ -74,10 +122,12 @@ export default {
           if (this.valid_credit_card(this.card.num)) {
             this.$buefy.toast.open({
               duration: 5000,
-              message: 'code bon',
+              message: 'Commande réussite',
               position: 'is-bottom',
               type: 'is-success'
             })
+            console.log('panier validé')
+            router.push({path: '/home'})
           } else {
             this.$buefy.toast.open({
               duration: 5000,

@@ -31,7 +31,8 @@ export default {
   data () {
     return {
       order: [],
-      basket: true
+      basket: true,
+      user: null
     }
   },
   computed: {
@@ -107,6 +108,7 @@ export default {
                id,
                firstName,
                lastName,
+               email,
                gender,
                street,
                postalCode,
@@ -136,7 +138,8 @@ export default {
           }
         },
         update: data => {
-          console.log(data.getuser)
+          this.user = data.getuser
+          console.log(this.user)
           this.order = data.getuser.orders.filter(function (order) {
             if (order.status === 'BASKET') {
               return order
