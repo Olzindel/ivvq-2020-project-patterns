@@ -21,10 +21,10 @@
           <template v-slot:arrow-right>
             <i class="icon icon-arrow-right"/>
           </template>
-          <vueper-slide :image="image.imageLink"
-                        :key="i"
-                        v-for="(image, i) in productInfos.imageLinks"
-                        v-if="productInfos.imageLinks.length">
+          <vueper-slide v-for="image in product.imageLinks"
+                          :image="image.imageLink"
+                          :key="image.id"
+                        v-if="product.imageLinks.length">
             <template v-slot:loader>
               <b-icon class="icon icon-loader spinning"/>
             </template>
@@ -44,14 +44,14 @@
       <div class="column productInfos is-vcentered is-centered">
         <div class="columns is-multiline">
           <div class="column is-12 section box">
-            <h1 class="title">{{productInfos.name}}</h1>
-            <h2 class="subtitle">{{productInfos.price}} €</h2>
-            <article class="description" v-if="productInfos.description">
-              {{productInfos.description}}
+            <h1 class="title">{{product.name}}</h1>
+            <h2 class="subtitle">{{product.price}} €</h2>
+            <article class="description" v-if="product.description">
+              {{product.description}}
             </article>
             <div v-else>
               Aucune description pour ce produit.
-            </div>
+          </div>
           </div>
           <div class="column add-to-basket">
             <b-button @click="getUser()">Ajouter au panier</b-button>
@@ -82,13 +82,14 @@ export default {
       return {
         query: gql`query ProductInfos($productId: ID!) {
           productInfos: product(productId: $productId){
-            id
-            name
+            id,
+            name,
              imageLinks{
+              id,
               imageLink
-             }
-            price
-            status
+             },
+            price,
+            status,
             description
           }
         }`,
@@ -96,13 +97,18 @@ export default {
           return {
             productId: this.productId
           }
+        },
+        update: data => {
+          console.log(data.productInfos)
+          this.product = data.productInfos
+          console.log(this.product.imageLinks)
         }
       }
     }
   },
   data () {
     return {
-      productInfos: {
+      product: {
         id: -1,
         name: '',
         imageLinks: [],
@@ -149,7 +155,7 @@ export default {
         variables: {
           input: {
             quantity: 1,
-            productId: this.productInfos.id,
+            productId: this.product.id,
             orderId: orderId
           }
         }
@@ -167,7 +173,8 @@ export default {
         }`,
         variables: {
           id: localStorage.getItem('user')
-        }
+        },
+        fetchPolicy: 'no-cache'
       }
       ).then(data => {
         const basket = data.data.getuser.orders.filter(function (order) {
@@ -176,8 +183,10 @@ export default {
           }
         })
         if (basket.length === 0) {
+          console.log('add a basket')
           this.addABasket()
         } else {
+          console.log(basket[0])
           this.addThisProduct(basket[0].id)
         }
       }).catch((error) => { this.danger(error) })
@@ -192,7 +201,7 @@ export default {
     },
     success () {
       this.$buefy.toast.open({
-        message: this.productInfos.name + ' a été ajouté à votre panier',
+        message: this.product.name + ' a été ajouté à votre panier',
         type: 'is-success'
       })
     }
