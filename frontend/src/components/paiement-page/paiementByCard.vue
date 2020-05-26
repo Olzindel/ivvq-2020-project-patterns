@@ -58,7 +58,8 @@ import router from '../../router/index'
 export default {
   name: 'paiementByCard',
   props: {
-    user: {type: Object, required: true}
+    user: {type: Object, required: true},
+    order: {type: Object, required: true}
   },
   data () {
     return {
@@ -127,7 +128,7 @@ export default {
               type: 'is-success'
             })
             console.log('panier validé')
-            router.push({path: '/home'})
+            this.paidBasket()
           } else {
             this.$buefy.toast.open({
               duration: 5000,
@@ -152,6 +153,34 @@ export default {
           type: 'is-danger'
         })
       }
+    },
+    paidBasket () {
+      this.$apollo.mutate({
+        mutation: gql`mutation updateOrder ($orderId: ID!, $input: OrderInput!){
+        updateOrderToPaid: updateOrder( orderId: $orderId, input: $input){
+          id
+        }
+        }`,
+        variables: {
+          orderId: parseInt(this.order.id),
+          input: {
+            status: 'PAID'
+          }
+        },
+        fetchPolicy: 'no-cache'
+      }).then(data => {
+        console.log('paid')
+        router.push({path: '/home'})
+      }).catch((error) => {
+        console.log(error)
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: 'une erreur est apparu, paiement invalidé retour au panier' + '<br/>' + 'veuillez valider votre commande a nouveau',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
+        router.push({path: '/basket'})
+      })
     },
     valid_credit_card (value) {
       // source :https://gist.github.com/DiegoSalazar/4075533

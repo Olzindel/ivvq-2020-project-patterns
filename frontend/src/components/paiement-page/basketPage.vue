@@ -9,13 +9,17 @@
         <basket-card class="cardSize" :orderItem='orderItem' @deleteItem="deleteItem"/>
       </div>
     </div>
-    <div>
+    <div v-if="order.length !== 0">
       montant de votre commande {{this.price}} €
     <b-button @click="validateBasket">je valide mon panier</b-button>
     </div>
+    <div v-if="order.length === 0">
+      <h2> votre panier est vide </h2>
+      <img class="img"  src="https://vignette.wikia.nocookie.net/fireemblem/images/3/3f/Anna_FE13_Artwork.png/revision/latest?cb=20160719200512"/>
+    </div>
   </div>
     <div v-if="!basket">
-      <paiement-by-card :user="user" />
+      <paiement-by-card :user="user" :order="this.order[0]" />
     </div>
   </div>
 </template>
@@ -66,35 +70,38 @@ export default {
     },
     validateBasket () {
       console.log('coucou')
-      this.basket = false
-      /* this.$apollo.mutate({
-        mutation: gql`mutation updateOrder ($orderId: ID!, $input: OrderInput!){
-        updateOrderToPaid: updateOrder( orderId: $orderId, input: $input){
-          id
-        }
-        }`,
+      this.$apollo.query({
+        query: gql`
+      query enoughStock ( $orderId : ID! ){
+        checkStockForAnOrder : enoughStock(orderId : $orderId){
+        id
+      }}`,
         variables: {
-          orderId: this.order[0].id,
-          input: {
-            status: 'PAID'
-          }
-        }
+          orderId: parseInt(this.order[0].id)
+        },
+        fetchPolicy: 'no-cache'
       }).then(data => {
-      this.basket = false
-      }).catch((error) => {
-        this.errorMessage(error.message)
-      }) */
+        console.log(data)
+        if (data.data.checkStockForAnOrder.length > 0) { this.errorMessage(data.data.checkStockForAnOrder) } else {
+          this.basket = false
+        }
+      })
     },
     errorMessage (error) {
-      let message = error.split(':')
-      let id = message[3].toString().split('|')
-      this.$buefy.toast.open({
-        duration: 5000,
-        message: 'pas assez de stock pour ' + id[0] + 'juste ' + this.order[0].orderItems.filter(function (item) {
-          if (id[1] === item.product.id) {
+      console.log(error[0].id)
+      let test = ''
+      error.forEach((error) => {
+        let item = this.order[0].orderItems.filter(function (item) {
+          if (error.id === item.product.id) {
             return item
           }
-        })[0].product.stock + ' produit(s) disponible',
+        })[0]
+        test += 'pas assez de stock pour ' + item.product.name + ' juste ' + item.product.stock + ' produit(s) disponible' + '<br/>'
+      })
+      console.log(test)
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: test,
         position: 'is-bottom',
         type: 'is-danger'
       })
@@ -137,6 +144,7 @@ export default {
             id: localStorage.getItem('user')
           }
         },
+        fetchPolicy: 'no-cache',
         update: data => {
           this.user = data.getuser
           console.log(this.user)
@@ -161,5 +169,9 @@ export default {
     font-size: 50px;
     justify-content: center;
     padding: 24px;
+  }
+  .img{
+    height: 300px;
+    width: auto;
   }
 </style>
