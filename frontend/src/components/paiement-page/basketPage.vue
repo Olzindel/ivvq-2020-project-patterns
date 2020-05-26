@@ -52,7 +52,6 @@ export default {
   },
   methods: {
     deleteItem (idItem) {
-      console.log(idItem)
       this.$apollo.mutate({
         mutation: gql`mutation deleteOrderItem ($orderItemId: ID!){
         deleteOrderItem : deleteOrderItem(orderItemId: $orderItemId)
@@ -69,7 +68,6 @@ export default {
       })
     },
     validateBasket () {
-      console.log('coucou')
       this.$apollo.query({
         query: gql`
       query enoughStock ( $orderId : ID! ){
@@ -81,14 +79,12 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log(data)
         if (data.data.checkStockForAnOrder.length > 0) { this.errorMessage(data.data.checkStockForAnOrder) } else {
           this.basket = false
         }
       })
     },
     errorMessage (error) {
-      console.log(error[0].id)
       let test = ''
       error.forEach((error) => {
         let item = this.order[0].orderItems.filter(function (item) {
@@ -98,7 +94,6 @@ export default {
         })[0]
         test += 'pas assez de stock pour ' + item.product.name + ' juste ' + item.product.stock + ' produit(s) disponible' + '<br/>'
       })
-      console.log(test)
       this.$buefy.toast.open({
         duration: 5000,
         message: test,
@@ -147,7 +142,6 @@ export default {
         fetchPolicy: 'no-cache',
         update: data => {
           this.user = data.getuser
-          console.log(this.user)
           this.order = data.getuser.orders.filter(function (order) {
             if (order.status === 'BASKET') {
               return order

@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     changeProductNumber () {
-      console.log(this.orderItem.quantity)
       this.$apollo.mutate({
         mutation: gql`mutation updateOrderItem ($orderItemId:ID!, $input: OrderItemInput!){
           updateOrderItem : updateOrderItem(
@@ -56,8 +55,6 @@ export default {
           },
           orderItemId: this.orderItem.id
         }
-      }).then(data => {
-        console.log(data)
       })
     },
     deleteMe () {
