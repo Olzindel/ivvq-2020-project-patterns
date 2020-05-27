@@ -1,6 +1,7 @@
 package patterns.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @NoArgsConstructor
 @Transactional
 @Entity(name = "orders")
-public class Order {
+public class Order implements Serializable {
 
   @Id @GeneratedValue private Long id;
 

@@ -9,27 +9,33 @@ type User {
     street:String
     postalCode:String
     city:String
-    merchant: Boolean!
+    role:Role!
     orders: [Order!]
 }
 
 input UserInput {
     username: String
     password: String
-    firstName: String!
-    lastName: String!
-    email: String!
+    firstName: String
+    lastName: String
+    email: String
     gender: String
     street:String
     postalCode:String
     city:String
-    merchant : Boolean
+    role:Role
     orders: [ID!]
+}
+
+enum Role {
+    USER
+    MERCHANT
 }
 
 extend type Query {
     users(count: Int!):[User]
     user(userId: ID!):User
+    userFromToken(token: String!):User
 }
 
 extend type Mutation {

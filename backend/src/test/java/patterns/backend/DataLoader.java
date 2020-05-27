@@ -41,7 +41,7 @@ public class DataLoader {
             "51 chemin du Pastis",
             "51000",
             "Jaune",
-            false);
+            Role.USER);
     product = new Product("Saber", 100000.0, ProductStatus.AVAILABLE, "Description", 10);
     imageLink = new ImageLink("http://www.l.com", product);
     order = new Order(OrderStatus.PAID, user);
@@ -72,7 +72,7 @@ public class DataLoader {
             "51 chemin du Pastis",
             "51000",
             "Jaune",
-            false,
+            Role.USER,
             null);
     productInput =
         new ProductInput(

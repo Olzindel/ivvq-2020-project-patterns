@@ -1,6 +1,7 @@
 package patterns.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -19,7 +20,7 @@ import patterns.backend.exception.NotEnoughStockException;
 @NoArgsConstructor
 @Transactional
 @Entity(name = "products")
-public class Product {
+public class Product implements Serializable {
 
   @Id @GeneratedValue private Long id;
 
