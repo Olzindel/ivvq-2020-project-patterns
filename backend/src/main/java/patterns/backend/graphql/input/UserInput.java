@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.transaction.annotation.Transactional;
+import patterns.backend.domain.Role;
 
 @Setter
 @Getter
@@ -22,6 +23,6 @@ public class UserInput {
   String street;
   String postalCode;
   String city;
-  Boolean merchant;
+  Role role;
   List<Long> orderIds;
 }

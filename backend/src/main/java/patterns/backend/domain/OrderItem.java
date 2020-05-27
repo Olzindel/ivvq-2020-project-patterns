@@ -1,5 +1,6 @@
 package patterns.backend.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @NoArgsConstructor
 @Transactional
 @Entity(name = "order_items")
-public class OrderItem {
+public class OrderItem implements Serializable {
 
   @Id @GeneratedValue private Long id;
 
