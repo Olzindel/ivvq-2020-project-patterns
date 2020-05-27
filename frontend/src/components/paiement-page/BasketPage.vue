@@ -10,8 +10,8 @@
       </div>
     </div>
     <div v-if="order.length !== 0">
-      montant de votre commande {{this.price}} €
-    <b-button @click="validateBasket">je valide mon panier</b-button>
+      Montant de votre commande {{this.price}} €
+    <b-button @click="validateBasket">Je valide mon panier</b-button>
     </div>
     <div v-if="order.length === 0">
       <h2> votre panier est vide </h2>
@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import BasketCard from './basketCard'
+import BasketCard from './BasketCard'
 import gql from 'graphql-tag'
-import PaiementByCard from './paiementByCard'
+import PaiementByCard from './PaiementByCard'
 
 export default {
   name: 'basketPage',
