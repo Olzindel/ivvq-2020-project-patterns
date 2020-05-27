@@ -16,20 +16,18 @@ import patterns.backend.services.OrderService;
 @Setter
 public class OrderMutation implements GraphQLMutationResolver {
 
-    @Autowired
-    private OrderService orderService;
+  @Autowired private OrderService orderService;
 
-    public Order createOrder(OrderInput orderInput) {
-        return orderService.create(orderInput);
-    }
+  public Order createOrder(OrderInput orderInput) {
+    return orderService.create(orderInput);
+  }
 
-    public Long deleteOrder(Long orderId) {
-        orderService.deleteOrderById(orderId);
-        return orderId;
-    }
+  public Long deleteOrder(Long orderId) {
+    orderService.deleteOrderById(orderId);
+    return orderId;
+  }
 
-    public Order updateOrder(Long orderId, OrderInput orderInput) {
-        return orderService.update(orderId, orderInput);
-    }
-
+  public Order updateOrder(Long orderId, OrderInput orderInput) {
+    return orderService.update(orderId, orderInput);
+  }
 }

@@ -6,7 +6,11 @@
 
 <script>
 export default {
-  name: 'Banner'
+  name: 'Banner',
+  mounted () {
+    // todo: change this by the connection user id
+    localStorage.setItem('user', 1)
+  }
 }
 </script>
 
