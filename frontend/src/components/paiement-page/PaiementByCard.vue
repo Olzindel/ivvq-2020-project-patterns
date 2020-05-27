@@ -5,7 +5,7 @@
     </div>
     <div class="block">
       <b-field grouped position="is-centered">
-        <b-field label="Personal title" label-position='inside'>
+        <b-field label-position='inside'>
           <b-select v-model="user.gender">
             <option value="F">Mme</option>
             <option value="M">Mr</option>
@@ -30,7 +30,7 @@
         <b-input v-model="user.city"/>
       </b-field>
     </div>
-    <b-field label="Numero de carte" label-position='inside' expanded>
+    <b-field label="Numéro de carte" label-position='inside' expanded>
       <b-input minlength="16" maxlength="16" pattern="[0-9]*" v-model="card.num"/>
     </b-field>
     <b-field grouped position="is-centered">
@@ -38,11 +38,11 @@
       <b-datepicker
         type="month"
         expanded
-        placeholder="Select a date"
+        placeholder="Selectionner une date"
         v-model="card.date">
       </b-datepicker>
     </b-field>
-    <b-field label="code au dos de la carte" label-position='inside' expanded style="margin-right: 20%">
+    <b-field label="Code au dos de la carte" label-position='inside' expanded style="margin-right: 20%">
       <b-input minlength="3" maxlength="3" pattern="[0-9]*" v-model="card.code"/>
     </b-field>
     </b-field>
@@ -108,7 +108,7 @@ export default {
           }
         }
       }).then(data => {
-        this.valideInfo()
+        this.valideInfos()
       }).catch((error) => this.$buefy.toast.open({
         duration: 5000,
         message: error.message,
@@ -116,7 +116,7 @@ export default {
         type: 'is-danger'
       }))
     },
-    valideInfo () {
+    valideInfos () {
       let date = new Date()
       if (this.card.date.getTime() >= date.setMonth(date.getMonth() - 1)) {
         if (this.card.code.length === 3) {
@@ -169,7 +169,7 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log('paid')
+        console.log('commande en preparation')
         router.push({path: '/home'})
       }).catch((error) => {
         console.log(error)

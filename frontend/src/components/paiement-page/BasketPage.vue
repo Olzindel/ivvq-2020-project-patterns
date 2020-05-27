@@ -10,8 +10,8 @@
       </div>
     </div>
     <div v-if="!basketIsEmpty">
-      montant de votre commande {{this.price}} €
-    <b-button @click="validateBasket">je valide mon panier</b-button>
+      Montant de votre commande {{this.price}} €
+    <b-button @click="validateBasket">Je valide mon panier</b-button>
     </div>
     <div v-else>
       <h2> Votre panier est vide </h2>
@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import BasketCard from './basketCard'
+import BasketCard from './BasketCard'
 import gql from 'graphql-tag'
-import PaiementByCard from './paiementByCard'
+import PaiementByCard from './PaiementByCard'
 
 export default {
   name: 'basketPage',
@@ -94,18 +94,18 @@ export default {
       })
     },
     errorMessage (error) {
-      let test = ''
+      let message = ''
       error.forEach((error) => {
         let item = this.order[0].orderItems.filter(function (item) {
           if (error.id === item.product.id) {
             return item
           }
         })[0]
-        test += 'pas assez de stock pour ' + item.product.name + ' juste ' + item.product.stock + ' produit(s) disponible' + '<br/>'
+        message += 'pas assez de stock pour ' + item.product.name + ' juste ' + item.product.stock + ' produit(s) disponible' + '<br/>'
       })
       this.$buefy.toast.open({
         duration: 5000,
-        message: test,
+        message: message,
         position: 'is-bottom',
         type: 'is-danger'
       })
