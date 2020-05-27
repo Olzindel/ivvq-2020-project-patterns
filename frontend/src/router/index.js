@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import ProductPage from '../components/product-page/ProductPage'
 import HeaderPart from '../components/home-page/HomePage'
 import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
+import BasketPage from '../components/paiement-page/BasketPage'
+import paiementByCard from '../components/paiement-page/PaiementByCard'
 
 Vue.use(Router)
 
@@ -19,9 +22,25 @@ export default new Router({
       component: HeaderPart
     },
     {
+      path: '/product/:productId',
+      props: true,
+      name: 'Product-Page',
+      component: ProductPage
+    },
+    {
       path: '/account',
       name: 'UserAccount',
       component: UserAccount
+    },
+    {
+      path: '/paiement',
+      name: 'paiemenByCard',
+      component: paiementByCard
+    },
+    {
+      path: '/basket',
+      name: 'BasketPage',
+      component: BasketPage
     },
     {
       path: '/aPropos',

@@ -5,7 +5,7 @@
       <b-menu style="padding:12px">
         <b-menu-list label="Mon compte">
           <b-menu-item icon-pack="fa" icon="info-circle" label="Info" @click="goToAccount()"></b-menu-item>
-          <b-menu-item icon-pack="fa" icon="settings" label="Mon panier"></b-menu-item>
+          <b-menu-item icon-pack="fa" icon="settings" label="Mon panier" @click="goToBasket()"></b-menu-item>
           <b-menu-item icon="account" label="historique d'achat">
           </b-menu-item>
         </b-menu-list>
@@ -53,6 +53,10 @@ export default {
     },
     goToAPropos () {
       router.push({path: '/aPropos'})
+      this.showNavigation = false
+    },
+    goToBasket () {
+      router.push({path: '/basket'})
       this.showNavigation = false
     }
   }
