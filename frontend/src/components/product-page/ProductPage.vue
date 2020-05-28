@@ -16,10 +16,14 @@
                        fade lazy
                        lazy-load-on-drag>
           <template v-slot:arrow-left>
-            <i class="icon icon-arrow-left"/>
+            <div class="icon is-medium icon-arrow-left">
+              <img style="object-fit: contain" src='../../assets/product-page/pointingLeft.svg'/>
+            </div>
           </template>
           <template v-slot:arrow-right>
-            <i class="icon icon-arrow-right"/>
+            <div class="icon is-medium icon-arrow-right">
+              <img style="object-fit: contain" src='../../assets/product-page/pointingRight.svg'/>
+            </div>
           </template>
           <vueper-slide :image="image.imageLink"
                         :key="i"
@@ -32,7 +36,7 @@
 
           <vueper-slide image="../../assets/product-page/no-image-icon.png" v-else>
             <template v-slot:loader>
-              <i class="icon icon-loader spinning"></i>
+              <i class="icon icon-loader spinning"/>
               <b-icon class="icon loading-icon">
                 <span>Loading...</span>
               </b-icon>
@@ -180,7 +184,9 @@ export default {
         } else {
           this.addThisProduct(basket[0].id)
         }
-      }).catch((error) => { this.danger(error) })
+      }).catch((error) => {
+        this.danger(error)
+      })
     },
     danger (text) {
       this.$buefy.toast.open({
@@ -201,20 +207,12 @@ export default {
 </script>
 
 <style scoped>
-  .icon-arrow-left:before {
-    content: url('../../assets/product-page/pointingLeft.svg');
-    display: inline-flex;
-    width: 32px;
-    height: 32px;
+  .icon-arrow-left {
     background: white;
     border-radius: 32px;
   }
 
-  .icon-arrow-right:before {
-    content: url('../../assets/product-page/pointingRight.svg');
-    display: inline-flex;
-    width: 32px;
-    height: 32px;
+  .icon-arrow-right {
     background: white;
     border-radius: 32px;
   }
