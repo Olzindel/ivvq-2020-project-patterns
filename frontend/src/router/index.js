@@ -9,6 +9,7 @@ import BasketPage from '../components/paiement-page/basketPage'
 import paiementByCard from '../components/paiement-page/paiementByCard'
 import ProductStockPage from '../components/mercant-page/ProductStockPage'
 import OrderPage from '../components/mercant-page/OrderPage'
+import UserOrder from '../components/user-option/UserOrder'
 
 Vue.use(Router)
 
@@ -58,6 +59,11 @@ export default new Router({
       path: '/order',
       name: 'OrderPage',
       component: OrderPage
+    },
+    {
+      path: '/userOrder',
+      name: 'UserOrder',
+      component: UserOrder
     },
     {
       path: '*',
