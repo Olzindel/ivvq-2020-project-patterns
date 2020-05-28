@@ -1,5 +1,7 @@
 package patterns.backend.graphql.query;
 
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -7,32 +9,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import patterns.backend.services.OrderService;
 
-import static org.mockito.Mockito.verify;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class OrderQueryTest {
 
-    @MockBean
-    OrderService orderService;
+  @MockBean OrderService orderService;
 
-    OrderQuery orderQuery;
+  OrderQuery orderQuery;
 
-    @BeforeEach
-    public void setup() {
-        orderQuery = new OrderQuery();
-        orderQuery.setOrderService(orderService);
-    }
+  @BeforeEach
+  public void setup() {
+    orderQuery = new OrderQuery();
+    orderQuery.setOrderService(orderService);
+  }
 
-    @Test
-    void getOrders() {
-        orderQuery.getOrders(1);
-        verify(orderService).findAll(1);
-    }
+  @Test
+  void getOrders() {
+    orderQuery.getOrders(1);
+    verify(orderService).findAll(1);
+  }
 
-    @Test
-    void getOrder() {
-        orderQuery.getOrder(0L);
-        verify(orderService).findOrderById(0L);
-    }
+  @Test
+  void getOrder() {
+    orderQuery.getOrder(0L);
+    verify(orderService).findOrderById(0L);
+  }
 }

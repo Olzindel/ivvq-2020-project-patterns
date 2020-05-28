@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import patterns.backend.domain.ImageLink;
 
 @Repository
-public interface ImageLinkRepository extends CrudRepository<ImageLink, Long> {
-}
+public interface ImageLinkRepository extends CrudRepository<ImageLink, Long> {}
