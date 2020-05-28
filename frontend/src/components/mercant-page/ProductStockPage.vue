@@ -73,7 +73,6 @@ export default {
         },
         fetchPolicy: 'no-cache',
         update: data => {
-          console.log(data)
           this.products = data.getAllProducts
         }
       }
