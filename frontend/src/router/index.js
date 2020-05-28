@@ -6,7 +6,9 @@ import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
 import BasketPage from '../components/paiement-page/BasketPage'
-import paiementByCard from '../components/paiement-page/PaiementByCard'
+import PaiementByCard from '../components/paiement-page/PaiementByCard'
+import ProductStockPage from '../components/mercant-page/ProductStockPage'
+import OrderPage from '../components/mercant-page/OrderPage'
 
 Vue.use(Router)
 
@@ -34,8 +36,8 @@ export default new Router({
     },
     {
       path: '/paiement',
-      name: 'paiemenByCard',
-      component: paiementByCard
+      name: 'PaiemenByCard',
+      component: PaiementByCard
     },
     {
       path: '/basket',
@@ -46,6 +48,16 @@ export default new Router({
       path: '/aPropos',
       name: 'APropos',
       component: APropos
+    },
+    {
+      path: '/stock',
+      name: 'ProductStockPage',
+      component: ProductStockPage
+    },
+    {
+      path: '/order',
+      name: 'OrderPage',
+      component: OrderPage
     },
     {
       path: '*',

@@ -4,17 +4,17 @@
     <div class="title">
       Mon panier
     </div>
-   <div class="columns is-multiline is-centered is-flex " v-if="order.length !== 0" >
+   <div class="columns is-multiline is-centered is-flex " v-if="!basketIsEmpty" >
       <div v-for='orderItem in order[0].orderItems' :key="orderItem.id">
         <basket-card class="cardSize" :orderItem='orderItem' @deleteItem="deleteItem"/>
       </div>
     </div>
-    <div v-if="order.length !== 0">
+    <div v-if="!basketIsEmpty">
       Montant de votre commande {{this.price}} €
     <b-button @click="validateBasket">Je valide mon panier</b-button>
     </div>
-    <div v-if="order.length === 0">
-      <h2> votre panier est vide </h2>
+    <div v-else>
+      <h2> Votre panier est vide </h2>
       <img class="img"  src="https://vignette.wikia.nocookie.net/fireemblem/images/3/3f/Anna_FE13_Artwork.png/revision/latest?cb=20160719200512"/>
     </div>
   </div>
@@ -48,6 +48,15 @@ export default {
         })
       }
       return sum
+    },
+    basketIsEmpty () {
+      if (this.order.length === 0) {
+        return true
+      } else if (this.order[0].orderItems.length === 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
