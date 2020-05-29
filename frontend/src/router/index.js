@@ -84,7 +84,7 @@ const router = new Router({
       }
     },
     {
-      path: '/order',
+      path: '/orders',
       name: 'orderPage',
       component: OrderPage,
       beforeRouteEnter: (to, from, next) => {

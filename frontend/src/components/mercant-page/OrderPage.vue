@@ -1,15 +1,15 @@
 <template>
 <div>
-  <h1 style="margin-bottom: 24px">Commande Réalisée</h1>
+  <h1 class="title" style="margin-bottom: 24px">Commandes réalisées</h1>
   <div class="board">
     <div>
-      id de la commande
+      Id de la commande
     </div>
     <div>
-      liste des produits
+      Liste des produits
     </div>
     <div>
-      adresse de l'acheteur
+      Adresse de l'acheteur
     </div>
   </div>
   <div v-for='order in orders' :key="order.id" class="board">

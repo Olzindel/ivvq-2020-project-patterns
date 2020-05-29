@@ -17,9 +17,11 @@
             <b-menu-item icon="account-plus" label="S'inscrire" @click="goToSignUp()"/>
           </div>
         </b-menu-list>
+        <!-- Merchant -->
         <b-menu-list v-if="isAuthenticated() && store.getters.isMerchant" label="Administration">
           <div>
-            <!-- Insert merchant options there -->
+            <b-menu-item label="Gérer les stocks" @click="goToProductStockPage()"/>
+            <b-menu-item label="Historique des commandes clients" @click="goToOrders()"/>
           </div>
         </b-menu-list>
         <b-menu-list label="Information">
@@ -86,6 +88,14 @@ export default {
     goToHistory () {
       // TODO
       // router.push('/history')
+      this.showNavigation = false
+    },
+    goToProductStockPage () {
+      router.push('/stock')
+      this.showNavigation = false
+    },
+    goToOrders () {
+      router.push('/orders')
       this.showNavigation = false
     },
     isAuthenticated () {
