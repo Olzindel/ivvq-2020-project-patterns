@@ -15,16 +15,8 @@
           <b-input v-model="user.firstName"/>
         </b-field>
         <b-field label="Nom" label-position='inside' expanded>
-          <b-input v-model="user.name"/>
+          <b-input v-model="user.lastName"/>
         </b-field>
-      </b-field>
-      <b-field position="is-left" label="date d'anniversaire" label-position='inside' style="margin-right: 50%">
-        <b-datepicker
-          ref="datepicker"
-          expanded
-          placeholder="Select a date"
-          v-model="user.dateOfBirth">
-        </b-datepicker>
       </b-field>
       <b-field grouped position="is-centered">
         <b-field label="Rue" label-position='inside' expanded>
@@ -35,16 +27,16 @@
         </b-field>
       </b-field>
       <b-field position="is-left" label="Ville" label-position='inside' style="margin-right: 50%">
-        <b-input v-model="user.town"/>
+        <b-input v-model="user.city"/>
       </b-field>
       <b-field label="email" label-position='inside' expanded>
         <b-input placeholder="Email" type="email" v-model="user.email"></b-input>
       </b-field>
       <b-field label="password" label-position='inside' expanded>
-        <b-input type="password"/>
+        <b-input type="password" v-model="password1"/>
       </b-field>
       <b-field label="password" label-position='inside' expanded>
-        <b-input type="password"/>
+        <b-input type="password" v-model="password2"/>
       </b-field>
     </div>
     <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateInfo">Je change mes
@@ -54,25 +46,108 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 export default {
   name: 'UserAccount',
   data () {
     return {
       user: {
-        firstName: 'Jean',
-        name: 'MARTIN',
+        firstName: '',
+        lastName: '',
         gender: 'M',
-        email: 'waifu@market-desu.com',
-        dateOfBirth: new Date(),
-        street: '118 route de Narbonne',
-        postalCode: '31500',
-        town: 'Toulouse'
+        email: '',
+        street: '',
+        postalCode: '',
+        city: ''
+      },
+      password1: '',
+      password2: ''
+    }
+  },
+  apollo: {
+    userInfos () {
+      return {
+        query: gql`query user($id: ID!){
+            getuser:user(userId: $id){
+              id,
+              username,
+              firstName,
+              lastName,
+              email,
+              street,
+              postalCode,
+              city,
+              email,
+              gender,
+              }
+              }
+        `,
+        variables () {
+          return {
+            id: localStorage.getItem('user')
+          }
+        },
+        fetchPolicy: 'no-cache',
+        update: data => {
+          this.user = data.getuser
+        }
       }
     }
   },
   methods: {
     updateInfo () {
-      console.log(this.user)
+      if (this.password1.valueOf() === this.password2.valueOf() && this.password1 !== '') {
+        if (this.user.firstName !== '' && this.user.lastName !== '' && this.user.postalCode.length === 5 &&
+          this.user.street !== '' && this.user.email !== '' && this.user.city !== '') {
+          this.$apollo.mutate({
+            mutation: gql`mutation updateUser ($userId: ID!, $input: UserInput!){
+        updateUserAdress : updateUser(userId: $userId,input: $input){
+        id
+         }}`,
+            variables: {
+              userId: this.user.id,
+              input: {
+                gender: this.user.gender,
+                firstName: this.user.firstName,
+                lastName: this.user.lastName,
+                street: this.user.street,
+                postalCode: this.user.postalCode,
+                city: this.user.city,
+                email: this.user.email,
+                password: this.password1
+              }
+            }
+          }).then(data => {
+            this.$buefy.toast.open({
+              duration: 3000,
+              message: 'information mise à jour',
+              position: 'is-bottom',
+              type: 'is-success'
+            })
+          }).catch((error) => {
+            this.$buefy.toast.open({
+              duration: 3000,
+              message: error.message,
+              position: 'is-bottom',
+              type: 'is-danger'
+            })
+          })
+        } else {
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: 'un champs est vide',
+            position: 'is-bottom',
+            type: 'is-danger'
+          })
+        }
+      } else {
+        this.$buefy.toast.open({
+          duration: 3000,
+          message: 'le champ password est vide ou les deux champs ne correspondent pas',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
+      }
     }
   }
 }
