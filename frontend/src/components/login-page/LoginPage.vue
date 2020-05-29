@@ -4,13 +4,15 @@
       <h1 class="title">Connexion</h1>
       <div v-if="!isConnected">
         <section>
-          <b-field label="Nom d'utilisateur" label-position="inside">
-            <b-input v-model="username" placeholder="Mon nom d'utilisateur"></b-input>
-          </b-field>
-          <b-field label="Mot de passe" label-position="inside">
-            <b-input v-model="password" type="password" placeholder="Mon mot de passe"></b-input>
-          </b-field>
-          <b-button type="button is-primary submit" @click="login()">Connexion</b-button>
+          <form>
+            <b-field label="Nom d'utilisateur" label-position="inside">
+              <b-input v-model="username" placeholder="Mon nom d'utilisateur" required></b-input>
+            </b-field>
+            <b-field label="Mot de passe" label-position="inside">
+              <b-input v-model="password" type="password" placeholder="Mon mot de passe" required></b-input>
+            </b-field>
+            <b-button type="button is-primary submit" @click="login()">Connexion</b-button>
+          </form>
         </section>
         <section>
           <b-button type="button is-text" @click="goToSignUp()">Pas encore inscrit ?</b-button>
@@ -24,7 +26,9 @@
 </template>
 
 <script>
+import store from '../../store'
 import axios from 'axios'
+import gql from 'graphql-tag'
 
 export default {
   name: 'LoginPage',
@@ -37,13 +41,34 @@ export default {
   },
   methods: {
     login () {
+      // var that = this
       axios.post(process.env.VUE_APP_LOGIN_HTTP, {
         username: this.username,
         password: this.password
-      }).then(function (value) {
-        localStorage.setItem('connection-token', value.headers['authorization'])
-        this.$router.push('/home')
-      }, error => {
+      }).then(value => {
+        const connectionToken = value.headers['authorization']
+        this.$apollo.query({
+          query: gql`query UserFromToken($token: String!){
+              user: userFromToken(token: $token) {
+                id,
+                role
+                }
+              }`,
+          variables: {
+            token: connectionToken
+          }
+        }).then(result => {
+          localStorage.setItem('connection-token', connectionToken)
+          store.commit('connect', result.data.user)
+          this.$router.push('/home')
+        }, reason => this.$buefy.toast.open({
+          duration: 5000,
+          message: 'Unexpected error',
+          position: 'is-bottom',
+          type: 'is-danger'
+        }))
+      },
+      error => {
         if (error.response.status === 401) {
           this.$buefy.toast.open({
             duration: 5000,
@@ -52,6 +77,12 @@ export default {
             type: 'is-danger'
           })
         } else {
+          this.$buefy.toast.open({
+            duration: 5000,
+            message: 'Unexpected error',
+            position: 'is-bottom',
+            type: 'is-danger'
+          })
         }
       })
     },

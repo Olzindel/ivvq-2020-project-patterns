@@ -110,7 +110,10 @@ export default {
               street: $street,
               city: $city,
               postalCode: $postalCode
-            })
+              role: USER
+            }) {
+              id
+             }
           }`,
         // Parameters
         variables: {

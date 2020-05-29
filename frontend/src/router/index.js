@@ -11,10 +11,25 @@ import BasketPage from '../components/paiement-page/BasketPage'
 import PaiementByCard from '../components/paiement-page/PaiementByCard'
 import ProductStockPage from '../components/mercant-page/ProductStockPage'
 import OrderPage from '../components/mercant-page/OrderPage'
+import store from '../store'
+import gql from 'graphql-tag'
+import {apolloClient} from '../vue-appolo-config'
 
 Vue.use(Router)
 
-export default new Router({
+let redirectIfNotCondition = function (condition, next) {
+  console.log(condition)
+  if (!condition) {
+    next('home')
+  } else {
+    next(true)
+  }
+}
+
+let isAuthenticated = function () {
+  return localStorage.getItem('connection-token')
+}
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -22,44 +37,59 @@ export default new Router({
     },
     {
       path: '/home',
-      name: 'HeaderPart',
+      name: 'headerPart',
       component: HeaderPart
     },
     {
       path: '/product/:productId',
       props: true,
-      name: 'Product-Page',
+      name: 'productPage',
       component: ProductPage
     },
     {
       path: '/account',
-      name: 'UserAccount',
-      component: UserAccount
+      name: 'userAccount',
+      component: UserAccount,
+      beforeEnter (to, from, next) {
+        redirectIfNotCondition(isAuthenticated(), next)
+      }
     },
     {
       path: '/paiement',
-      name: 'PaiemenByCard',
-      component: PaiementByCard
+      name: 'paiementByCard',
+      component: PaiementByCard,
+      beforeEnter (to, from, next) {
+        redirectIfNotCondition(isAuthenticated(), next)
+      }
     },
     {
       path: '/basket',
-      name: 'BasketPage',
-      component: BasketPage
+      name: 'basketPage',
+      component: BasketPage,
+      beforeEnter (to, from, next) {
+        redirectIfNotCondition(isAuthenticated(), next)
+      }
     },
     {
       path: '/aPropos',
-      name: 'APropos',
+      name: 'aPropos',
       component: APropos
     },
     {
       path: '/stock',
-      name: 'ProductStockPage',
-      component: ProductStockPage
+      name: 'productStockPage',
+      component: ProductStockPage,
+      beforeRouteEnter: (to, from, next) => {
+        redirectIfNotCondition(isAuthenticated() && store.getters.isMerchant, next)
+      }
     },
     {
       path: '/order',
-      name: 'OrderPage',
-      component: OrderPage
+      name: 'orderPage',
+      component: OrderPage,
+      beforeRouteEnter: (to, from, next) => {
+        redirectIfNotCondition(isAuthenticated() && store.getters.isMerchant, next)
+      }
     },
     {
       path: '*',
@@ -77,3 +107,29 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (isAuthenticated() && !store.getters.user) {
+    console.log(apolloClient)
+    apolloClient.query({
+      query: gql`query UserFromToken($token: String!){
+              user: userFromToken(token: $token) {
+                id,
+                role
+                }
+              }`,
+      variables: {
+        token: localStorage.getItem('connection-token')
+      }
+    }).then(result => {
+      console.log('a')
+      store.commit('connect', result.data.user)
+    }, () => {
+      console.log('b')
+      localStorage.setItem('connection-token', '')
+    })
+  }
+  next(true)
+})
+
+export default router

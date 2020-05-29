@@ -26,8 +26,8 @@
             </div>
           </template>
           <vueper-slide v-for="image in product.imageLinks"
-                          :image="image.imageLink"
-                          :key="image.id"
+                        :image="image.imageLink"
+                        :key="image.id"
                         v-if="product.imageLinks.length">
             <template v-slot:loader>
               <b-icon class="icon icon-loader spinning"/>
@@ -55,7 +55,7 @@
             </article>
             <div v-else>
               Aucune description pour ce produit.
-          </div>
+            </div>
           </div>
           <div class="column add-to-basket">
             <b-button @click="getUser()">Ajouter au panier</b-button>
@@ -74,6 +74,7 @@ import {VueperSlide, VueperSlides} from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
 
 import gql from 'graphql-tag'
+import store from '../../store'
 
 Vue.use(Router)
 
@@ -139,7 +140,7 @@ export default {
           }}`,
         variables: {
           input: {
-            userId: localStorage.getItem('user'),
+            userId: store.getters.user.id,
             status: 'BASKET'
           }
         }
@@ -174,7 +175,7 @@ export default {
             }
         }`,
         variables: {
-          id: localStorage.getItem('user')
+          id: store.getters.user.id
         },
         fetchPolicy: 'no-cache'
       }
