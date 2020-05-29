@@ -99,9 +99,7 @@ export default {
           }
         },
         update: data => {
-          console.log(data.productInfos)
           this.product = data.productInfos
-          console.log(this.product.imageLinks)
         }
       }
     }
@@ -183,10 +181,8 @@ export default {
           }
         })
         if (basket.length === 0) {
-          console.log('add a basket')
           this.addABasket()
         } else {
-          console.log(basket[0])
           this.addThisProduct(basket[0].id)
         }
       }).catch((error) => { this.danger(error) })

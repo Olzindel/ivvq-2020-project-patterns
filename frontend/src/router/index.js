@@ -5,8 +5,8 @@ import HeaderPart from '../components/home-page/HomePage'
 import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
-import BasketPage from '../components/paiement-page/basketPage'
-import paiementByCard from '../components/paiement-page/paiementByCard'
+import BasketPage from '../components/paiement-page/BasketPage'
+import PaiementByCard from '../components/paiement-page/PaiementByCard'
 import ProductStockPage from '../components/mercant-page/ProductStockPage'
 import OrderPage from '../components/mercant-page/OrderPage'
 
@@ -36,8 +36,8 @@ export default new Router({
     },
     {
       path: '/paiement',
-      name: 'paiemenByCard',
-      component: paiementByCard
+      name: 'PaiemenByCard',
+      component: PaiementByCard
     },
     {
       path: '/basket',

@@ -32,11 +32,6 @@ export default {
   props: {
     orderItem: {type: Object, required: true}
   },
-  data () {
-    return {
-      patate: 5
-    }
-  },
   methods: {
     changeProductNumber () {
       this.$apollo.mutate({

@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.DataLoader;
-import patterns.backend.domain.Order;
-import patterns.backend.domain.OrderItem;
-import patterns.backend.domain.OrderStatus;
-import patterns.backend.domain.User;
+import patterns.backend.domain.*;
 import patterns.backend.exception.OrderItemNotFoundException;
 import patterns.backend.graphql.input.OrderInput;
 import patterns.backend.graphql.input.OrderItemInput;
@@ -89,7 +86,7 @@ public class OrderMutationIntegrationTest {
 
     OrderInput orderInputUpdate = new OrderInput();
     UserInput userInputUpdate =
-        new UserInput("t", "t", "t", "t", "t.t@g.c", "F", "F", "31450", "c", true, null);
+        new UserInput("t", "t", "t", "t", "t.t@g.c", "F", "F", "31450", "c", Role.USER, null);
     User userUpdate = userMutation.createUser(userInputUpdate);
 
     OrderItemInput orderItemInputUpdate = new OrderItemInput(4, null, null);

@@ -75,7 +75,6 @@ export default {
         },
         fetchPolicy: 'no-cache',
         update: data => {
-          console.log(data)
           this.orders = data.getAllOrders.filter((order) => {
             if (order.status === 'PAID') {
               return order

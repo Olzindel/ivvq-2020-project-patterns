@@ -10,6 +10,9 @@ import javax.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 @Getter
@@ -17,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @NoArgsConstructor
 @Transactional
 @Entity(name = "users")
-public class User {
+public class User implements UserDetails {
 
   @Id @GeneratedValue private Long id;
 
@@ -42,7 +45,7 @@ public class User {
 
   private String city;
 
-  @NotNull private Boolean merchant;
+  @NotNull private Role role;
 
   @JsonIgnore
   @OneToMany(
@@ -62,7 +65,7 @@ public class User {
       String street,
       String postalCode,
       String city,
-      Boolean merchant) {
+      Role role) {
     this.username = username;
     this.password = password;
     this.firstName = firstName;
@@ -72,10 +75,37 @@ public class User {
     this.street = street;
     this.postalCode = postalCode;
     this.city = city;
-    this.merchant = merchant;
+    this.role = role;
   }
 
   public void addOrder(Order order) {
     orders.add(order);
+  }
+
+  @Override
+  public Set<GrantedAuthority> getAuthorities() {
+    Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+    authorities.add(new SimpleGrantedAuthority(this.role.getAuthority()));
+    return authorities;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return false;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return false;
   }
 }
