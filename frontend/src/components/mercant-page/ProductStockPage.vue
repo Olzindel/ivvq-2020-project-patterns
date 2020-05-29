@@ -1,15 +1,15 @@
 <template>
   <div>
-<h1>Votre Stock de produit</h1>
+<h1 class="title">Votre stock de produits</h1>
     <div class="board">
       <div>
-       id du produit
+       Id du produit
       </div>
       <div>
-        nom du produit
+        Nom du produit
       </div>
       <div>
-        stock disponible
+        Stock disponible
       </div>
     </div>
   <div v-for='product in products' :key="product.id" class="board">

@@ -27,7 +27,8 @@
     "vue-apollo": "^3.0.3",
     "vue-material": "^1.0.0-beta-13",
     "vue-router": "^3.0.1",
-    "vueperslides": "^2.8.3"
+    "vueperslides": "^2.8.3",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

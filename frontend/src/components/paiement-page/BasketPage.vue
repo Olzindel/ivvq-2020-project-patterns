@@ -1,25 +1,26 @@
 <template>
   <div>
-  <div v-if="basket">
-    <div class="title">
-      Mon panier
-    </div>
-   <div class="columns is-multiline is-centered is-flex " v-if="!basketIsEmpty" >
-      <div v-for='orderItem in order[0].orderItems' :key="orderItem.id">
-        <basket-card class="cardSize" :orderItem='orderItem' @deleteItem="deleteItem"/>
+    <div v-if="basket">
+      <div class="title">
+        Mon panier
+      </div>
+      <div class="columns is-multiline is-centered is-flex " v-if="!basketIsEmpty">
+        <div v-for='orderItem in order[0].orderItems' :key="orderItem.id">
+          <basket-card class="cardSize" :orderItem='orderItem' @deleteItem="deleteItem"/>
+        </div>
+      </div>
+      <div v-if="!basketIsEmpty">
+        Montant de votre commande {{this.price}} €
+        <b-button @click="validateBasket">Je valide mon panier</b-button>
+      </div>
+      <div v-else>
+        <h2> Votre panier est vide </h2>
+        <img class="img"
+             src="https://vignette.wikia.nocookie.net/fireemblem/images/3/3f/Anna_FE13_Artwork.png/revision/latest?cb=20160719200512"/>
       </div>
     </div>
-    <div v-if="!basketIsEmpty">
-      Montant de votre commande {{this.price}} €
-    <b-button @click="validateBasket">Je valide mon panier</b-button>
-    </div>
-    <div v-else>
-      <h2> Votre panier est vide </h2>
-      <img class="img"  src="https://vignette.wikia.nocookie.net/fireemblem/images/3/3f/Anna_FE13_Artwork.png/revision/latest?cb=20160719200512"/>
-    </div>
-  </div>
     <div v-if="!basket">
-      <paiement-by-card :user="user" :order="this.order[0]" />
+      <paiement-by-card :user="user" :order="this.order[0]"/>
     </div>
   </div>
 </template>
@@ -28,6 +29,7 @@
 import BasketCard from './BasketCard'
 import gql from 'graphql-tag'
 import PaiementByCard from './PaiementByCard'
+import store from '../../store'
 
 export default {
   name: 'basketPage',
@@ -88,7 +90,9 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        if (data.data.checkStockForAnOrder.length > 0) { this.errorMessage(data.data.checkStockForAnOrder) } else {
+        if (data.data.checkStockForAnOrder.length > 0) {
+          this.errorMessage(data.data.checkStockForAnOrder)
+        } else {
           this.basket = false
         }
       })
@@ -145,7 +149,7 @@ export default {
         }`,
         variables () {
           return {
-            id: localStorage.getItem('user')
+            id: store.getters.user.id
           }
         },
         fetchPolicy: 'no-cache',
@@ -168,12 +172,14 @@ export default {
     width: 300px;
     padding: 12px;
   }
+
   .title {
     font-size: 50px;
     justify-content: center;
     padding: 24px;
   }
-  .img{
+
+  .img {
     height: 300px;
     width: auto;
   }
