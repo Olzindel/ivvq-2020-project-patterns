@@ -19,7 +19,6 @@ const store = new Vuex.Store({
   mutations: {
     connect (state, user) {
       state.user = user
-      console.log('state', state)
     },
     logout (state) {
       state.connectionToken = ''
