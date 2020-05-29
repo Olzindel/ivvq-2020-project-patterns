@@ -2,8 +2,8 @@ package patterns.backend.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doCallRealMethod;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,14 @@ class ImageLinkServiceTest {
 
   private ImageLink imageLink;
   private Product product;
+  private ImageLinkInput imageLinkInput;
 
   @BeforeEach
   public void setup() {
     DataLoader dataLoader = new DataLoader();
     imageLink = dataLoader.getImageLink();
     product = dataLoader.getProduct();
+    imageLinkInput = dataLoader.getImageLinkInput();
 
     imageLinkService = new ImageLinkService();
     imageLinkService.setProductService(productService);
@@ -113,5 +115,17 @@ class ImageLinkServiceTest {
     imageLinkService.findAll(8);
     // then: the findAll method of the Repository is invoked
     verify(imageLinkService.getImageLinkRepository()).findAll();
+  }
+
+  @Test
+  void update() {
+    // given: an ImageLinkInput, an ImageLink and an ImageLinkService
+    ImageLinkService imageLinkServiceMock = mock(ImageLinkService.class);
+    doCallRealMethod().when(imageLinkServiceMock).update(0L, imageLinkInput);
+    when(imageLinkServiceMock.findImageLinkById(0L)).thenReturn(imageLink);
+    // when: update method is invoked
+    imageLinkServiceMock.update(0L, imageLinkInput);
+    // then: create(ImageLink) method is invoked
+    verify(imageLinkServiceMock).create(imageLink);
   }
 }

@@ -2,8 +2,8 @@ package patterns.backend.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doCallRealMethod;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
 import patterns.backend.DataLoader;
 import patterns.backend.domain.Product;
+import patterns.backend.graphql.input.ProductInput;
 import patterns.backend.repositories.ProductRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -26,11 +27,13 @@ class ProductServiceTest {
   @MockBean private ImageLinkService imageLinkService;
 
   private Product product;
+  private ProductInput productInput;
 
   @BeforeEach
   public void setup() {
     DataLoader dataLoader = new DataLoader();
     product = dataLoader.getProduct();
+    productInput = dataLoader.getProductInput();
 
     productService = new ProductService();
     productService.setProductRepository(productRepository);
@@ -91,5 +94,28 @@ class ProductServiceTest {
     productService.findAll(8);
     // then: the findAll method of the Repository is invoked
     verify(productService.getProductRepository()).findAll();
+  }
+
+  @Test
+  void createProductFromProductInput() {
+    // given: a ProductInput and a ProductService
+    ProductService productServiceMock = mock(ProductService.class);
+    doCallRealMethod().when(productServiceMock).create(productInput);
+    // when: create(ProductInput) method is invoked
+    productServiceMock.create(productInput);
+    // then: create(Product) method is invoked
+    verify(productServiceMock).create(productInput);
+  }
+
+  @Test
+  void update() {
+    // given: a ProductInput, a Product and a ProductService
+    ProductService productServiceMock = mock(ProductService.class);
+    doCallRealMethod().when(productServiceMock).update(0L, productInput);
+    when(productServiceMock.findProductById(0L)).thenReturn(product);
+    // when: update method is invoked
+    productServiceMock.update(0L, productInput);
+    // then: create(Product) method is invoked
+    verify(productServiceMock).create(product);
   }
 }
