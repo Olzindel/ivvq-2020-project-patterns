@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueApollo from 'vue-apollo'
 import CustomAppoloClient from './vue-appolo-config'
+import 'vueperslides/dist/vueperslides.css'
 
 // create the apollo client
 const apolloClient = CustomAppoloClient

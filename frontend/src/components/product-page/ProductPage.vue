@@ -69,9 +69,7 @@
 <script>
 import Vue from 'vue'
 import Router from 'vue-router'
-
 import {VueperSlide, VueperSlides} from 'vueperslides'
-import 'vueperslides/dist/vueperslides.css'
 
 import gql from 'graphql-tag'
 

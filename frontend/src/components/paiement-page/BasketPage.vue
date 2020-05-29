@@ -60,11 +60,16 @@ export default {
           orderItemId: idItem
         }
       }).then(data => {
-        this.order[0].orderItems = this.order[0].orderItems.filter(function (orderItem) {
-          if (orderItem.id !== data.data.deleteOrderItem) {
-            return orderItem
-          }
-        })
+        console.log(data)
+        this.refreshOrderAfterDelete(data)
+      })
+    },
+    refreshOrderAfterDelete (data) {
+      console.log(data)
+      this.order[0].orderItems = this.order[0].orderItems.filter(function (orderItem) {
+        if (orderItem.id !== data.data.deleteOrderItem) {
+          return orderItem
+        }
       })
     },
     validateBasket () {

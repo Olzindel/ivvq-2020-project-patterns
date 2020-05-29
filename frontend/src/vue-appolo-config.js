@@ -13,7 +13,6 @@ const authLink = setContext((_, {headers}) => {
   // return the headers to the context so httpLink can read them
   return {
     headers: {
-      ...headers,
       authorization: token || ''
     }
   }
@@ -23,6 +22,6 @@ export const cache = new InMemoryCache()
 
 export default new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache,
   connectToDevTools: true
 })
