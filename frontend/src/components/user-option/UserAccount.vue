@@ -96,7 +96,6 @@ export default {
   },
   methods: {
     updateInfo () {
-      console.log(this.user)
       if (this.password1.valueOf() === this.password2.valueOf() && this.password1 !== '') {
         if (this.user.firstName !== '' && this.user.lastName !== '' && this.user.postalCode.length === 5 &&
           this.user.street !== '' && this.user.email !== '' && this.user.city !== '') {
@@ -119,7 +118,6 @@ export default {
               }
             }
           }).then(data => {
-            console.log(data)
             this.$buefy.toast.open({
               duration: 3000,
               message: 'information mise à jour',
