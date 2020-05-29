@@ -21,10 +21,9 @@ module.exports = {
   setupFiles: ['<rootDir>/test/unit/setup'],
   coverageDirectory: '<rootDir>/test/unit/coverage',
   collectCoverageFrom: [
-    'test/unit/specs',
-    '!test/e2e/specs',
-    '!src/**/*.{js,vue}',
-    '!src/main.js',
+    'src/**/*.{js,vue}',
+    '!src/*.{js,vue}',
+    '!src/service/*.js',
     '!src/router/index.js',
     '!**/node_modules/**',
     '!**/vendor/**'

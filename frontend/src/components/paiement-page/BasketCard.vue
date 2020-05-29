@@ -16,7 +16,7 @@
           </div>
         </div>
         <b-field @="changeProductNumber()" style="display: flex;justify-content: center">
-        <b-numberinput controls-position="compact" v-on:input="changeProductNumber"
+        <b-numberinput controls-position="compact" v-on:input="changeProductNumber()"
                        controls-rounded icon-pack="mdi" min="1" style="width: 180px" v-model="orderItem.quantity">
         </b-numberinput>
       </b-field>

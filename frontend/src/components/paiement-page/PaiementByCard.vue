@@ -46,7 +46,7 @@
       <b-input minlength="3" maxlength="3" pattern="[0-9]*" v-model="card.code"/>
     </b-field>
     </b-field>
-    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateUser">Je valide mes informations et je paie
+    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateUser()">Je valide mes informations et je paie
     </b-button>
   </div>
 </template>

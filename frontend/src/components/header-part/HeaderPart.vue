@@ -22,7 +22,7 @@
       </template>
       <template slot="end">
         <b-navbar-item tag="div">
-          <Login/>
+          <!--<Login/> -->
         </b-navbar-item>
       </template>
     </b-navbar>
@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import Login from './login/Login'
+// import Login from './login/Login'
 import router from '../../router/index'
 
 export default {
   name: 'headerPart',
-  components: {Login},
+  // components: {Login},
   data: () => ({
     showNavigation: false,
     navbarOptions: {

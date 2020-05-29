@@ -1,5 +1,5 @@
 import BasketPage from '../../../../src/components/paiement-page/BasketPage'
-import {createLocalVue, mount, shallowMount} from '@vue/test-utils'
+import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 import {jest} from '@jest/globals'
 
