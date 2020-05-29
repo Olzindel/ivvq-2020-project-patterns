@@ -18,7 +18,6 @@ import {apolloClient} from '../vue-appolo-config'
 Vue.use(Router)
 
 let redirectIfNotCondition = function (condition, next) {
-  console.log(condition)
   if (!condition) {
     next('home')
   } else {
@@ -110,7 +109,6 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (isAuthenticated() && !store.getters.user) {
-    console.log(apolloClient)
     apolloClient.query({
       query: gql`query UserFromToken($token: String!){
               user: userFromToken(token: $token) {
@@ -122,10 +120,8 @@ router.beforeEach((to, from, next) => {
         token: localStorage.getItem('connection-token')
       }
     }).then(result => {
-      console.log('a')
       store.commit('connect', result.data.user)
     }, () => {
-      console.log('b')
       localStorage.setItem('connection-token', '')
     })
   }

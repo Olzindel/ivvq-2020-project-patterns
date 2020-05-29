@@ -103,8 +103,8 @@ export default {
             input:{
               username: $username,
               password: $password,
-              firstName: $firstname,
-              lastName: $lastname,
+              firstName: $firstName,
+              lastName: $lastName,
               email: $email,
               gender: $gender,
               street: $street,
@@ -119,8 +119,8 @@ export default {
         variables: {
           username: this.user.account.username,
           password: this.user.account.password,
-          firstname: this.user.infos.firstname,
-          lastname: this.user.infos.lastname,
+          firstName: this.user.infos.firstname,
+          lastName: this.user.infos.lastname,
           email: this.user.infos.email,
           gender: this.user.infos.gender,
           street: this.user.infos.addresse,
