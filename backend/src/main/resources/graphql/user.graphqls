@@ -16,9 +16,9 @@ type User {
 input UserInput {
     username: String
     password: String
-    firstName: String!
-    lastName: String!
-    email: String!
+    firstName: String
+    lastName: String
+    email: String
     gender: String
     street:String
     postalCode:String
