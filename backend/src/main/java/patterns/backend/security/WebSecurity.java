@@ -13,7 +13,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableWebSecurity()
+@EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
   private UserDetailsServiceImpl userDetailsService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -65,7 +65,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+    final CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+    config.addExposedHeader("Authorization");
+    source.registerCorsConfiguration("/**", config);
     return source;
   }
 }

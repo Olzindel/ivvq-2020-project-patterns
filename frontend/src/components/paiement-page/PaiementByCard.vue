@@ -34,19 +34,20 @@
       <b-input minlength="16" maxlength="16" pattern="[0-9]*" v-model="card.num"/>
     </b-field>
     <b-field grouped position="is-centered">
-    <b-field position="is-left" label="date" label-position='inside' style="margin-left: 20%">
-      <b-datepicker
-        type="month"
-        expanded
-        placeholder="Selectionner une date"
-        v-model="card.date">
-      </b-datepicker>
+      <b-field position="is-left" label="date" label-position='inside' style="margin-left: 20%">
+        <b-datepicker
+          type="month"
+          expanded
+          placeholder="Selectionner une date"
+          v-model="card.date">
+        </b-datepicker>
+      </b-field>
+      <b-field label="Code au dos de la carte" label-position='inside' expanded style="margin-right: 20%">
+        <b-input minlength="3" maxlength="3" pattern="[0-9]*" v-model="card.code"/>
+      </b-field>
     </b-field>
-    <b-field label="Code au dos de la carte" label-position='inside' expanded style="margin-right: 20%">
-      <b-input minlength="3" maxlength="3" pattern="[0-9]*" v-model="card.code"/>
-    </b-field>
-    </b-field>
-    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateUser()">Je valide mes informations et je paie
+    <b-button type="is-primary" class="buttonValidation" size="is-Large" @click="updateUser">Je valide mes informations
+      et je paie
     </b-button>
   </div>
 </template>
@@ -127,7 +128,6 @@ export default {
               position: 'is-bottom',
               type: 'is-success'
             })
-            console.log('panier validé')
             this.paidBasket()
           } else {
             this.$buefy.toast.open({
@@ -169,13 +169,11 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log('commande en preparation')
         router.push({path: '/home'})
-      }).catch((error) => {
-        console.log(error)
+      }).catch(() => {
         this.$buefy.toast.open({
           duration: 5000,
-          message: 'une erreur est apparu, paiement invalidé retour au panier' + '<br/>' + 'veuillez valider votre commande a nouveau',
+          message: 'Une erreur est survenue, paiement invalidé.<br/>veuillez reéssayer',
           position: 'is-bottom',
           type: 'is-danger'
         })

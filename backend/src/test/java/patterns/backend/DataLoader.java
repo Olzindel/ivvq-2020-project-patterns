@@ -22,6 +22,8 @@ public class DataLoader {
   ImageLinkInput imageLinkInput;
   OrderInput orderInput;
   OrderItemInput orderItemInput;
+  String token;
+  String unknownToken;
 
   public DataLoader() {
     super();
@@ -46,6 +48,10 @@ public class DataLoader {
     imageLink = new ImageLink("http://www.l.com", product);
     order = new Order(OrderStatus.PAID, user);
     orderItem = new OrderItem(2, product, order);
+    token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNTkxNTM0NDU3fQ.ah7TMtPvrs1N8QGaquhMOJUjle5kdQuWId0AnsdBy8xvgFly3YNUhujwPD1jrVxCf-aIrntqKhKbj911VMjshQ";
+    unknownToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImV4cCI6MTU5MTUyNTc0M30.NlyrZtd_irBfoJ3Ej1QFDvXkHYp53vSA7FLH-CfPEXUFhKb42VN51hkjp8Dnz50J7k60VQVGsqkqEkdcF7-P3Q";
 
     Set<OrderItem> orderItems = new HashSet<>();
     Set<Order> orders = new HashSet<>();

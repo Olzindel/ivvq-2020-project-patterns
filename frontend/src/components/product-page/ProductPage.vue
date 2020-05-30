@@ -25,10 +25,10 @@
               <img style="object-fit: contain" src='../../assets/product-page/pointingRight.svg'/>
             </div>
           </template>
-          <vueper-slide :image="image.imageLink"
-                        :key="i"
-                        v-for="(image, i) in productInfos.imageLinks"
-                        v-if="productInfos.imageLinks.length">
+          <vueper-slide v-for="image in product.imageLinks"
+                        :image="image.imageLink"
+                        :key="image.id"
+                        v-if="product.imageLinks.length">
             <template v-slot:loader>
               <b-icon class="icon icon-loader spinning"/>
             </template>
@@ -48,10 +48,10 @@
       <div class="column productInfos is-vcentered is-centered">
         <div class="columns is-multiline">
           <div class="column is-12 section box">
-            <h1 class="title">{{productInfos.name}}</h1>
-            <h2 class="subtitle">{{productInfos.price}} €</h2>
-            <article class="description" v-if="productInfos.description">
-              {{productInfos.description}}
+            <h1 class="title">{{product.name}}</h1>
+            <h2 class="subtitle">{{product.price}} €</h2>
+            <article class="description" v-if="product.description">
+              {{product.description}}
             </article>
             <div v-else>
               Aucune description pour ce produit.
@@ -72,6 +72,7 @@ import Router from 'vue-router'
 import {VueperSlide, VueperSlides} from 'vueperslides'
 
 import gql from 'graphql-tag'
+import store from '../../store'
 
 Vue.use(Router)
 
@@ -84,13 +85,14 @@ export default {
       return {
         query: gql`query ProductInfos($productId: ID!) {
           productInfos: product(productId: $productId){
-            id
-            name
+            id,
+            name,
              imageLinks{
+              id,
               imageLink
-             }
-            price
-            status
+             },
+            price,
+            status,
             description
           }
         }`,
@@ -98,13 +100,16 @@ export default {
           return {
             productId: this.productId
           }
+        },
+        update: data => {
+          this.product = data.productInfos
         }
       }
     }
   },
   data () {
     return {
-      productInfos: {
+      product: {
         id: -1,
         name: '',
         imageLinks: [],
@@ -133,7 +138,7 @@ export default {
           }}`,
         variables: {
           input: {
-            userId: localStorage.getItem('user'),
+            userId: store.getters.user.id,
             status: 'BASKET'
           }
         }
@@ -151,7 +156,7 @@ export default {
         variables: {
           input: {
             quantity: 1,
-            productId: this.productInfos.id,
+            productId: this.product.id,
             orderId: orderId
           }
         }
@@ -168,8 +173,9 @@ export default {
             }
         }`,
         variables: {
-          id: localStorage.getItem('user')
-        }
+          id: store.getters.user.id
+        },
+        fetchPolicy: 'no-cache'
       }
       ).then(data => {
         const basket = data.data.getuser.orders.filter(function (order) {
@@ -196,7 +202,7 @@ export default {
     },
     success () {
       this.$buefy.toast.open({
-        message: this.productInfos.name + ' a été ajouté à votre panier',
+        message: this.product.name + ' a été ajouté à votre panier',
         type: 'is-success'
       })
     }

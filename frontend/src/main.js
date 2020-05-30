@@ -4,11 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueApollo from 'vue-apollo'
-import CustomAppoloClient from './vue-appolo-config'
-import 'vueperslides/dist/vueperslides.css'
-
-// create the apollo client
-const apolloClient = CustomAppoloClient
+import {apolloClient} from './vue-appolo-config'
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
@@ -22,8 +18,6 @@ const apolloProvider = new VueApollo({
     console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
   }
 })
-
-// install the vue plugin
 Vue.use(VueApollo)
 Vue.config.productionTip = false
 
