@@ -14,12 +14,9 @@ describe('BasketPage', () => {
   })
 
   test('test', () => {
-    // const router = new VueRouter({index})
     const wrapper = shallowMount(HeaderPart, {
       localVue
     })
-
-    // const spyDelete = jest.spyOn(wrapper.vm, 'router')
     wrapper.setData({
       showNavigation: false,
       navbarOptions: {
@@ -28,8 +25,6 @@ describe('BasketPage', () => {
     }
     )
     wrapper.vm.goToAccount()
-    // expect(spyDelete).toHaveBeenCalled()
-    // expect(wrapper.find('.home').text()).toBe('/home')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
 })

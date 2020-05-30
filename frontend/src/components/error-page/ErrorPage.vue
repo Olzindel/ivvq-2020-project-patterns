@@ -41,7 +41,6 @@ export default {
   methods: {
     goToHome () {
       router.push({path: '/'})
-      this.showNavigation = false
     }
   }
 }
