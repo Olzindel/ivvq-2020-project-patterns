@@ -15,43 +15,62 @@ import patterns.backend.services.ImageLinkService;
 import patterns.backend.services.ProductService;
 import patterns.backend.services.UserService;
 
+import javax.transaction.Transactional;
+
 @Component
 @Profile("PREPROD")
+@Transactional
 public class Dataloader implements ApplicationRunner {
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private ProductService productService;
+  @Autowired private ProductService productService;
 
-    @Autowired
-    private ImageLinkService imageLinkService;
+  @Autowired private ImageLinkService imageLinkService;
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        initUser();
-        initProduct();
-    }
+  @Override
+  public void run(ApplicationArguments args) throws Exception {
+    initUser();
+    initProduct();
+  }
 
-    private void initUser() {
-        UserInput userInput = new UserInput("admin", "admin", "admin", "admin", "admin@gmail.com", "M", "8", "4500", "Toulouse", Role.MERCHANT, null);
-        userService.create(userInput);
-    }
+  private void initUser() {
+    UserInput userInput =
+        new UserInput(
+            "admin",
+            "admin",
+            "admin",
+            "admin",
+            "admin@gmail.com",
+            "M",
+            "8",
+            "31450",
+            "Toulouse",
+            Role.MERCHANT,
+            null);
+    userService.create(userInput);
+  }
 
-    private void initProduct() {
-        ProductInput arturiaPendragonInput = new ProductInput("Arturia Pendragon", 17f, ProductStatus.AVAILABLE, "", 1, null);
-        ProductInput violetEvergardenInput = new ProductInput("Violet Evergarden", 16f, ProductStatus.AVAILABLE, "", 4, null);
+  private void initProduct() {
+    ProductInput arturiaPendragonInput =
+        new ProductInput("Arturia Pendragon", 17f, ProductStatus.AVAILABLE, "", 1, null);
+    ProductInput violetEvergardenInput =
+        new ProductInput("Violet Evergarden", 16f, ProductStatus.AVAILABLE, "", 4, null);
 
-        Product violetEvergarden = productService.create(violetEvergardenInput);
-        Product arturiaPendragon = productService.create(arturiaPendragonInput);
+    Product violetEvergarden = productService.create(violetEvergardenInput);
+    Product arturiaPendragon = productService.create(arturiaPendragonInput);
 
-        ImageLinkInput arturiaImageLink1 = new ImageLinkInput("https://waifu.clan.su/_ld/2/54338270.jpg", arturiaPendragon.getId());
-        ImageLinkInput arturiaImageLink2 = new ImageLinkInput("https://i.redd.it/z9vzlizb8sl01.jpg", arturiaPendragon.getId());
-        ImageLinkInput violetImageLink = new ImageLinkInput("https://s.itl.cat/pngfile/s/153-1532902_violet-evergarden-full-violet-evergarden-luculia-marlborough.png", violetEvergarden.getId());
+    ImageLinkInput arturiaImageLink1 =
+        new ImageLinkInput("https://waifu.clan.su/_ld/2/54338270.jpg", arturiaPendragon.getId());
+    ImageLinkInput arturiaImageLink2 =
+        new ImageLinkInput("https://i.redd.it/z9vzlizb8sl01.jpg", arturiaPendragon.getId());
+    ImageLinkInput violetImageLink =
+        new ImageLinkInput(
+            "https://s.itl.cat/pngfile/s/153-1532902_violet-evergarden-full-violet-evergarden-luculia-marlborough.png",
+            violetEvergarden.getId());
 
-        imageLinkService.create(arturiaImageLink1);
-        imageLinkService.create(arturiaImageLink2);
-        imageLinkService.create(violetImageLink);
-    }
+    imageLinkService.create(arturiaImageLink1);
+    imageLinkService.create(arturiaImageLink2);
+    imageLinkService.create(violetImageLink);
+  }
 }
