@@ -5,13 +5,13 @@
     </div>
     <div class="block">
       <b-field grouped position="is-centered">
-        <b-field label="Personal title" label-position='inside'>
+        <b-field label="Titre" label-position='inside'>
           <b-select v-model="user.gender">
             <option value="F">Mme</option>
             <option value="M">Mr</option>
           </b-select>
         </b-field>
-        <b-field label="prenom" label-position='inside' expanded>
+        <b-field label="Prénom" label-position='inside' expanded>
           <b-input v-model="user.firstName"/>
         </b-field>
         <b-field label="Nom" label-position='inside' expanded>
@@ -19,7 +19,7 @@
         </b-field>
       </b-field>
       <b-field grouped position="is-centered">
-        <b-field label="Rue" label-position='inside' expanded>
+        <b-field label="Adresse" label-position='inside' expanded>
           <b-input v-model="user.street"/>
         </b-field>
         <b-field label="Code Postal" label-position='inside' expanded>
@@ -29,13 +29,13 @@
       <b-field position="is-left" label="Ville" label-position='inside' style="margin-right: 50%">
         <b-input v-model="user.city"/>
       </b-field>
-      <b-field label="email" label-position='inside' expanded>
+      <b-field label="Email" label-position='inside' expanded>
         <b-input placeholder="Email" type="email" v-model="user.email"></b-input>
       </b-field>
-      <b-field label="password" label-position='inside' expanded>
+      <b-field label="Changer le mot de passe" label-position='inside' expanded>
         <b-input type="password" v-model="password1"/>
       </b-field>
-      <b-field label="password" label-position='inside' expanded>
+      <b-field label="Confirmer le mot de passe" label-position='inside' expanded>
         <b-input type="password" v-model="password2"/>
       </b-field>
     </div>
@@ -96,7 +96,6 @@ export default {
   },
   methods: {
     updateInfo () {
-      console.log(this.user)
       if (this.password1.valueOf() === this.password2.valueOf() && this.password1 !== '') {
         if (this.user.firstName !== '' && this.user.lastName !== '' && this.user.postalCode.length === 5 &&
           this.user.street !== '' && this.user.email !== '' && this.user.city !== '') {
@@ -119,10 +118,9 @@ export default {
               }
             }
           }).then(data => {
-            console.log(data)
             this.$buefy.toast.open({
               duration: 3000,
-              message: 'information mise à jour',
+              message: 'informations mises à jour',
               position: 'is-bottom',
               type: 'is-success'
             })
@@ -145,7 +143,7 @@ export default {
       } else {
         this.$buefy.toast.open({
           duration: 3000,
-          message: 'le champ password est vide ou les deux champs ne correspondent pas',
+          message: 'Le champ password est vide ou les deux champs ne correspondent pas',
           position: 'is-bottom',
           type: 'is-danger'
         })

@@ -29,12 +29,14 @@ public class UserQueryIntegrationTest {
 
   UserInput userInput;
   OrderInput orderInput;
+  String token;
 
   @BeforeEach
   public void setup() {
     DataLoader dataLoader = new DataLoader();
     userInput = dataLoader.getUserInput();
     orderInput = dataLoader.getOrderInput();
+    token = dataLoader.getToken();
   }
 
   @Test
@@ -54,6 +56,9 @@ public class UserQueryIntegrationTest {
       assertEquals(user.getGender(), userQueried.getGender());
       assertEquals(user.getFirstName(), userQueried.getFirstName());
       assertEquals(user.getLastName(), userQueried.getLastName());
+      assertEquals(user.getRole(), userQueried.getRole());
+      assertEquals(user.getUsername(), userQueried.getUsername());
+      assertEquals(user.getPassword(), userQueried.getPassword());
     }
   }
 
@@ -73,5 +78,29 @@ public class UserQueryIntegrationTest {
     assertEquals(user.getGender(), userQueried.getGender());
     assertEquals(user.getFirstName(), userQueried.getFirstName());
     assertEquals(user.getLastName(), userQueried.getLastName());
+    assertEquals(user.getRole(), userQueried.getRole());
+    assertEquals(user.getUsername(), userQueried.getUsername());
+    assertEquals(user.getPassword(), userQueried.getPassword());
+  }
+
+  @Test
+  void getUserFromToken() {
+    Order order = orderMutation.createOrder(orderInput);
+    userInput.setOrderIds(Arrays.asList(order.getId()));
+    User user = userMutation.createUser(userInput);
+
+    User userQueried = userQuery.getUserFromToken(token);
+
+    assertEquals(user.getOrders(), userQueried.getOrders());
+    assertEquals(user.getStreet(), userQueried.getStreet());
+    assertEquals(user.getCity(), userQueried.getCity());
+    assertEquals(user.getPostalCode(), userQueried.getPostalCode());
+    assertEquals(user.getEmail(), userQueried.getEmail());
+    assertEquals(user.getGender(), userQueried.getGender());
+    assertEquals(user.getFirstName(), userQueried.getFirstName());
+    assertEquals(user.getLastName(), userQueried.getLastName());
+    assertEquals(user.getRole(), userQueried.getRole());
+    assertEquals(user.getUsername(), userQueried.getUsername());
+    assertEquals(user.getPassword(), userQueried.getPassword());
   }
 }

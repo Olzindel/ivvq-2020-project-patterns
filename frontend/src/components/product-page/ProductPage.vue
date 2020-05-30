@@ -16,14 +16,18 @@
                        fade lazy
                        lazy-load-on-drag>
           <template v-slot:arrow-left>
-            <i class="icon icon-arrow-left"/>
+            <div class="icon is-medium icon-arrow-left">
+              <img style="object-fit: contain" src='../../assets/product-page/pointingLeft.svg'/>
+            </div>
           </template>
           <template v-slot:arrow-right>
-            <i class="icon icon-arrow-right"/>
+            <div class="icon is-medium icon-arrow-right">
+              <img style="object-fit: contain" src='../../assets/product-page/pointingRight.svg'/>
+            </div>
           </template>
           <vueper-slide v-for="image in product.imageLinks"
-                          :image="image.imageLink"
-                          :key="image.id"
+                        :image="image.imageLink"
+                        :key="image.id"
                         v-if="product.imageLinks.length">
             <template v-slot:loader>
               <b-icon class="icon icon-loader spinning"/>
@@ -32,7 +36,7 @@
 
           <vueper-slide image="../../assets/product-page/no-image-icon.png" v-else>
             <template v-slot:loader>
-              <i class="icon icon-loader spinning"></i>
+              <i class="icon icon-loader spinning"/>
               <b-icon class="icon loading-icon">
                 <span>Loading...</span>
               </b-icon>
@@ -51,7 +55,7 @@
             </article>
             <div v-else>
               Aucune description pour ce produit.
-          </div>
+            </div>
           </div>
           <div class="column add-to-basket">
             <b-button @click="getUser()">Ajouter au panier</b-button>
@@ -70,6 +74,7 @@ import {VueperSlide, VueperSlides} from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
 
 import gql from 'graphql-tag'
+import store from '../../store'
 
 Vue.use(Router)
 
@@ -99,9 +104,7 @@ export default {
           }
         },
         update: data => {
-          console.log(data.productInfos)
           this.product = data.productInfos
-          console.log(this.product.imageLinks)
         }
       }
     }
@@ -137,7 +140,7 @@ export default {
           }}`,
         variables: {
           input: {
-            userId: localStorage.getItem('user'),
+            userId: store.getters.user.id,
             status: 'BASKET'
           }
         }
@@ -172,7 +175,7 @@ export default {
             }
         }`,
         variables: {
-          id: localStorage.getItem('user')
+          id: store.getters.user.id
         },
         fetchPolicy: 'no-cache'
       }
@@ -183,13 +186,13 @@ export default {
           }
         })
         if (basket.length === 0) {
-          console.log('add a basket')
           this.addABasket()
         } else {
-          console.log(basket[0])
           this.addThisProduct(basket[0].id)
         }
-      }).catch((error) => { this.danger(error) })
+      }).catch((error) => {
+        this.danger(error)
+      })
     },
     danger (text) {
       this.$buefy.toast.open({
@@ -210,20 +213,12 @@ export default {
 </script>
 
 <style scoped>
-  .icon-arrow-left:before {
-    content: url('../../assets/product-page/pointingLeft.svg');
-    display: inline-flex;
-    width: 32px;
-    height: 32px;
+  .icon-arrow-left {
     background: white;
     border-radius: 32px;
   }
 
-  .icon-arrow-right:before {
-    content: url('../../assets/product-page/pointingRight.svg');
-    display: inline-flex;
-    width: 32px;
-    height: 32px;
+  .icon-arrow-right {
     background: white;
     border-radius: 32px;
   }
