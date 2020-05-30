@@ -332,29 +332,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>check-unit-test</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <excludes>
-                                        <exclude>*Test</exclude>
-                                    </excludes>
-                                    <limits>
-                                        <limit>
-                                            <counter>INSTRUCTION</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.7</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>pre-integration-test</id>
                         <configuration>
                             <skip>${skip.integration.tests}</skip>
@@ -381,7 +358,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>check-integration-test</id>
+                        <id>check-test</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
