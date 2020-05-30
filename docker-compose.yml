@@ -23,5 +23,20 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=PREPROD"
 
-volumes:
-  postgres-data:
+  selenium:
+    image: selenium/standalone-firefox
+    ports:
+      - "4444:4444"
+    links:
+      - app
+
+  e2e_tests:
+    container_name: e2e_tests_container
+    image: e2e_tests
+    build: ./e2e
+    command: ./wait-for-it.sh -t 60 selenium:4444 -- ./wait-for-it.sh -t 60 app:8080 -- ./node_modules/.bin/nightwatch
+    depends_on:
+      - selenium
+      - app
+    links:
+      - app

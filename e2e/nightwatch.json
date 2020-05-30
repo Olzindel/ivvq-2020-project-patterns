@@ -1,0 +1,22 @@
+{
+  "src_folders": [
+    "tests"
+  ],
+  "output_folder": "nw/reports",
+  "test_workers": false,
+  "live_output": false,
+  "test_settings": {
+    "default": {
+      "launch_url": "http://app:8080",
+      "selenium_host": "selenium",
+      "selenium_port": 4444,
+      "silent": true,
+      "desiredCapabilities": {
+        "browserName": "firefox",
+        "acceptInsecureCerts": true,
+        "javascriptEnabled": true,
+        "acceptSslCerts": true
+      }
+    }
+  }
+}
