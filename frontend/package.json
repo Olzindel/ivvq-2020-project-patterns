@@ -18,13 +18,17 @@
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link-context": "^1.0.20",
+    "apollo-link-http": "^1.5.17",
     "axios": "^0.19.2",
     "buefy": "^0.8.17",
     "graphql": "^0.12.3",
+    "graphql-tag": "^2.10.3",
     "vue": "^2.6.11",
     "vue-apollo": "^3.0.3",
     "vue-material": "^1.0.0-beta-13",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vueperslides": "^2.8.3",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

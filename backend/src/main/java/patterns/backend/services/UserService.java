@@ -82,7 +82,7 @@ public class UserService {
             userInput.getStreet(),
             userInput.getPostalCode(),
             userInput.getCity(),
-            userInput.getMerchant());
+            userInput.getRole());
 
     if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
       Set<Order> orders = new HashSet<>();
