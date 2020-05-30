@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import ProductPage from '../components/product-page/ProductPage'
-import HeaderPart from '../components/home-page/HomePage'
 import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
@@ -11,6 +10,7 @@ import BasketPage from '../components/paiement-page/BasketPage'
 import PaiementByCard from '../components/paiement-page/PaiementByCard'
 import ProductStockPage from '../components/mercant-page/ProductStockPage'
 import OrderPage from '../components/mercant-page/OrderPage'
+import HomePage from '../components/home-page/HomePage'
 import store from '../store'
 import gql from 'graphql-tag'
 import {apolloClient} from '../vue-appolo-config'
@@ -36,8 +36,8 @@ const router = new Router({
     },
     {
       path: '/home',
-      name: 'headerPart',
-      component: HeaderPart
+      name: 'homePage',
+      component: HomePage
     },
     {
       path: '/product/:productId',
@@ -108,6 +108,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('742645458745454')
   if (isAuthenticated() && !store.getters.user) {
     apolloClient.query({
       query: gql`query UserFromToken($token: String!){

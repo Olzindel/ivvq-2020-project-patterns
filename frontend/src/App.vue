@@ -13,6 +13,7 @@ import Header from './components/header-part/HeaderPart'
 import Banner from './components/header-part/Banner'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import 'vueperslides/dist/vueperslides.css'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 

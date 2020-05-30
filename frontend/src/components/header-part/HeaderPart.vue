@@ -41,8 +41,6 @@
 </template>
 
 <script>
-// import Login from './login/Login'
-import router from '../../router/index'
 import store from '../../store'
 
 export default {
@@ -57,27 +55,27 @@ export default {
   }),
   methods: {
     goToAccount () {
-      router.push('/account')
+      this.$router.push('/account')
       this.showNavigation = false
     },
     goToHome () {
-      router.push('/')
+      this.$router.push('/')
       this.showNavigation = false
     },
     goToAPropos () {
-      router.push('/aPropos')
+      this.$router.push('/aPropos')
       this.showNavigation = false
     },
     goToBasket () {
-      router.push('/basket')
+      this.$router.push('/basket')
       this.showNavigation = false
     },
     goToLogin () {
-      router.push('/login')
+      this.$router.push('/login')
       this.showNavigation = false
     },
     goToSignUp () {
-      router.push('/signup')
+      this.$router.push('/signup')
       this.showNavigation = false
     },
     logout () {
@@ -91,11 +89,11 @@ export default {
       this.showNavigation = false
     },
     goToProductStockPage () {
-      router.push('/stock')
+      this.$router.push('/stock')
       this.showNavigation = false
     },
     goToOrders () {
-      router.push('/orders')
+      this.$router.push('/orders')
       this.showNavigation = false
     },
     isAuthenticated () {
