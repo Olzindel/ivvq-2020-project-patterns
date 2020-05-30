@@ -2,8 +2,7 @@ package patterns.backend.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import patterns.backend.DataLoader;
 import patterns.backend.domain.User;
+import patterns.backend.graphql.input.UserInput;
 import patterns.backend.repositories.UserRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,6 +30,8 @@ class UserServiceTest {
 
   private User user;
 
+  private UserInput userInput;
+
   @BeforeEach
   public void setup() {
     DataLoader dataLoader = new DataLoader();
@@ -40,6 +42,7 @@ class UserServiceTest {
     userService.setBCryptPasswordEncoder(bCryptPasswordEncoder);
 
     user = dataLoader.getUser();
+    userInput = dataLoader.getUserInput();
   }
 
   @Test
@@ -78,6 +81,29 @@ class UserServiceTest {
 
     // then: the save method of UserRepository is invoked
     verify(userService.getUserRepository()).save(user);
+  }
+
+  @Test
+  void createUserFromUserInput() {
+    // given: an userInput and an userService
+    UserService userServiceMock = mock(UserService.class);
+    doCallRealMethod().when(userServiceMock).create(userInput);
+    // when: create(UserInput) method is invoked
+    userServiceMock.create(userInput);
+    // then: create(User) method is invoked
+    verify(userServiceMock).create(userInput);
+  }
+
+  @Test
+  void update() {
+    // given: an userInput, an User and an userService
+    UserService userServiceMock = mock(UserService.class);
+    doCallRealMethod().when(userServiceMock).update(0L, userInput);
+    when(userServiceMock.findUserById(0L)).thenReturn(user);
+    // when: update method is invoked
+    userServiceMock.update(0L, userInput);
+    // then: create(User) method is invoked
+    verify(userServiceMock).create(user);
   }
 
   @Test
