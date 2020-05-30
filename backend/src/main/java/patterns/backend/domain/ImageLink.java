@@ -1,5 +1,6 @@
 package patterns.backend.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @NoArgsConstructor
 @Transactional
 @Entity(name = "image_links")
-public class ImageLink {
+public class ImageLink implements Serializable {
 
   @Id @GeneratedValue private Long id;
 

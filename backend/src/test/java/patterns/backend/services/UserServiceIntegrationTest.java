@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import patterns.backend.DataLoader;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.Role;
 import patterns.backend.domain.User;
 import patterns.backend.exception.UserNotFoundException;
 import patterns.backend.graphql.input.UserInput;
@@ -94,7 +95,7 @@ public class UserServiceIntegrationTest {
             user.getStreet(),
             user.getPostalCode(),
             user.getCity(),
-            false,
+            Role.USER,
             user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
     // when: the object user is updated in the database
     userService.update(user.getId(), userInput);
@@ -131,7 +132,7 @@ public class UserServiceIntegrationTest {
             user.getStreet(),
             user.getPostalCode(),
             user.getCity(),
-            false,
+            Role.USER,
             user.getOrders().stream().map(Order::getId).collect(Collectors.toList()));
     // when: the object user is updated in the database
     userService.update(user.getId(), userInput);

@@ -82,7 +82,7 @@ public class UserService {
             userInput.getStreet(),
             userInput.getPostalCode(),
             userInput.getCity(),
-            userInput.getMerchant());
+            userInput.getRole());
 
     if (userInput.getOrderIds() != null && !userInput.getOrderIds().isEmpty()) {
       Set<Order> orders = new HashSet<>();
@@ -96,6 +96,10 @@ public class UserService {
 
   public User update(Long userId, UserInput userInput) {
     User user = findUserById(userId);
+
+    if (userInput.getPassword() != null) {
+      user.setPassword(userInput.getPassword());
+    }
 
     if (userInput.getFirstName() != null) {
       user.setFirstName(userInput.getFirstName());

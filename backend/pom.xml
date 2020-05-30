@@ -123,7 +123,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.12</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Mockito -->
@@ -319,6 +320,10 @@
                             <skip>${skip.unit.tests}</skip>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                            <excludes>
+                                <exclude>**/*Exception.*</exclude>
+                                <exclude>**/PatternsApplication*.*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                     <execution>
@@ -337,7 +342,7 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.4</minimum>
+                                            <minimum>0.7</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -364,6 +369,10 @@
                             <skip>${skip.integration.tests}</skip>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                            <excludes>
+                                <exclude>**/*Exception.*</exclude>
+                                <exclude>**/PatternsApplication*.*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                     <execution>
