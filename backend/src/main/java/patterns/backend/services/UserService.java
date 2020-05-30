@@ -97,6 +97,10 @@ public class UserService {
   public User update(Long userId, UserInput userInput) {
     User user = findUserById(userId);
 
+    if (userInput.getPassword() != null) {
+      user.setPassword(userInput.getPassword());
+    }
+
     if (userInput.getFirstName() != null) {
       user.setFirstName(userInput.getFirstName());
     }
