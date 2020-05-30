@@ -47,6 +47,7 @@
 
 <script>
 import gql from 'graphql-tag'
+import store from '../../store'
 export default {
   name: 'UserAccount',
   data () {
@@ -84,7 +85,7 @@ export default {
         `,
         variables () {
           return {
-            id: localStorage.getItem('user')
+            id: store.getters.user.id
           }
         },
         fetchPolicy: 'no-cache',
