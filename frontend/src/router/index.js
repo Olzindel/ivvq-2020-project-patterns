@@ -92,13 +92,9 @@ const router = new Router({
       }
     },
     {
-      path: '/userOrder',
+      path: '/history',
       name: 'UserOrder',
       component: UserOrder
-    },
-    {
-      path: '*',
-      component: ErrorPage
     },
     {
       path: '/login',
@@ -109,6 +105,10 @@ const router = new Router({
       path: '/signup',
       name: 'signup',
       component: SignUpPage
+    },
+    {
+      path: '*',
+      component: ErrorPage
     }
   ]
 })
