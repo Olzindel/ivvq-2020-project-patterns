@@ -69,7 +69,6 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log(data)
         this.products = data.data.getAllProducts
       })
     }
