@@ -98,7 +98,7 @@ public class UserService {
     User user = findUserById(userId);
 
     if (userInput.getPassword() != null) {
-      user.setPassword(userInput.getPassword());
+      user.setPassword(bCryptPasswordEncoder.encode(userInput.getPassword()));
     }
 
     if (userInput.getFirstName() != null) {
@@ -143,6 +143,17 @@ public class UserService {
         user.addOrder(orderService.findOrderById(idToAdd));
       }
     }
-    return create(user);
+    User savedUser;
+    if (user != null) {
+      savedUser = userRepository.save(user);
+      if (user.getOrders() != null) {
+        for (Order order : user.getOrders()) {
+          order.setUser(user);
+        }
+      }
+    } else {
+      throw new IllegalArgumentException();
+    }
+    return savedUser;
   }
 }
