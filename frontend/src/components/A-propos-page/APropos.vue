@@ -51,7 +51,7 @@ export default {
       team: 'Ce site a été entièrement réalisé par une équipe de 4 développeurs dans ' +
           'le cadre de leur formation du master développement logiciel. Le but est de réaliser un site marchand' +
           ' en utilisant toute une chaîne DevOps. Les 4 développeurs sont Nathan ROCHE,Alexandre ELLERO, Timothée THIBAULT, Pierre SELEBRAN',
-      thanks: 'Nous tenons a remercier l’équipe Captain-adhoc ainsi que les professeurs pour leur aide durant ce projet'
+      thanks: 'Nous tenons à remercier l’équipe Captain-adhoc ainsi que l\'équipe pédagogique du master pour leur aide durant ce projet'
     }
   }
 }
