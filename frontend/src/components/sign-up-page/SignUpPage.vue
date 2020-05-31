@@ -22,32 +22,32 @@
               </b-step-item>
               <b-step-item step="2" label="Informations complémentaires" icon="account-plus" disabled>
                 <div class="block">
-                  <b-field label="Prénom" label-position="inside">
-                    <b-input v-model="user.infos.firstname" placeholder="Mon prénom"></b-input>
+                  <b-field label="Prénom" label-position="inside" required>
+                    <b-input v-model="user.infos.firstname" placeholder="Mon prénom" required></b-input>
                   </b-field>
                   <b-field label="Nom" label-position="inside">
-                    <b-input v-model="user.infos.lastname" placeholder="Mon mom"></b-input>
+                    <b-input v-model="user.infos.lastname" placeholder="Mon mom" required></b-input>
                   </b-field>
                   <b-field label="Email" label-position="inside">
-                    <b-input v-model="user.infos.email" type="email" placeholder="Mon email"></b-input>
+                    <b-input v-model="user.infos.email" type="email" placeholder="Mon email" required></b-input>
                   </b-field>
                   <div class="block">
-                    <b-radio name="genre" v-model="user.infos.gender" native-value="H">
+                    <b-radio name="genre" v-model="user.infos.gender" native-value="M">
                       Homme
                     </b-radio>
                     <b-radio name="genre" v-model="user.infos.gender" native-value="F">
                       Femme
                     </b-radio>
                   </div>
-                  <b-field label="Ville" label-position="inside">
-                    <b-input v-model="user.infos.city" placeholder="Ma ville"></b-input>
+                  <b-field label="Ville" label-position="inside" required>
+                    <b-input v-model="user.infos.city" placeholder="Ma ville" required></b-input>
                   </b-field>
                   <b-field label="Adresse" label-position="inside">
-                    <b-input v-model="user.infos.addresse" placeholder="Mon adresse"></b-input>
+                    <b-input v-model="user.infos.addresse" placeholder="Mon adresse" required></b-input>
                   </b-field>
                   <b-field label="Code postal" label-position="inside">
-                    <b-input v-model="user.infos.zipCode" type="number" placeholder="Mon code postal" min="1000"
-                             max="99999"></b-input>
+                    <b-input v-model="user.infos.zipCode" type="text" placeholder="Mon code postal"
+                             pattern="^(([0-8][0-9])|(9[0-5]))[0-9]{3}$" required></b-input>
                   </b-field>
                 </div>
               </b-step-item>
@@ -82,18 +82,27 @@ export default {
           firstname: '',
           lastname: '',
           email: '',
-          gender: 'H',
+          gender: 'M',
           addresse: '',
           city: '',
-          zipCode: null
+          zipCode: ''
         }
       }
     }
   },
-
   methods: {
-    isValid () {
-      return this.user.account.username && this.user.account.password && this.user.account.password === this.user.account.passwordConfirm
+    isValid: function () {
+      return this.user.account.username &&
+          this.user.account.password &&
+          this.user.account.passwordConfirm &&
+          this.user.account.password === this.user.account.passwordConfirm &&
+          this.user.infos.firstname &&
+          this.user.infos.lastname &&
+          this.user.infos.email &&
+          this.user.infos.gender &&
+          this.user.infos.addresse &&
+          this.user.infos.city &&
+          this.user.infos.zipCode
     },
     submit () {
       this.$apollo.mutate({
@@ -112,7 +121,7 @@ export default {
               postalCode: $postalCode
               role: USER
             }) {
-              id
+              username
              }
           }`,
         // Parameters
@@ -127,6 +136,21 @@ export default {
           city: this.user.infos.city,
           postalCode: this.user.infos.zipCode
         }
+      }).then(value => {
+        this.$router.push('/login')
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: 'L\'utilisateur ' + value.data.createUser.username + ' a été créé avec succès',
+          position: 'is-bottom',
+          type: 'is-success'
+        })
+      }, () => {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: 'Une erreur a eu lieu. Veuillez réessayer ultèrieurement',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
       })
     }
   }
