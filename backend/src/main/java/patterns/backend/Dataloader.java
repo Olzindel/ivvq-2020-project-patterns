@@ -15,8 +15,11 @@ import patterns.backend.services.ImageLinkService;
 import patterns.backend.services.ProductService;
 import patterns.backend.services.UserService;
 
+import javax.transaction.Transactional;
+
 @Component
 @Profile("PREPROD")
+@Transactional
 public class Dataloader implements ApplicationRunner {
 
     @Autowired
