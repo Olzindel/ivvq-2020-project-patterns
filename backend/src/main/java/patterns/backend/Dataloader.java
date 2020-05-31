@@ -43,7 +43,7 @@ public class Dataloader implements ApplicationRunner {
             "admin@gmail.com",
             "M",
             "8",
-            "4500",
+            "45000",
             "Toulouse",
             Role.MERCHANT,
             null);
