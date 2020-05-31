@@ -64,5 +64,8 @@ public class Dataloader implements ApplicationRunner {
         imageLinkService.create(arturiaImageLink1);
         imageLinkService.create(arturiaImageLink2);
         imageLinkService.create(violetImageLink);
+        imageLinkService.create(inoriImageLink);
+        imageLinkService.create(lucinaImageLink);
+        imageLinkService.create(corrinImageLink);
     }
 }
