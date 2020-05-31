@@ -71,7 +71,7 @@ export default {
         }`,
         variables () {
           return {
-            id: localStorage.getItem('user')
+            id: this.$store.getters.user.id
           }
         },
         fetchPolicy: 'no-cache',
