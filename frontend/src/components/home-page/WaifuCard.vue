@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import router from '../../router/index'
 
 export default {
   name: 'WaifuCard',
@@ -29,7 +28,7 @@ export default {
   },
   methods: {
     changeToProductInfo () {
-      router.push({path: '/product/' + this.product.id})
+      this.$router.push({path: '/product/' + this.product.id})
     }
   }
 }

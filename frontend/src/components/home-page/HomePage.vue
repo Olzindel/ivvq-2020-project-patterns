@@ -17,9 +17,10 @@ export default {
       products: []
     }
   },
-  apollo: {
-    products: {
-      query: gql`query ProductInfos($count: Int!) {
+  methods: {
+    getProducts () {
+      this.$apollo.query({
+        query: gql`query ProductInfos($count: Int!) {
             products(count: $count){
             id
             name
@@ -30,10 +31,16 @@ export default {
             status
          }
         }`,
-      variables: {
-        count: 10
-      }
+        variables: {
+          count: 100
+        }
+      }).then(data => {
+        this.products = data.data.products
+      })
     }
+  },
+  mounted () {
+    this.getProducts()
   },
   components: {WaifuCard}
 }

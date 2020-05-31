@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-if="$apollo.queries.productInfos.error">
+    <div v-if="product.id === -1">
       Erreur du chargement du produit...
     </div>
 
-    <div v-else-if="$apollo.queries.productInfos.loading">
+    <div v-else-if="product === {}">
       <b-icon class="icon loading-icon"></b-icon>
     </div>
 
@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="column add-to-basket">
-            <b-button @click="getUser()">Ajouter au panier</b-button>
+            <b-button @click="getUserOrder()">Ajouter au panier</b-button>
           </div>
         </div>
       </div>
@@ -69,12 +69,9 @@
 <script>
 import Vue from 'vue'
 import Router from 'vue-router'
-
 import {VueperSlide, VueperSlides} from 'vueperslides'
-import 'vueperslides/dist/vueperslides.css'
 
 import gql from 'graphql-tag'
-import store from '../../store'
 
 Vue.use(Router)
 
@@ -82,33 +79,6 @@ export default {
   name: 'ProductPage',
   components: {VueperSlides, VueperSlide},
   props: ['productId'],
-  apollo: {
-    productInfos () {
-      return {
-        query: gql`query ProductInfos($productId: ID!) {
-          productInfos: product(productId: $productId){
-            id,
-            name,
-             imageLinks{
-              id,
-              imageLink
-             },
-            price,
-            status,
-            description
-          }
-        }`,
-        variables () {
-          return {
-            productId: this.productId
-          }
-        },
-        update: data => {
-          this.product = data.productInfos
-        }
-      }
-    }
-  },
   data () {
     return {
       product: {
@@ -116,7 +86,6 @@ export default {
         name: '',
         imageLinks: [],
         price: '',
-        status: '',
         description: ''
       },
       carousel: {
@@ -131,6 +100,27 @@ export default {
     }
   },
   methods: {
+    getProductInfo () {
+      this.$apollo.query({
+        query: gql`query ProductInfos($productId: ID!) {
+          productInfos: product(productId: $productId){
+            id,
+            name,
+             imageLinks{
+              id,
+              imageLink
+             },
+            price,
+            description
+          }
+        }`,
+        variables: {
+          productId: this.productId
+        }
+      }).then(data => {
+        this.product = data.data.productInfos
+      })
+    },
     addABasket () {
       this.$apollo.mutate({
         mutation: gql`mutation createOrder($input: OrderInput) {
@@ -140,7 +130,7 @@ export default {
           }}`,
         variables: {
           input: {
-            userId: store.getters.user.id,
+            userId: this.$store.getters.user.id,
             status: 'BASKET'
           }
         }
@@ -164,9 +154,10 @@ export default {
         }
       }).then(data => this.success()).catch((error) => this.danger(error))
     },
-    getUser () {
-      this.$apollo.query({
-        query: gql`query user($id: ID!){
+    getUserOrder () {
+      if (localStorage.getItem('connection-token')) {
+        this.$apollo.query({
+          query: gql`query user($id: ID!){
             getuser:user(userId: $id){
                orders{
                   id,
@@ -174,30 +165,41 @@ export default {
                  }
             }
         }`,
-        variables: {
-          id: store.getters.user.id
-        },
-        fetchPolicy: 'no-cache'
-      }
-      ).then(data => {
-        const basket = data.data.getuser.orders.filter(function (order) {
-          if (order.status === 'BASKET') {
-            return order
-          }
-        })
-        if (basket.length === 0) {
-          this.addABasket()
-        } else {
-          this.addThisProduct(basket[0].id)
+          variables: {
+            id: this.$store.getters.user.id
+          },
+          fetchPolicy: 'no-cache'
         }
-      }).catch((error) => {
-        this.danger(error)
-      })
+        ).then(data => {
+          const basket = data.data.getuser.orders.filter(function (order) {
+            if (order.status === 'BASKET') {
+              return order
+            }
+          })
+          if (basket.length === 0) {
+            this.addABasket()
+          } else {
+            this.addThisProduct(basket[0].id)
+          }
+        }).catch(() => {
+          this.notifyError()
+        })
+      } else {
+        this.danger()
+      }
     },
-    danger (text) {
+    danger () {
       this.$buefy.toast.open({
         duration: 5000,
-        message: 'Vous devez vous connecter',
+        message: 'Connectez vous pour ajouter cette waifu à votre panier',
+        position: 'is-bottom',
+        type: 'is-danger'
+      })
+    },
+    notifyError () {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: 'Une erreur est survenue. Réessayez plus tard',
         position: 'is-bottom',
         type: 'is-danger'
       })
@@ -208,6 +210,9 @@ export default {
         type: 'is-success'
       })
     }
+  },
+  mounted () {
+    this.getProductInfo()
   }
 }
 </script>

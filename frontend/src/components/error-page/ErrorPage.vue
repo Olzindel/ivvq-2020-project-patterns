@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import router from '../../router/index'
 export default {
   name: 'ErrorPage',
   data () {
@@ -40,8 +39,7 @@ export default {
   },
   methods: {
     goToHome () {
-      router.push({path: '/'})
-      this.showNavigation = false
+      this.$router.push('/')
     }
   }
 }

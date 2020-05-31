@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import ProductPage from '../components/product-page/ProductPage'
-import HeaderPart from '../components/home-page/HomePage'
 import UserAccount from '../components/user-option/UserAccount'
 import ErrorPage from '../components/error-page/ErrorPage'
 import APropos from '../components/A-propos-page/APropos'
@@ -11,6 +10,8 @@ import BasketPage from '../components/paiement-page/BasketPage'
 import PaiementByCard from '../components/paiement-page/PaiementByCard'
 import ProductStockPage from '../components/mercant-page/ProductStockPage'
 import OrderPage from '../components/mercant-page/OrderPage'
+import HomePage from '../components/home-page/HomePage'
+import UserOrder from '../components/user-option/UserOrder'
 import store from '../store'
 import gql from 'graphql-tag'
 import {apolloClient} from '../vue-appolo-config'
@@ -36,8 +37,8 @@ const router = new Router({
     },
     {
       path: '/home',
-      name: 'headerPart',
-      component: HeaderPart
+      name: 'homePage',
+      component: HomePage
     },
     {
       path: '/product/:productId',
@@ -91,8 +92,9 @@ const router = new Router({
       }
     },
     {
-      path: '*',
-      component: ErrorPage
+      path: '/history',
+      name: 'UserOrder',
+      component: UserOrder
     },
     {
       path: '/login',
@@ -103,6 +105,10 @@ const router = new Router({
       path: '/signup',
       name: 'signup',
       component: SignUpPage
+    },
+    {
+      path: '*',
+      component: ErrorPage
     }
   ]
 })
@@ -121,11 +127,14 @@ router.beforeEach((to, from, next) => {
       }
     }).then(result => {
       store.commit('connect', result.data.user)
+      next(true)
     }, () => {
       localStorage.setItem('connection-token', '')
+      next(true)
     })
+  } else {
+    next(true)
   }
-  next(true)
 })
 
 export default router

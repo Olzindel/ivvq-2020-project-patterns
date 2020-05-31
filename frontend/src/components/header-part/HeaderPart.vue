@@ -18,7 +18,7 @@
           </div>
         </b-menu-list>
         <!-- Merchant -->
-        <b-menu-list v-if="isAuthenticated() && store.getters.isMerchant" label="Administration">
+        <b-menu-list v-if="isAuthenticated() && $store.getters.isMerchant" label="Administration">
           <div>
             <b-menu-item label="Gérer les stocks" @click="goToProductStockPage()"/>
             <b-menu-item label="Historique des commandes clients" @click="goToOrders()"/>
@@ -41,61 +41,55 @@
 </template>
 
 <script>
-import Login from './login/Login'
-import router from '../../router/index'
-import store from '../../store'
 
 export default {
   name: 'headerPart',
-  components: {Login},
   data: () => ({
     showNavigation: false,
     navbarOptions: {
       fixedTop: true
-    },
-    store: store
+    }
   }),
   methods: {
     goToAccount () {
-      router.push('/account')
+      this.$router.push('/account')
       this.showNavigation = false
     },
     goToHome () {
-      router.push('/')
+      this.$router.push('/')
       this.showNavigation = false
     },
     goToAPropos () {
-      router.push('/aPropos')
+      this.$router.push('/aPropos')
       this.showNavigation = false
     },
     goToBasket () {
-      router.push('/basket')
+      this.$router.push('/basket')
       this.showNavigation = false
     },
     goToLogin () {
-      router.push('/login')
+      this.$router.push('/login')
       this.showNavigation = false
     },
     goToSignUp () {
-      router.push('/signup')
+      this.$router.push('/signup')
       this.showNavigation = false
     },
     logout () {
-      store.commit('logout')
+      this.$store.commit('logout')
       localStorage.setItem('connection-token', '')
       this.goToHome()
     },
     goToHistory () {
-      // TODO
-      // router.push('/history')
+      this.$router.push('/history')
       this.showNavigation = false
     },
     goToProductStockPage () {
-      router.push('/stock')
+      this.$router.push('/stock')
       this.showNavigation = false
     },
     goToOrders () {
-      router.push('/orders')
+      this.$router.push('/orders')
       this.showNavigation = false
     },
     isAuthenticated () {
