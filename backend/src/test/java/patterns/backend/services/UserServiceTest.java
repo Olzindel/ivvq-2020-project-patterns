@@ -2,6 +2,7 @@ package patterns.backend.services;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -97,13 +98,27 @@ class UserServiceTest {
   @Test
   void update() {
     // given: an userInput, an User and an userService
-    UserService userServiceMock = mock(UserService.class);
-    doCallRealMethod().when(userServiceMock).update(0L, userInput);
-    when(userServiceMock.findUserById(0L)).thenReturn(user);
+    when(userService.getUserRepository().findById(0L))
+            .thenReturn(java.util.Optional.ofNullable(user));
+    when(userRepository.save(user)).thenReturn(user);
     // when: update method is invoked
-    userServiceMock.update(0L, userInput);
-    // then: create(User) method is invoked
-    verify(userServiceMock).create(user);
+    User userUpdated = userService.update(0L, userInput);
+    // then: all fields are updated
+    assertEquals(user.getId(), userUpdated.getId());
+    assertEquals(user.getUsername(), userUpdated.getUsername());
+    assertEquals(user.getRole(), userUpdated.getRole());
+    assertEquals(user.getOrders(), userUpdated.getOrders());
+    assertEquals(user.getEmail(), userUpdated.getEmail());
+    assertEquals(user.getFirstName(), userUpdated.getFirstName());
+    assertEquals(user.getLastName(), userUpdated.getLastName());
+    assertEquals(user.getGender(), userUpdated.getGender());
+    assertEquals(user.getCity(), userUpdated.getCity());
+    assertEquals(user.getStreet(), userUpdated.getStreet());
+    assertEquals(user.getPostalCode(), userUpdated.getPostalCode());
+    // then : save method of userRepository is called
+    verify(userRepository).save(user);
+    // then : findById method of userRepository is called
+    verify(userRepository).findById(0L);
   }
 
   @Test
