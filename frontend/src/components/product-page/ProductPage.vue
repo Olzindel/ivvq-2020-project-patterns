@@ -117,7 +117,6 @@ export default {
         variables: {
           productId: this.productId
         }}).then(data => {
-        console.log(data)
         this.product = data.data.productInfos
       })
     },
@@ -175,7 +174,6 @@ export default {
             return order
           }
         })
-        console.log(basket)
         if (basket.length === 0) {
           this.addABasket()
         } else {
