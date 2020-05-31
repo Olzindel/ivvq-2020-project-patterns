@@ -46,6 +46,7 @@ describe('ProductPage', () => {
         }
       }
     })
+    localStorage.setItem('connection-token', 'abc')
     wrapper.vm.addABasket = spy
     wrapper.vm.getUserOrder()
     setTimeout(() => {
