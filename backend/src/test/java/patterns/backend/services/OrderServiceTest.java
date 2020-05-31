@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doCallRealMethod;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.repository.CrudRepository;
 import patterns.backend.DataLoader;
 import patterns.backend.domain.Order;
+import patterns.backend.domain.Product;
 import patterns.backend.graphql.input.OrderInput;
 import patterns.backend.repositories.OrderRepository;
 
@@ -26,6 +29,8 @@ class OrderServiceTest {
 
   @MockBean private OrderItemService orderItemService;
 
+  @MockBean private UserService userService;
+
   private Order order;
   private OrderInput orderInput;
 
@@ -38,6 +43,7 @@ class OrderServiceTest {
     orderService = new OrderService();
     orderService.setOrderRepository(orderRepository);
     orderService.setOrderItemService(orderItemService);
+    orderService.setUserService(userService);
   }
 
   @Test
@@ -108,13 +114,23 @@ class OrderServiceTest {
 
   @Test
   void update() {
-    // given: an OrderInput, an Order and an OrderService
-    OrderService orderServiceMock = mock(OrderService.class);
-    doCallRealMethod().when(orderServiceMock).update(0L, orderInput);
-    when(orderServiceMock.findOrderById(0L)).thenReturn(order);
-    // when: update method is invoked
-    orderServiceMock.update(0L, orderInput);
-    // then: create(Order) method is invoked
-    verify(orderServiceMock).create(order);
+    orderInput.setUserId(0L);
+    List<Long> orderItems = new ArrayList<>();
+    orderItems.add(0L);
+    orderInput.setOrderItemIds(orderItems);
+    when(orderRepository.findById(order.getId())).thenReturn(java.util.Optional.ofNullable(order));
+    when(orderRepository.save(order)).thenReturn(order);
+    Order savedOrder = orderService.update(order.getId(), orderInput);
+    verify(orderRepository).findById(order.getId());
+    verify(orderRepository).save(order);
+  }
+
+  @Test
+  void enoughStock() {
+    when(orderRepository.findById(order.getId())).thenReturn(java.util.Optional.ofNullable(order));
+    when(orderRepository.save(order)).thenReturn(order);
+    Order savedOrder = orderService.create(order);
+    List<Product> productList = orderService.enoughStock(savedOrder.getId());
+    assert productList.isEmpty();
   }
 }
