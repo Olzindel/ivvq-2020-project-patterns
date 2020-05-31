@@ -5,7 +5,7 @@ module.exports = {
   },
   'Verify that products are visible': function (browser) {
     browser
-      .assert.elementsCount('card', 2)
+      .assert.elementsCount('div.card',2)
       .end()
   }
 }
