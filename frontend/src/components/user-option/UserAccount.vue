@@ -47,6 +47,8 @@
 
 <script>
 import gql from 'graphql-tag'
+import store from '../../store'
+
 export default {
   name: 'UserAccount',
   data () {
@@ -68,23 +70,23 @@ export default {
     userInfos () {
       return {
         query: gql`query user($id: ID!){
-            getuser:user(userId: $id){
-              id,
-              username,
-              firstName,
-              lastName,
-              email,
-              street,
-              postalCode,
-              city,
-              email,
-              gender,
-              }
-              }
+        getuser:user(userId: $id){
+            id,
+            username,
+            firstName,
+            lastName,
+            email,
+            street,
+            postalCode,
+            city,
+            email,
+            gender,
+          }
+        }
         `,
         variables () {
           return {
-            id: localStorage.getItem('user')
+            id: store.getters.user.id
           }
         },
         fetchPolicy: 'no-cache',
@@ -96,9 +98,15 @@ export default {
   },
   methods: {
     updateInfo () {
-      if (this.password1.valueOf() === this.password2.valueOf() && this.password1 !== '') {
-        if (this.user.firstName !== '' && this.user.lastName !== '' && this.user.postalCode.length === 5 &&
-          this.user.street !== '' && this.user.email !== '' && this.user.city !== '') {
+      let newPassword = this.password1
+
+      if (!this.password1) {
+        newPassword = null
+      }
+
+      if (this.password1 === this.password2 || this.password1) {
+        if (this.user.firstName && this.user.lastName && this.user.postalCode.length === 5 &&
+            this.user.street && this.user.email && this.user.city) {
           this.$apollo.mutate({
             mutation: gql`mutation updateUser ($userId: ID!, $input: UserInput!){
         updateUserAdress : updateUser(userId: $userId,input: $input){
@@ -114,13 +122,13 @@ export default {
                 postalCode: this.user.postalCode,
                 city: this.user.city,
                 email: this.user.email,
-                password: this.password1
+                password: newPassword
               }
             }
           }).then(data => {
             this.$buefy.toast.open({
               duration: 3000,
-              message: 'informations mises à jour',
+              message: 'Informations mises à jour',
               position: 'is-bottom',
               type: 'is-success'
             })
@@ -135,7 +143,7 @@ export default {
         } else {
           this.$buefy.toast.open({
             duration: 3000,
-            message: 'un champs est vide',
+            message: 'Un champ est vide',
             position: 'is-bottom',
             type: 'is-danger'
           })
@@ -143,12 +151,13 @@ export default {
       } else {
         this.$buefy.toast.open({
           duration: 3000,
-          message: 'Le champ password est vide ou les deux champs ne correspondent pas',
+          message: 'Les mots de passe doivent être identiques',
           position: 'is-bottom',
           type: 'is-danger'
         })
       }
     }
+
   }
 }
 </script>

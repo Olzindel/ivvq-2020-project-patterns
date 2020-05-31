@@ -121,7 +121,7 @@ export default {
       let date = new Date()
       if (this.card.date.getTime() >= date.setMonth(date.getMonth() - 1)) {
         if (this.card.code.length === 3) {
-          if (this.valid_credit_card(this.card.num)) {
+          if (this.card.num.length > 15 && this.valid_credit_card(this.card.num)) {
             this.$buefy.toast.open({
               duration: 5000,
               message: 'Commande réussite',
@@ -132,7 +132,7 @@ export default {
           } else {
             this.$buefy.toast.open({
               duration: 5000,
-              message: 'code mauvais',
+              message: 'Le numéro de la carte bleue fournie n\'est pas valide',
               position: 'is-bottom',
               type: 'is-danger'
             })
@@ -140,7 +140,7 @@ export default {
         } else {
           this.$buefy.toast.open({
             duration: 5000,
-            message: 'code invalide',
+            message: 'Le code au dos de la carte bleue fournie n\'est pas valide',
             position: 'is-bottom',
             type: 'is-danger'
           })
@@ -148,7 +148,7 @@ export default {
       } else {
         this.$buefy.toast.open({
           duration: 5000,
-          message: 'date invalide',
+          message: 'La date d\'expiration de la carte bleue fournie n\'est pas valide',
           position: 'is-bottom',
           type: 'is-danger'
         })

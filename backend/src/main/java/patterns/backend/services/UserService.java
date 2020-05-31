@@ -143,7 +143,6 @@ public class UserService {
         user.addOrder(orderService.findOrderById(idToAdd));
       }
     }
-
     return create(user);
   }
 }
