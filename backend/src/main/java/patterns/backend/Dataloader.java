@@ -1,5 +1,6 @@
 package patterns.backend;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -14,8 +15,6 @@ import patterns.backend.graphql.input.UserInput;
 import patterns.backend.services.ImageLinkService;
 import patterns.backend.services.ProductService;
 import patterns.backend.services.UserService;
-
-import javax.transaction.Transactional;
 
 @Component
 @Profile("PREPROD")
