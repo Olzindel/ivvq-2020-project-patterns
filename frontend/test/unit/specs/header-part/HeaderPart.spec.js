@@ -2,15 +2,18 @@ import HeaderPart from '../../../../src/components/header-part/HeaderPart'
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 import VueRouter from 'vue-router'
+import Vuex from 'vuex'
 
 describe('BasketPage', () => {
   let localVue
   let wrapper
   let spy
+  let storeSpy
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Buefy, {})
     localVue.use(VueRouter)
+    localVue.use(Vuex)
     const routes = [
       {
         path: '/',
@@ -20,10 +23,17 @@ describe('BasketPage', () => {
     const router = new VueRouter({
       routes
     })
+    storeSpy = jest.fn()
+    const mutations = {
+      logout: storeSpy
+
+    }
+    const store = new Vuex.Store({mutations})
     spy = jest.fn()
     wrapper = shallowMount(HeaderPart, {
       localVue,
-      router
+      router,
+      store
     })
     wrapper.setData({
       showNavigation: true,
@@ -49,6 +59,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToAPropos', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -56,6 +67,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/aPropos')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToLogin', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -63,6 +75,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/login')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToSignUp', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -70,6 +83,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/signup')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToBasket', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -77,6 +91,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/basket')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToProductStockPage', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -91,6 +106,7 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/orders')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('goToHistory', () => {
     wrapper.vm.$router.push = spy
     expect(wrapper.vm.showNavigation).toBeTruthy()
@@ -98,9 +114,11 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/history')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
+
   test('logout', () => {
     wrapper.vm.goToHome = spy
     wrapper.vm.logout()
+    expect(storeSpy).toBeCalled()
     expect(spy).toBeCalled()
   })
 })
