@@ -99,7 +99,7 @@ class UserServiceTest {
   void update() {
     // given: an userInput, an User and an userService
     when(userService.getUserRepository().findById(0L))
-            .thenReturn(java.util.Optional.ofNullable(user));
+        .thenReturn(java.util.Optional.ofNullable(user));
     when(userRepository.save(user)).thenReturn(user);
     // when: update method is invoked
     User userUpdated = userService.update(0L, userInput);
