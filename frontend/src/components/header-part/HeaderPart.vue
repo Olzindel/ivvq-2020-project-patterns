@@ -41,17 +41,14 @@
 </template>
 
 <script>
-import store from '../../store'
 
 export default {
   name: 'headerPart',
-  // components: {Login},
   data: () => ({
     showNavigation: false,
     navbarOptions: {
       fixedTop: true
-    },
-    store: store
+    }
   }),
   methods: {
     goToAccount () {
@@ -79,7 +76,7 @@ export default {
       this.showNavigation = false
     },
     logout () {
-      store.commit('logout')
+      this.$store.commit('logout')
       localStorage.setItem('connection-token', '')
       this.goToHome()
     },

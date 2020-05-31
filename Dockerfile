@@ -8,10 +8,7 @@ RUN npm install
 
 COPY ./frontend ./
 
-RUN npm test
-
-RUN npm run build
-
+RUN npm test && npm run build
 
 #========================================================================
 

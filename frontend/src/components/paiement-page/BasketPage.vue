@@ -70,12 +70,10 @@ export default {
           orderItemId: idItem
         }
       }).then(data => {
-        console.log(data)
         this.refreshOrderAfterDelete(data)
       })
     },
     refreshOrderAfterDelete (data) {
-      console.log(data)
       this.order[0].orderItems = this.order[0].orderItems.filter(function (orderItem) {
         if (orderItem.id !== data.data.deleteOrderItem) {
           return orderItem
@@ -119,7 +117,6 @@ export default {
       })
     },
     BasketInfo () {
-      console.log('my test')
       this.$apollo.query({
         query: gql`query user($id: ID!){
             getuser:user(userId: $id){
@@ -155,7 +152,6 @@ export default {
         },
         fetchPolicy: 'no-cache'
       }).then(data => {
-        console.log(data)
         this.user = data.data.getuser
         this.order = data.data.getuser.orders.filter(function (order) {
           if (order.status === 'BASKET') {
