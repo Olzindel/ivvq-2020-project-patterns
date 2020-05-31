@@ -54,11 +54,9 @@ export default {
           }
         }
       })
-    }
-  },
-  apollo: {
+    },
     getAllProduct () {
-      return {
+      this.$apollo.query({
         query: gql`
       query products ( $count : Int! ){
         getAllProducts : products(count : $count){
@@ -66,19 +64,21 @@ export default {
           name,
           stock
       }}`,
-        variables () {
-          return {
-            count: 50
-          }
+        variables: {
+          count: 50
         },
-        fetchPolicy: 'no-cache',
-        update: data => {
-          this.products = data.getAllProducts
-        }
-      }
+        fetchPolicy: 'no-cache'
+      }).then(data => {
+        console.log(data)
+        this.products = data.data.getAllProducts
+      })
     }
+  },
+  mounted () {
+    this.getAllProduct()
   }
 }
+
 </script>
 
 <style scoped>

@@ -16,9 +16,6 @@ describe('BasketPage', () => {
     BasketPage.mounted = mountedSpy
   })
 
-  afterEach(() => {
-  })
-
   test('deleteItem', done => {
     const mutate = () => {
       return Promise.resolve({

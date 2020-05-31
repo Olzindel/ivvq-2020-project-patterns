@@ -1,8 +1,8 @@
-import HomePage from '../../../../src/components/home-page/HomePage'
+import ProductStockPage from '../../../../src/components/mercant-page/ProductStockPage'
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 
-describe('HomePage', () => {
+describe('ProductPage', () => {
   let localVue
 
   beforeEach(() => {
@@ -10,22 +10,19 @@ describe('HomePage', () => {
     localVue.use(Buefy, {})
   })
 
-  test('get all product', () => {
+  test('getAllProduct', done => {
     const query = () => {
       return Promise.resolve({
         data: {
-          products: [{
+          getAllProducts: [{
             id: 2,
             name: 'name',
-            price: 5,
-            imageLinks: [{
-              imageLink: 'imageLink'
-            }]
+            stock: 5
           }]
         }
       })
     }
-    const wrapper = shallowMount(HomePage, {
+    const wrapper = shallowMount(ProductStockPage, {
       localVue,
       mocks: {
         $apollo: {
@@ -34,9 +31,8 @@ describe('HomePage', () => {
       }
     })
     setTimeout(() => {
-      expect(wrapper.vm.products.id).toBe(2)
-      expect(wrapper.vm.products.imageLinks.imagelink).toBe('imageLink')
-      expect(wrapper.vm.products.price).toBe(5)
+      done()
+      expect(wrapper.vm.products[0].id).toBe(2)
     })
   })
 })

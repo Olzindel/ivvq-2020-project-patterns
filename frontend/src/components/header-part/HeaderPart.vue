@@ -18,7 +18,7 @@
           </div>
         </b-menu-list>
         <!-- Merchant -->
-        <b-menu-list v-if="isAuthenticated() && store.getters.isMerchant" label="Administration">
+        <b-menu-list v-if="isAuthenticated() && $store.getters.isMerchant" label="Administration">
           <div>
             <b-menu-item label="Gérer les stocks" @click="goToProductStockPage()"/>
             <b-menu-item label="Historique des commandes clients" @click="goToOrders()"/>
