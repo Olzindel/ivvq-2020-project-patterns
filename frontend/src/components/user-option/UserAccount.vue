@@ -95,8 +95,6 @@ export default {
       if (!this.password1) {
         newPassword = null
       }
-
-      console.log(this.password1, this.password2)
       if (this.password1 === this.password2) {
         if (this.user.firstName && this.user.lastName && this.user.postalCode.length === 5 &&
             this.user.street && this.user.email && this.user.city) {

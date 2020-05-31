@@ -165,10 +165,10 @@ describe('ProductPage', () => {
         $apollo: {
           mutate
         }
+      },
+      propsData: {
+        productId: 2
       }
-    })
-    wrapper.setData({
-      productId: 1
     })
     let spy = jest.fn()
     wrapper.vm.success = spy
@@ -188,10 +188,10 @@ describe('ProductPage', () => {
         $apollo: {
           mutate
         }
+      },
+      propsData: {
+        productId: 2
       }
-    })
-    wrapper.setData({
-      productId: 1
     })
     let spy = jest.fn()
     wrapper.vm.danger = spy

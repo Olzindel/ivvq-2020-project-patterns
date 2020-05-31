@@ -105,7 +105,8 @@ export default {
             street: this.user.street,
             postalCode: this.user.postalCode,
             city: this.user.city,
-            email: this.user.email
+            email: this.user.email,
+            password: null
           }
         }
       }).then(data => {

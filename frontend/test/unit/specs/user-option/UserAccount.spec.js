@@ -57,8 +57,8 @@ describe('UserAccount', () => {
       })
     })
   })
-  // TODO: change to test when solve
-  xtest('update info with different password', done => {
+
+  test('update info with different password', done => {
     const mutate = () => {
       return Promise.resolve({
         data: {
