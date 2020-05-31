@@ -118,7 +118,6 @@ export default {
           productId: this.productId
         }
       }).then(data => {
-        console.log(data)
         this.product = data.data.productInfos
       })
     },

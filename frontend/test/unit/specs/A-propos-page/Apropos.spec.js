@@ -2,7 +2,7 @@ import APropos from '../../../../src/components/A-propos-page/APropos'
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 
-describe('BasketPage', () => {
+describe('APropos', () => {
   let localVue
   let wrapper
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('BasketPage', () => {
     })
   })
 
-  test('data properties', () => {
+  test('are data only string', () => {
     expect(typeof wrapper.vm.presentation === 'string').toBeTruthy()
     expect(typeof wrapper.vm.team === 'string').toBeTruthy()
     expect(typeof wrapper.vm.thanks === 'string').toBeTruthy()

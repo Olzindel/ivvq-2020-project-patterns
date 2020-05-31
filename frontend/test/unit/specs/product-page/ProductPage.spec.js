@@ -42,7 +42,6 @@ describe('ProductPage', () => {
     })
     setTimeout(() => {
       done()
-      console.log(wrapper.vm.product.id)
       expect(wrapper.vm.product.id).toBe(2)
       expect(wrapper.vm.product.name).toBe('name')
     })

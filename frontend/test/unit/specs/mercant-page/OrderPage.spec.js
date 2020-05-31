@@ -10,7 +10,7 @@ describe('OrderPage', () => {
     localVue.use(Buefy, {})
   })
 
-  test('get all product', done => {
+  test('should get all product', done => {
     const query = () => {
       return Promise.resolve({
         data: {
