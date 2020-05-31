@@ -103,6 +103,7 @@ describe('ProductPage', () => {
         }
       }
     })
+    localStorage.setItem('connection-token', 'abc')
     wrapper.vm.addABasket = spyAddBasket
     wrapper.vm.addThisProduct = spyAddProduct
     let spyDanger = jest.fn()
