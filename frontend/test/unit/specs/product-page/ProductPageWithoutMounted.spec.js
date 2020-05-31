@@ -49,6 +49,7 @@ describe('ProductPage', () => {
         }
       }
     })
+    localStorage.setItem('connection-token', 'abc')
     wrapper.vm.addABasket = spyAddBasket
     wrapper.vm.addThisProduct = spyAddProduct
     wrapper.vm.getUserOrder()
@@ -80,6 +81,7 @@ describe('ProductPage', () => {
         }
       }
     })
+    localStorage.setItem('connection-token', 'abc')
     wrapper.vm.addABasket = spyAddBasket
     wrapper.vm.addThisProduct = spyAddProduct
     wrapper.vm.getUserOrder()
@@ -90,7 +92,7 @@ describe('ProductPage', () => {
     })
   })
 
-  test('should get all user order and add product because there are a basket', done => {
+  test('should get all user order and return an error', done => {
     query = () => {
       return Promise.reject(new Error('mock error'))
     }
@@ -107,7 +109,7 @@ describe('ProductPage', () => {
     wrapper.vm.addABasket = spyAddBasket
     wrapper.vm.addThisProduct = spyAddProduct
     let spyDanger = jest.fn()
-    wrapper.vm.danger = spyDanger
+    wrapper.vm.notifyError = spyDanger
     wrapper.vm.getUserOrder()
     setTimeout(() => {
       done()
@@ -123,10 +125,10 @@ describe('ProductPage', () => {
     })
     let spy = jest.fn()
     wrapper.vm.$buefy.toast.open = spy
-    wrapper.vm.danger('message')
+    wrapper.vm.notifyError('message')
     expect(spy).toBeCalledWith({
       duration: 5000,
-      message: 'Vous devez vous connecter',
+      message: 'Une erreur est survenue. Réessayez plus tard',
       position: 'is-bottom',
       type: 'is-danger'
     })
