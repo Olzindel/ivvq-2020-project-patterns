@@ -104,7 +104,8 @@ export default {
         newPassword = null
       }
 
-      if (this.password1 === this.password2 || this.password1) {
+      console.log(this.password1, this.password2)
+      if (this.password1 === this.password2) {
         if (this.user.firstName && this.user.lastName && this.user.postalCode.length === 5 &&
             this.user.street && this.user.email && this.user.city) {
           this.$apollo.mutate({
