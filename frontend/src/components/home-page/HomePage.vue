@@ -32,7 +32,7 @@ export default {
          }
         }`,
         variables: {
-          count: 10
+          count: 100
         }
       }).then(data => {
         this.products = data.data.products

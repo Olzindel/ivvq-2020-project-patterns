@@ -23,13 +23,13 @@
     </div>
     <div>
       <div>
-        {{order.User.firstName}} {{order.User.lastName}}
+        {{order.user.firstName}} {{order.user.lastName}}
       </div>
       <div>
-        {{order.User.street}}
+        {{order.user.street}}
       </div>
       <div>
-        {{order.User.postalCode}} {{order.User.city}}
+        {{order.user.postalCode}} {{order.user.city}}
       </div>
     </div>
   </div>
@@ -46,9 +46,9 @@ export default {
       orders: []
     }
   },
-  apollo: {
+  methods: {
     getAllProduct () {
-      return {
+      this.$apollo.query({
         query: gql`
       query orders ( $count : Int! ){
         getAllOrders : orders(count : $count){
@@ -60,7 +60,7 @@ export default {
               name
             }
           }
-          User {
+          user {
           firstName,
           lastName,
           street,
@@ -68,22 +68,22 @@ export default {
           city
           }
       }}`,
-        variables () {
-          return {
-            count: 50
-          }
+        variables: {
+          count: 50
         },
-        fetchPolicy: 'no-cache',
-        update: data => {
-          this.orders = data.getAllOrders.filter((order) => {
-            if (order.status === 'PAID') {
-              return order
-            }
+        fetchPolicy: 'no-cache'
+      }).then(data => {
+        this.orders = data.data.getAllOrders.filter((order) => {
+          if (order.status === 'PAID') {
+            return order
           }
-          )
         }
-      }
+        )
+      })
     }
+  },
+  mounted () {
+    this.getAllProduct()
   }
 }
 </script>
