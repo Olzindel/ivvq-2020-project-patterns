@@ -2,6 +2,9 @@
   "src_folders": [
     "tests"
   ],
+  "custom_assertions_path": [
+    "custom_assertions"
+  ],
   "output_folder": "nw/reports",
   "test_workers": false,
   "live_output": false,
