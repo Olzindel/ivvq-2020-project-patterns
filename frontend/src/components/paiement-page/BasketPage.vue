@@ -29,7 +29,6 @@
 import BasketCard from './BasketCard'
 import gql from 'graphql-tag'
 import PaiementByCard from './PaiementByCard'
-import store from '../../store'
 
 export default {
   name: 'basketPage',
@@ -118,11 +117,10 @@ export default {
         position: 'is-bottom',
         type: 'is-danger'
       })
-    }
-  },
-  apollo: {
+    },
     BasketInfo () {
-      return {
+      console.log('my test')
+      this.$apollo.query({
         query: gql`query user($id: ID!){
             getuser:user(userId: $id){
                id,
@@ -152,22 +150,23 @@ export default {
                }
             }
         }`,
-        variables () {
-          return {
-            id: store.getters.user.id
-          }
+        variables: {
+          id: this.$store.getters.user.id
         },
-        fetchPolicy: 'no-cache',
-        update: data => {
-          this.user = data.getuser
-          this.order = data.getuser.orders.filter(function (order) {
-            if (order.status === 'BASKET') {
-              return order
-            }
-          })
-        }
-      }
+        fetchPolicy: 'no-cache'
+      }).then(data => {
+        console.log(data)
+        this.user = data.data.getuser
+        this.order = data.data.getuser.orders.filter(function (order) {
+          if (order.status === 'BASKET') {
+            return order
+          }
+        })
+      })
     }
+  },
+  mounted () {
+    this.BasketInfo()
   }
 }
 </script>

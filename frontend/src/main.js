@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueApollo from 'vue-apollo'
 import {apolloClient} from './vue-appolo-config'
+import store from './store'
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
@@ -25,6 +26,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   apolloProvider,
   components: {App},
   template: '<App/>'

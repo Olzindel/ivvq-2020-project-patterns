@@ -91,7 +91,13 @@ describe('BasketPage', () => {
     expect(spy).toBeCalledWith('/orders')
     expect(wrapper.vm.showNavigation).toBeFalsy()
   })
-
+  test('goToHistory', () => {
+    wrapper.vm.$router.push = spy
+    expect(wrapper.vm.showNavigation).toBeTruthy()
+    wrapper.vm.goToHistory()
+    expect(spy).toBeCalledWith('/history')
+    expect(wrapper.vm.showNavigation).toBeFalsy()
+  })
   test('logout', () => {
     wrapper.vm.goToHome = spy
     wrapper.vm.logout()

@@ -127,11 +127,14 @@ router.beforeEach((to, from, next) => {
       }
     }).then(result => {
       store.commit('connect', result.data.user)
+      next(true)
     }, () => {
       localStorage.setItem('connection-token', '')
+      next(true)
     })
+  } else {
+    next(true)
   }
-  next(true)
 })
 
 export default router

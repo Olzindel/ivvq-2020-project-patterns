@@ -25,7 +25,9 @@ describe('ErrorPage', () => {
       localVue,
       router
     })
+    const spy = jest.fn()
+    wrapper.vm.$router.push = spy
     wrapper.vm.goToHome()
-    expect(wrapper.vm.$route.path).toBe('/')
+    expect(spy).toBeCalledWith('/')
   })
 })

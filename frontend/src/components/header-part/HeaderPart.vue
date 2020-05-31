@@ -84,7 +84,7 @@ export default {
       this.goToHome()
     },
     goToHistory () {
-      router.push('/history')
+      this.$router.push('/history')
       this.showNavigation = false
     },
     goToProductStockPage () {
