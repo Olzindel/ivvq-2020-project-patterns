@@ -116,8 +116,8 @@ export default {
         }`,
         variables: {
           productId: this.productId
-        }}).then(data => {
-        console.log(data)
+        }
+      }).then(data => {
         this.product = data.data.productInfos
       })
     },
@@ -155,8 +155,9 @@ export default {
       }).then(data => this.success()).catch((error) => this.danger(error))
     },
     getUserOrder () {
-      this.$apollo.query({
-        query: gql`query user($id: ID!){
+      if (localStorage.getItem('connection-token')) {
+        this.$apollo.query({
+          query: gql`query user($id: ID!){
             getuser:user(userId: $id){
                orders{
                   id,
@@ -164,31 +165,41 @@ export default {
                  }
             }
         }`,
-        variables: {
-          id: this.$store.getters.user.id
-        },
-        fetchPolicy: 'no-cache'
-      }
-      ).then(data => {
-        const basket = data.data.getuser.orders.filter(function (order) {
-          if (order.status === 'BASKET') {
-            return order
-          }
-        })
-        console.log(basket)
-        if (basket.length === 0) {
-          this.addABasket()
-        } else {
-          this.addThisProduct(basket[0].id)
+          variables: {
+            id: this.$store.getters.user.id
+          },
+          fetchPolicy: 'no-cache'
         }
-      }).catch((error) => {
-        this.danger(error)
-      })
+        ).then(data => {
+          const basket = data.data.getuser.orders.filter(function (order) {
+            if (order.status === 'BASKET') {
+              return order
+            }
+          })
+          if (basket.length === 0) {
+            this.addABasket()
+          } else {
+            this.addThisProduct(basket[0].id)
+          }
+        }).catch(() => {
+          this.notifyError()
+        })
+      } else {
+        this.danger()
+      }
     },
-    danger (text) {
+    danger () {
       this.$buefy.toast.open({
         duration: 5000,
-        message: 'Vous devez vous connecter',
+        message: 'Connectez vous pour ajouter cette waifu à votre panier',
+        position: 'is-bottom',
+        type: 'is-danger'
+      })
+    },
+    notifyError () {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: 'Une erreur est survenue. Réessayez plus tard',
         position: 'is-bottom',
         type: 'is-danger'
       })

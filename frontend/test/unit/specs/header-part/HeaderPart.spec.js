@@ -4,7 +4,7 @@ import Buefy from 'buefy'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-describe('BasketPage', () => {
+describe('HeaderPart', () => {
   let localVue
   let wrapper
   let spy

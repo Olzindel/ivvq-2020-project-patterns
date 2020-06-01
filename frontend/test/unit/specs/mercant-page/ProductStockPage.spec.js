@@ -2,7 +2,7 @@ import ProductStockPage from '../../../../src/components/mercant-page/ProductSto
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 
-describe('ProductPage', () => {
+describe('ProductStockPage', () => {
   let localVue
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ProductPage', () => {
     localVue.use(Buefy, {})
   })
 
-  test('getAllProduct', done => {
+  test('should get All Product', done => {
     const query = () => {
       return Promise.resolve({
         data: {
@@ -37,7 +37,7 @@ describe('ProductPage', () => {
     })
   })
 
-  test('changeStockProduct', () => {
+  test('change the stock of a product', () => {
     const query = () => {
       return Promise.resolve({
         data: {

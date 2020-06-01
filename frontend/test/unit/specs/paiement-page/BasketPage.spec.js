@@ -16,7 +16,7 @@ describe('BasketPage', () => {
     BasketPage.mounted = mountedSpy
   })
 
-  test('deleteItem', done => {
+  test('should delete a Item', done => {
     const mutate = () => {
       return Promise.resolve({
         data: {
@@ -68,7 +68,7 @@ describe('BasketPage', () => {
     })
   })
 
-  test('calcul price', () => {
+  test('should calcul price of all item', () => {
     const wrapper = shallowMount(BasketPage, {
       localVue
     })
@@ -128,7 +128,7 @@ describe('BasketPage', () => {
     expect(wrapper.vm.basketIsEmpty).toBeFalsy()
   })
 
-  test('validate Basket not empty', done => {
+  test('validate a basket not empty', done => {
     const query = () => {
       return Promise.resolve({
         data: {
@@ -181,7 +181,7 @@ describe('BasketPage', () => {
     })
   })
 
-  test('validate Basket empty', done => {
+  test('validate a Basket empty', done => {
     const query = () => {
       return Promise.resolve({
         data: {
@@ -233,7 +233,7 @@ describe('BasketPage', () => {
     })
   })
 
-  test('function error message', () => {
+  test('show a error message', () => {
     const wrapper = shallowMount(BasketPage, {
       localVue
     })

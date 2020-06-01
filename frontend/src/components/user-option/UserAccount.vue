@@ -47,8 +47,6 @@
 
 <script>
 import gql from 'graphql-tag'
-import store from '../../store'
-
 export default {
   name: 'UserAccount',
   data () {
@@ -66,9 +64,9 @@ export default {
       password2: ''
     }
   },
-  apollo: {
-    userInfos () {
-      return {
+  methods: {
+    getUserInfos () {
+      this.$apollo.query({
         query: gql`query user($id: ID!){
         getuser:user(userId: $id){
             id,
@@ -84,27 +82,20 @@ export default {
           }
         }
         `,
-        variables () {
-          return {
-            id: store.getters.user.id
-          }
+        variables: {
+          id: this.$store.getters.user.id
         },
-        fetchPolicy: 'no-cache',
-        update: data => {
-          this.user = data.getuser
-        }
-      }
-    }
-  },
-  methods: {
+        fetchPolicy: 'no-cache'}).then(data => {
+        this.user = data.data.getuser
+      })
+    },
     updateInfo () {
       let newPassword = this.password1
 
       if (!this.password1) {
         newPassword = null
       }
-
-      if (this.password1 === this.password2 || this.password1) {
+      if (this.password1 === this.password2) {
         if (this.user.firstName && this.user.lastName && this.user.postalCode.length === 5 &&
             this.user.street && this.user.email && this.user.city) {
           this.$apollo.mutate({
@@ -157,7 +148,9 @@ export default {
         })
       }
     }
-
+  },
+  mounted () {
+    this.getUserInfos()
   }
 }
 </script>

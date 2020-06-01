@@ -3,7 +3,7 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Buefy from 'buefy'
 import VueRouter from 'vue-router'
 
-describe('BasketPage', () => {
+describe('WaifuCard', () => {
   let localVue
   let spy
   let wrapper

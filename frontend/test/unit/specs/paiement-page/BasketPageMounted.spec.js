@@ -10,7 +10,7 @@ describe('BasketPage', () => {
     localVue = createLocalVue()
     localVue.use(Buefy, {})
   })
-  test('BasketInfo', done => {
+  test('should get user and order on mounted', done => {
     const query = () => {
       return Promise.resolve({
         data: {
