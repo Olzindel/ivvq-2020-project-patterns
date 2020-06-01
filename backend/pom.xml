@@ -327,6 +327,7 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                             <excludes>
                                 <exclude>**/*Exception.*</exclude>
+                                <exclude>**/Dataloader.*</exclude>
                                 <exclude>**/PatternsApplication*.*</exclude>
                             </excludes>
                         </configuration>
@@ -353,6 +354,7 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
                             <excludes>
                                 <exclude>**/*Exception.*</exclude>
+                                <exclude>**/Dataloader.*</exclude>
                                 <exclude>**/PatternsApplication*.*</exclude>
                             </excludes>
                         </configuration>
@@ -363,6 +365,11 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <exclude>**/*Exception.*</exclude>
+                                <exclude>**/Dataloader.*</exclude>
+                                <exclude>**/PatternsApplication*.*</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
@@ -373,7 +380,7 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.8</minimum>
+                                            <minimum>80%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
