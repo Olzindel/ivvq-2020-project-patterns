@@ -6,12 +6,12 @@
   <parent>
     <groupId>fr.univ-tlse3.m2dl.patterns</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
   </parent>
 
   <artifactId>frontend</artifactId>
   <groupId>patterns</groupId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-RELEASE</version>
   <name>Waifu market-desu - Frontend</name>
   <description>Frontend du site web de vente</description>
   <packaging>pom</packaging>
